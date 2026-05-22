@@ -18,6 +18,7 @@ lerna-debug.log*
 # Tests
 /coverage
 /.nyc_output
+/.jest-cache
 
 # IDEs and editors
 /.idea
@@ -81,4 +82,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-

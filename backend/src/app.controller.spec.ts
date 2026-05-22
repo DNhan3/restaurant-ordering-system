@@ -15,8 +15,12 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return API metadata', () => {
+      expect(appController.getHome()).toEqual(
+        expect.objectContaining({
+          name: 'Restaurant Ordering System API',
+        }),
+      );
     });
   });
 });

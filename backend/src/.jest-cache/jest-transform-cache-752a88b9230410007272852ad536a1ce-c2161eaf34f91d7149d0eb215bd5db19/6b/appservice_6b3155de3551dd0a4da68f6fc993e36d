@@ -1,0 +1,36 @@
+5eb26e81b83ad87f96e87bbf66ab00dc
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppService = void 0;
+const common_1 = require("@nestjs/common");
+let AppService = class AppService {
+    getHome() {
+        return {
+            name: 'Restaurant Ordering System API',
+            pages: [
+                '/',
+                '/menu',
+                '/cart',
+                '/checkout',
+                '/orders',
+                '/booking',
+                '/login',
+                '/register',
+                '/admin',
+                '/admin/orders',
+                '/admin/foods',
+            ],
+        };
+    }
+};
+exports.AppService = AppService;
+exports.AppService = AppService = __decorate([
+    (0, common_1.Injectable)()
+], AppService);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFVzZXJzXFxjYXJvdFxcV2ViQXBwXFxyZXN0YXVyYW50LW9yZGVyaW5nLXN5c3RlbVxccmVzdGF1cmFudC1vcmRlcmluZy1zeXN0ZW1cXGJhY2tlbmRcXHNyY1xcYXBwLnNlcnZpY2UudHMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7O0FBQUEsMkNBQTRDO0FBR3JDLElBQU0sVUFBVSxHQUFoQixNQUFNLFVBQVU7SUFDckIsT0FBTztRQUNMLE9BQU87WUFDTCxJQUFJLEVBQUUsZ0NBQWdDO1lBQ3RDLEtBQUssRUFBRTtnQkFDTCxHQUFHO2dCQUNILE9BQU87Z0JBQ1AsT0FBTztnQkFDUCxXQUFXO2dCQUNYLFNBQVM7Z0JBQ1QsVUFBVTtnQkFDVixRQUFRO2dCQUNSLFdBQVc7Z0JBQ1gsUUFBUTtnQkFDUixlQUFlO2dCQUNmLGNBQWM7YUFDZjtTQUNGLENBQUM7SUFDSixDQUFDO0NBQ0YsQ0FBQTtBQW5CWSxnQ0FBVTtxQkFBVixVQUFVO0lBRHRCLElBQUEsbUJBQVUsR0FBRTtHQUNBLFVBQVUsQ0FtQnRCIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxVc2Vyc1xcY2Fyb3RcXFdlYkFwcFxccmVzdGF1cmFudC1vcmRlcmluZy1zeXN0ZW1cXHJlc3RhdXJhbnQtb3JkZXJpbmctc3lzdGVtXFxiYWNrZW5kXFxzcmNcXGFwcC5zZXJ2aWNlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEluamVjdGFibGUgfSBmcm9tICdAbmVzdGpzL2NvbW1vbic7XG5cbkBJbmplY3RhYmxlKClcbmV4cG9ydCBjbGFzcyBBcHBTZXJ2aWNlIHtcbiAgZ2V0SG9tZSgpIHtcbiAgICByZXR1cm4ge1xuICAgICAgbmFtZTogJ1Jlc3RhdXJhbnQgT3JkZXJpbmcgU3lzdGVtIEFQSScsXG4gICAgICBwYWdlczogW1xuICAgICAgICAnLycsXG4gICAgICAgICcvbWVudScsXG4gICAgICAgICcvY2FydCcsXG4gICAgICAgICcvY2hlY2tvdXQnLFxuICAgICAgICAnL29yZGVycycsXG4gICAgICAgICcvYm9va2luZycsXG4gICAgICAgICcvbG9naW4nLFxuICAgICAgICAnL3JlZ2lzdGVyJyxcbiAgICAgICAgJy9hZG1pbicsXG4gICAgICAgICcvYWRtaW4vb3JkZXJzJyxcbiAgICAgICAgJy9hZG1pbi9mb29kcycsXG4gICAgICBdLFxuICAgIH07XG4gIH1cbn1cbiJdLCJ2ZXJzaW9uIjozfQ==
