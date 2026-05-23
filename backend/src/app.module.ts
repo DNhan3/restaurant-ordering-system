@@ -1,25 +1,46 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AdminModule } from './admin/admin.module';
-import { AuthModule } from './auth/auth.module';
-import { BookingsModule } from './bookings/bookings.module';
-import { CartModule } from './cart/cart.module';
-import { CommonModule } from './common/common.module';
-import { FoodsModule } from './foods/foods.module';
-import { OrdersModule } from './orders/orders.module';
-import { UsersModule } from './users/users.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { FoodsModule } from './modules/foods.module.js';
+import { UsersModule } from './modules/users.module.js';
+import { CartItemsModule } from './modules/cart-items.module.js';
+import { BookingsModule } from './modules/bookings.module.js';
+import { BillDetailsModule } from './modules/bill-details.module.js';
+import { BillStatusModule } from './modules/bill-status.module.js';
+import { AdminModule } from './modules/admin.module.js';
+import { AuthModule } from './modules/auth.module.js';
+import { CartModule } from './modules/cart.module.js';
+import { OrdersModule } from './modules/orders.module.js';
 
 @Module({
   imports: [
-    CommonModule,
-    AuthModule,
-    UsersModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql' as const,
+        host: configService.get<string>('DB_HOST', 'localhost'),
+        port: configService.get<number>('DB_PORT', 3306),
+        username: configService.get<string>('DB_USERNAME', 'root'),
+        password: configService.get<string>('DB_PASSWORD', ''),
+        database: configService.get<string>('DB_NAME', 'wad_restaurant'),
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+    }),
     FoodsModule,
+    UsersModule,
+    CartItemsModule,
+    BookingsModule,
+    BillDetailsModule,
+    BillStatusModule,
+    AdminModule,
+    AuthModule,
     CartModule,
     OrdersModule,
-    BookingsModule,
-    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
