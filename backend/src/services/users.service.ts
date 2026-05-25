@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../models/user.entity.js';
 import { CreateUserDto } from '../dto/create-user.dto.js';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -19,14 +20,38 @@ export class UsersService {
     return user;
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const existing = await this.userRepository.findOneBy({
+  async findByEmailOrNull(email: string): Promise<User | null> {
+    return this.userRepository.findOneBy({ email });
+  }
+
+  async findByName(name: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ name });
+    if (!user) {
+      throw new NotFoundException(`User with name ${name} not found`);
+    }
+    return user;
+  }
+
+  async save(createUserDto: CreateUserDto): Promise<User> {
+    const existingByEmail = await this.userRepository.findOneBy({
       email: createUserDto.email,
     });
-    if (existing) {
+    if (existingByEmail) {
       throw new ConflictException('Email already exists');
     }
-    const user = this.userRepository.create(createUserDto);
+
+    const existingByName = await this.userRepository.findOneBy({
+      name: createUserDto.name,
+    });
+    if (existingByName) {
+      throw new ConflictException('Name already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const user = this.userRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
     return this.userRepository.save(user);
   }
 }
