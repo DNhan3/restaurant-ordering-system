@@ -3,19 +3,19 @@ import { Utensils, ArrowRight, Users, Award, Clock, Globe } from 'lucide-react';
 
 const TEAM_PHOTOS = [
   {
-    name: 'Đầu Bếp Minh Hùng',
-    role: 'Đầu Bếp Chính',
-    image: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&h=400&fit=crop',
+    name: 'Chef. Đức Nhân',
+    role: 'Bếp Trưởng',
+    image: '',
   },
   {
-    name: 'Cô Lan',
+    name: 'Chef. Nguyên Trung',
     role: 'Chuyên Gia Phở',
-    image: 'https://images.unsplash.com/photo-1583394293214-28ez1e51a97d?w=400&h=400&fit=crop',
+    image: '',
   },
   {
-    name: 'Anh Tuấn',
+    name: 'Chef. Triệu Hưng',
     role: 'Nghệ Nhân Bánh Mì',
-    image: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?w=400&h=400&fit=crop',
+    image: '',
   },
 ];
 
@@ -35,11 +35,11 @@ export default function AboutPage() {
           <div className="max-w-2xl">
             <span className="heading-accent text-2xl">Câu Chuyện Của Chúng Tôi</span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mt-4 mb-6">
-              Về <span className="text-primary">36Food</span>
+              Về 36<span className="text-primary">Food</span>
             </h1>
             <p className="text-lg text-brown-300 leading-relaxed">
-              Được thành lập từ năm 2015 bởi gia đình có niềm đam mê với ẩm thực Việt, 
-              36Food đã phục vụ hàng triệu khách hàng với những món ăn ngon chuẩn vị mẹ nấu. 
+              Được thành lập từ năm 2016 bởi những người có niềm đam mê với ẩm thực Việt, 
+              36Food đã phục vụ hàng nghìn khách hàng với những món ăn ngon chuẩn vị.
               Từ một quán nhỏ ven đường, giờ đây chúng tôi mang đến hương vị Việt đến mọi nhà.
             </p>
           </div>
@@ -76,13 +76,13 @@ export default function AboutPage() {
                   <p className="text-brown-600 mt-1">Năm Kinh Nghiệm</p>
                 </div>
                 <div className="bg-secondary/10 rounded-2xl p-6 text-center">
-                  <span className="text-4xl font-bold text-secondary">50+</span>
+                  <span className="text-4xl font-bold text-secondary">36+</span>
                   <p className="text-brown-600 mt-1">Món Ăn</p>
                 </div>
               </div>
               <div className="space-y-4 mt-8">
                 <div className="bg-brown-100 rounded-2xl p-6 text-center">
-                  <span className="text-4xl font-bold text-brown-700">100K+</span>
+                  <span className="text-4xl font-bold text-brown-700">1000+</span>
                   <p className="text-brown-600 mt-1">Khách Hàng</p>
                 </div>
                 <div className="bg-success/10 rounded-2xl p-6 text-center">
@@ -191,6 +191,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+      <br></br>
     </div>
   );
 }

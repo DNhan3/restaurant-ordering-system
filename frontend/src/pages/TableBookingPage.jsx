@@ -94,6 +94,7 @@ export default function TableBookingPage() {
         user_id: formData.card ? parseInt(formData.card) : null,
         book_when: formData.when,
         book_note: formData.note,
+        book_birthday_promo: formData.isBirthday,
       };
 
       await bookingService.create(bookingData);
@@ -303,7 +304,7 @@ export default function TableBookingPage() {
                       value={formData.note}
                       onChange={handleChange}
                       rows={4}
-                      placeholder="Yêu cầu đặc biệt hoặc chế độ ăn..."
+                      placeholder="Yêu cầu về dịp đặc biệt hoặc chế độ ăn..."
                       className="input-field resize-none"
                     />
                   </div>
