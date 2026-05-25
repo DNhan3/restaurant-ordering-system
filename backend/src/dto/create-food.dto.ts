@@ -2,10 +2,10 @@ import { IsString, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateFoodDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsNumber()
-  price: number;
+  price!: number;
 
   @IsOptional()
   @IsString()
