@@ -2,10 +2,10 @@ import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class CreateCartItemDto {
   @IsInt()
-  userId: number;
+  userId!: number;
 
   @IsInt()
-  foodId: number;
+  foodId!: number;
 
   @IsOptional()
   @IsInt()

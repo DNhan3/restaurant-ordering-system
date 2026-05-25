@@ -19,28 +19,28 @@ export enum BillStatusEnum {
 @Entity('bill_status')
 export class BillStatus {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ name: 'user_id' })
-  userId: number;
+  userId!: number;
 
   @Column({
     type: 'enum',
     enum: BillStatusEnum,
     default: BillStatusEnum.PENDING,
   })
-  status: BillStatusEnum;
+  status!: BillStatusEnum;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  total: number;
+  total!: number;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user!: User;
 
   @OneToMany(() => BillDetail, (detail) => detail.billStatus)
-  billDetails: BillDetail[];
+  billDetails!: BillDetail[];
 }

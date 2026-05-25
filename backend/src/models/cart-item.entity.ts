@@ -5,22 +5,22 @@ import { Food } from './food.entity.js';
 @Entity('cart_items')
 export class CartItem {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ name: 'user_id' })
-  userId: number;
+  userId!: number;
 
   @Column({ name: 'food_id' })
-  foodId: number;
+  foodId!: number;
 
   @Column({ type: 'int', default: 1 })
-  quantity: number;
+  quantity!: number;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user!: User;
 
   @ManyToOne(() => Food, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'food_id' })
-  food: Food;
+  food!: Food;
 }

@@ -5,27 +5,27 @@ import { Food } from './food.entity.js';
 @Entity('bill_details')
 export class BillDetail {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ name: 'bill_status_id' })
-  billStatusId: number;
+  billStatusId!: number;
 
   @Column({ name: 'food_id' })
-  foodId: number;
+  foodId!: number;
 
   @Column({ type: 'int' })
-  quantity: number;
+  quantity!: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  price: number;
+  price!: number;
 
   @ManyToOne(() => BillStatus, (billStatus) => billStatus.billDetails, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'bill_status_id' })
-  billStatus: BillStatus;
+  billStatus!: BillStatus;
 
   @ManyToOne(() => Food, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'food_id' })
-  food: Food;
+  food!: Food;
 }

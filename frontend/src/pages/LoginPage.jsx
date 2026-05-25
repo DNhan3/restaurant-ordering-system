@@ -52,27 +52,15 @@ export default function LoginPage() {
     setGeneralError('');
 
     try {
-      const userData = await authService.getUserByEmail(formData.email);
-
-      if (!userData) {
-        setGeneralError('Incorrect email or password');
-        setIsLoading(false);
-        return;
-      }
-
-      if (userData.user_password !== formData.password) {
-        setGeneralError('Incorrect email or password');
-        setIsLoading(false);
-        return;
-      }
-
-      // Remove password before storing
-      const { user_password, ...safeUserData } = userData;
-      login(safeUserData);
+      await login(formData.email, formData.password);
       navigate('/');
     } catch (error) {
-      console.error('Login failed:', error);
-      setGeneralError('Login failed. Please try again.');
+      if ([400, 401, 404].includes(error?.response?.status)) {
+        setGeneralError('Incorrect email or password');
+      } else {
+        setGeneralError('Login failed. Please try again.');
+      }
+      navigate('/');
     } finally {
       setIsLoading(false);
     }

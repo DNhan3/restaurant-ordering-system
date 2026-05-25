@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Lock, AlertCircle, ChefHat } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function AdminLoginPage() {
   const { loginAsAdmin } = useAuth();
+  const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -20,7 +21,9 @@ export default function AdminLoginPage() {
     const success = loginAsAdmin(password);
     if (!success) {
       setError('Invalid admin password');
+      return;
     }
+    navigate('/admin/dashboard');
   };
 
   return (

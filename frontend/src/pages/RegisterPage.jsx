@@ -6,7 +6,7 @@ import { authService } from '../services/api';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { register } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -18,9 +18,6 @@ export default function RegisterPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    phone: '',
-    birth: '',
-    gender: '',
   });
 
   const handleChange = (e) => {
@@ -60,63 +57,34 @@ export default function RegisterPage() {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    if (!formData.phone) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!formData.phone.startsWith('84') || formData.phone.length !== 11) {
-      newErrors.phone = 'Phone must start with 84 and be 11 digits';
-    }
-
-    if (!formData.birth) {
-      newErrors.birth = 'Birthday is required';
-    }
-
-    if (!formData.gender) {
-      newErrors.gender = 'Please select a gender';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!validateForm()) return;
 
     setIsLoading(true);
 
     try {
-      // Check if email already exists
-      const existingUser = await authService.getUserByEmail(formData.email);
-      if (existingUser) {
-        setErrors({ email: 'An account with this email already exists' });
-        setIsLoading(false);
-        return;
-      }
-
       const userData = {
-        user_name: formData.name,
-        user_email: formData.email,
-        user_password: formData.password,
-        user_phone: formData.phone,
-        user_birth: formData.birth,
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
       };
-
-      await authService.register(userData);
+      await register(userData);
       setSuccess(true);
-
-      // Auto login after registration
-      setTimeout(() => {
-        login({
-          user_name: formData.name,
-          user_email: formData.email,
-          user_phone: formData.phone,
-        });
-        navigate('/');
-      }, 2000);
+      navigate('/');
     } catch (error) {
       console.error('Registration failed:', error);
-      setErrors({ submit: 'Registration failed. Please try again.' });
+      if (error?.response?.status === 409) {
+        const message = error.response.data?.message || 'An account already exists';
+        setErrors(message.toLowerCase().includes('name') ? { name: message } : { email: message });
+      } else {
+        setErrors({ submit: 'Registration failed. Please try again.' });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -247,43 +215,13 @@ export default function RegisterPage() {
               {errors.confirmPassword && <p className="text-error text-sm mt-1">{errors.confirmPassword}</p>}
             </div>
 
-            {/* Phone & Birthday */}
-            <div className="grid sm:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-sm font-medium text-brown-700 mb-2">
-                  Phone Number
-                </label>
-                <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="84123456789"
-                    className={`input-field pl-12 ${errors.phone ? 'border-error' : ''}`}
-                  />
-                </div>
-                {errors.phone && <p className="text-error text-sm mt-1">{errors.phone}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-brown-700 mb-2">
-                  Birthday
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
-                  <input
-                    type="date"
-                    name="birth"
-                    value={formData.birth}
-                    onChange={handleChange}
-                    className={`input-field pl-12 ${errors.birth ? 'border-error' : ''}`}
-                  />
-                </div>
-                {errors.birth && <p className="text-error text-sm mt-1">{errors.birth}</p>}
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-sm text-primary hover:underline"
+            >
+              {showPassword ? 'Hide' : 'Show'} passwords
+            </button>
 
             {errors.submit && (
               <div className="p-4 bg-error/10 text-error rounded-xl flex items-center gap-2">

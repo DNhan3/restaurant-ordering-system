@@ -6,13 +6,17 @@ import { CreateUserDto } from '../dto/create-user.dto.js';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get(':email')
-  findByEmail(@Param('email') email: string) {
-    return this.usersService.findByEmail(email);
+  @Post('find')
+  async findByEmail(@Body('email') email: string) {
+    const user = await this.usersService.findByEmail(email);
+    const { password: _pw, ...rest } = user as any;
+    return rest;
   }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    const user = await this.usersService.save(createUserDto);
+    const { password: _pw, ...rest } = user as any;
+    return rest;
   }
 }

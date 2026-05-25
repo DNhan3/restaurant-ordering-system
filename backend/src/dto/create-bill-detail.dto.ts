@@ -2,14 +2,14 @@ import { IsInt, IsNumber } from 'class-validator';
 
 export class CreateBillDetailDto {
   @IsInt()
-  billStatusId: number;
+  billStatusId!: number;
 
   @IsInt()
-  foodId: number;
+  foodId!: number;
 
   @IsInt()
-  quantity: number;
+  quantity!: number;
 
   @IsNumber()
-  price: number;
+  price!: number;
 }
