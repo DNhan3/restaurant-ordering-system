@@ -60,7 +60,7 @@ const WHY_CHOOSE_US = [
   {
     icon: Clock,
     title: 'Giao Nhanh',
-    description: 'Giao hàng trong 30 phút hoặc miễn phí',
+    description: 'Giao hàng trong 30 phút và miễn phí',
   },
   {
     icon: Award,
@@ -128,7 +128,7 @@ export default function HomePage() {
                 </div>
                 <div className="w-px h-12 bg-brown-200" />
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">50+</div>
+                  <div className="text-2xl font-bold text-primary">36+</div>
                   <div className="text-sm text-brown-500">Món Ăn</div>
                 </div>
                 <div className="w-px h-12 bg-brown-200" />

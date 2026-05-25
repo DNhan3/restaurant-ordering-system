@@ -9,6 +9,7 @@ export default function RegisterPage() {
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
 
@@ -99,7 +100,6 @@ export default function RegisterPage() {
         user_password: formData.password,
         user_phone: formData.phone,
         user_birth: formData.birth,
-        user_gender: formData.gender,
       };
 
       await authService.register(userData);
@@ -169,7 +169,7 @@ export default function RegisterPage() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="John Doe"
+                  placeholder="Nguyen Van A"
                   className={`input-field pl-12 ${errors.name ? 'border-error' : ''}`}
                 />
               </div>
@@ -195,52 +195,57 @@ export default function RegisterPage() {
               {errors.email && <p className="text-error text-sm mt-1">{errors.email}</p>}
             </div>
 
-            {/* Password & Confirm */}
-            <div className="grid sm:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-sm font-medium text-brown-700 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Min 8 characters"
-                    className={`input-field pl-12 pr-12 ${errors.password ? 'border-error' : ''}`}
-                  />
-                </div>
-                {errors.password && <p className="text-error text-sm mt-1">{errors.password}</p>}
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-medium text-brown-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Min 8 characters"
+                  className={`input-field pl-12 pr-12 ${errors.password ? 'border-error' : ''}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-brown-400 hover:text-brown-600"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-brown-700 mb-2">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="Re-enter password"
-                    className={`input-field pl-12 ${errors.confirmPassword ? 'border-error' : ''}`}
-                  />
-                </div>
-                {errors.confirmPassword && <p className="text-error text-sm mt-1">{errors.confirmPassword}</p>}
-              </div>
+              {errors.password && <p className="text-error text-sm mt-1">{errors.password}</p>}
             </div>
 
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="text-sm text-primary hover:underline"
-            >
-              {showPassword ? 'Hide' : 'Show'} passwords
-            </button>
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-sm font-medium text-brown-700 mb-2">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Re-enter password"
+                  className={`input-field pl-12 pr-12 ${errors.confirmPassword ? 'border-error' : ''}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-brown-400 hover:text-brown-600"
+                >
+                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+              {errors.confirmPassword && <p className="text-error text-sm mt-1">{errors.confirmPassword}</p>}
+            </div>
 
             {/* Phone & Birthday */}
             <div className="grid sm:grid-cols-2 gap-5">
@@ -278,36 +283,6 @@ export default function RegisterPage() {
                 </div>
                 {errors.birth && <p className="text-error text-sm mt-1">{errors.birth}</p>}
               </div>
-            </div>
-
-            {/* Gender */}
-            <div>
-              <label className="block text-sm font-medium text-brown-700 mb-2">
-                Gender
-              </label>
-              <div className="flex gap-4">
-                {['male', 'female'].map((option) => (
-                  <label
-                    key={option}
-                    className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 cursor-pointer transition-colors ${
-                      formData.gender === option
-                        ? 'border-primary bg-primary/5'
-                        : 'border-brown-200 hover:border-primary/50'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="gender"
-                      value={option}
-                      checked={formData.gender === option}
-                      onChange={handleChange}
-                      className="sr-only"
-                    />
-                    <span className="font-medium capitalize">{option}</span>
-                  </label>
-                ))}
-              </div>
-              {errors.gender && <p className="text-error text-sm mt-1">{errors.gender}</p>}
             </div>
 
             {errors.submit && (

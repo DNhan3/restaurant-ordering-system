@@ -39,8 +39,8 @@ export default function Footer() {
             <Link to="/" className="flex items-center gap-2 mb-4">
               <Utensils className="w-8 h-8 text-primary" />
               <div className="flex flex-col leading-tight">
-                <span className="text-2xl font-bold heading-display">
-                  36<span className="text-primary">Food</span>
+                <span className="text-2xl font-bold heading-display text-white">
+                  36<span className="text-red-400">Food</span>
                 </span>
               </div>
             </Link>
@@ -54,9 +54,6 @@ export default function Footer() {
               </a>
               <a href="#" className="p-2 bg-brown-800 rounded-lg hover:bg-primary transition-colors">
                 <Instagram className="w-5 h-5" />
-              </a>
-              <a href="#" className="p-2 bg-brown-800 rounded-lg hover:bg-primary transition-colors">
-                <Twitter className="w-5 h-5" />
               </a>
             </div>
           </div>
