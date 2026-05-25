@@ -1,57 +1,57 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Clock, Award, Truck, HeartHandshake, ChevronRight } from 'lucide-react';
+import { ArrowRight, Clock, Award, Truck, HeartHandshake, ChevronRight, Leaf } from 'lucide-react';
 
 const FEATURED_CATEGORIES = [
   {
-    id: 'taco',
-    name: 'Tacos',
-    description: 'Authentic Mexican street tacos',
-    image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&h=400&fit=crop',
-    count: 12,
-  },
-  {
-    id: 'burrito',
-    name: 'Burritos',
-    description: 'Hearty and delicious wraps',
-    image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop',
+    id: 'pho',
+    name: 'Phở & Bún',
+    description: 'Phở bò, phở gà, bún bò huế',
+    image: 'https://images.unsplash.com/photo-1583224964978-2257b1c8f725?w=400&h=400&fit=crop',
     count: 8,
   },
   {
-    id: 'nachos',
-    name: 'Nachos',
-    description: 'Loaded with cheese & toppings',
-    image: 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=400&h=400&fit=crop',
+    id: 'com',
+    name: 'Cơm',
+    description: 'Cơm tấm, cơm gà, cơm rang',
+    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=400&fit=crop',
     count: 6,
   },
   {
-    id: 'dessert',
-    name: 'Desserts',
-    description: 'Sweet endings to your meal',
-    image: 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?w=400&h=400&fit=crop',
+    id: 'banhmi',
+    name: 'Bánh Mì',
+    description: 'Bánh mì thịt nướng, bánh mì pate',
+    image: 'https://images.unsplash.com/photo-1600688640154-9619e002df30?w=400&h=400&fit=crop',
     count: 5,
+  },
+  {
+    id: 'cuon',
+    name: 'Cuốn & Khai Vị',
+    description: 'Gỏi cuốn, chả giò, nem nướng',
+    image: 'https://images.unsplash.com/photo-1562967916-eb82221dfb44?w=400&h=400&fit=crop',
+    count: 7,
   },
 ];
 
 const FEATURED_ITEMS = [
   {
-    name: 'Carne Asada Tacos',
-    description: 'Grilled steak, onions, cilantro, salsa verde',
-    price: '$12.99',
-    image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=400&fit=crop',
+    name: 'Phở Bò Tái Nạm',
+    description: 'Thịt bò tươi, xương hầm đậm đà, bánh phở mềm dai',
+    price: '75.000đ',
+    image: 'https://images.unsplash.com/photo-1583224964978-2257b1c8f725?w=400&h=400&fit=crop',
     rating: 4.9,
   },
   {
-    name: 'Chicken Burrito Supreme',
-    description: 'Seasoned chicken, rice, beans, cheese, sour cream',
-    price: '$14.99',
-    image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=400&fit=crop',
+    name: 'Bún Bò Huế',
+    description: 'Sườn bò, giò heo, chả cua thơm ngon',
+    price: '65.000đ',
+    image: 'https://images.unsplash.com/photo-1574901685823-e9c1e3f4c3d4?w=400&h=400&fit=crop',
     rating: 4.8,
   },
   {
-    name: 'Loaded Nachos',
-    description: 'Tortilla chips, cheese, jalapeños, guacamole',
-    price: '$10.99',
-    image: 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=400&h=400&fit=crop',
+    name: 'Bánh Mì Thịt Nướng',
+    description: 'Thịt nướng thơm lừng, đồ chua giòn tan',
+    price: '35.000đ',
+    image: 'https://images.unsplash.com/photo-1600688640154-9619e002df30?w=400&h=400&fit=crop',
     rating: 4.7,
   },
 ];
@@ -59,23 +59,23 @@ const FEATURED_ITEMS = [
 const WHY_CHOOSE_US = [
   {
     icon: Clock,
-    title: 'Fast Delivery',
-    description: '30-minute delivery guarantee or your order is free',
+    title: 'Giao Nhanh',
+    description: 'Giao hàng trong 30 phút hoặc miễn phí',
   },
   {
     icon: Award,
-    title: 'Premium Quality',
-    description: 'Fresh ingredients sourced daily from local farms',
+    title: 'Nguyên Liệu Tươi',
+    description: 'Thực phẩm tươi sạch, nhập hàng mỗi ngày',
   },
   {
-    icon: Truck,
-    title: 'Free Shipping',
-    description: 'Free delivery on orders over $25',
+    icon: Leaf,
+    title: 'Không Phụ Gia',
+    description: 'Nấu ăn chuẩn công thức gia truyền',
   },
   {
     icon: HeartHandshake,
-    title: '24/7 Support',
-    description: 'Our team is always here to help you',
+    title: 'Hỗ Trợ 24/7',
+    description: 'Đội ngũ luôn sẵn sàng giúp đỡ bạn',
   },
 ];
 
@@ -96,27 +96,27 @@ export default function HomePage() {
             {/* Hero Content */}
             <div className="relative z-10 text-center lg:text-left">
               <span className="inline-block px-4 py-2 bg-primary/10 text-primary font-medium rounded-full text-sm mb-6 animate-fade-in">
-                Authentic Mexican Cuisine
+                Ẩm Thực Việt Nam Chuẩn Vị
               </span>
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold heading-display leading-tight mb-6 animate-slide-up">
-                Taste the <br />
-                <span className="text-primary">Magic</span> of <br />
-                Mexico
+                Chuẩn Cơm Mẹ Nấu <br />
+                <span className="text-primary">Ngay Tại Nhà</span> <br />
+                Bạn
               </h1>
               
               <p className="text-lg text-brown-600 mb-8 max-w-lg mx-auto lg:mx-0 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-                Fresh ingredients, bold flavors, and recipes passed down through generations. 
-                Experience the authentic taste of Mexico delivered to your door.
+                Phở nóng hổi, bún bò thơm lừng, cơm tấm đậm đà. 
+                Đặt món ngay để thưởng thức hương vị Việt Nam chuẩn chất lượng.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-slide-up" style={{ animationDelay: '0.2s' }}>
                 <Link to="/menu" className="btn-primary text-lg px-8 py-4 inline-flex items-center justify-center gap-2">
-                  Order Now
+                  Đặt Món Ngay
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link to="/table-booking" className="btn-secondary text-lg px-8 py-4 inline-flex items-center justify-center gap-2">
-                  Book a Table
+                  Đặt Bàn
                 </Link>
               </div>
 
@@ -124,17 +124,17 @@ export default function HomePage() {
               <div className="flex items-center justify-center lg:justify-start gap-8 mt-10 animate-slide-up" style={{ animationDelay: '0.3s' }}>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">4.9</div>
-                  <div className="text-sm text-brown-500">Rating</div>
+                  <div className="text-sm text-brown-500">Đánh Giá</div>
                 </div>
                 <div className="w-px h-12 bg-brown-200" />
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">50+</div>
-                  <div className="text-sm text-brown-500">Menu Items</div>
+                  <div className="text-sm text-brown-500">Món Ăn</div>
                 </div>
                 <div className="w-px h-12 bg-brown-200" />
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">30min</div>
-                  <div className="text-sm text-brown-500">Delivery</div>
+                  <div className="text-2xl font-bold text-primary">30ph</div>
+                  <div className="text-sm text-brown-500">Giao Hàng</div>
                 </div>
               </div>
             </div>
@@ -143,8 +143,8 @@ export default function HomePage() {
             <div className="relative animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <div className="relative z-10">
                 <img
-                  src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&h=800&fit=crop"
-                  alt="Delicious Mexican Tacos"
+                  src="https://images.unsplash.com/photo-1583224964978-2257b1c8f725?w=800&h=800&fit=crop"
+                  alt="Phở Bò Việt Nam"
                   className="w-full max-w-lg mx-auto rounded-3xl shadow-2xl"
                 />
               </div>
@@ -156,11 +156,11 @@ export default function HomePage() {
               <div className="absolute top-8 -left-4 lg:left-8 bg-white rounded-2xl shadow-xl p-4 animate-bounce-slow">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-success/20 rounded-full flex items-center justify-center">
-                    <span className="text-xl">🌮</span>
+                    <span className="text-xl">🍜</span>
                   </div>
                   <div>
-                    <p className="font-bold text-brown-900">Best Seller</p>
-                    <p className="text-sm text-brown-500">Taco Trio</p>
+                    <p className="font-bold text-brown-900">Món Bán Chạy</p>
+                    <p className="text-sm text-brown-500">Phở Bò Hà Nội</p>
                   </div>
                 </div>
               </div>
@@ -173,12 +173,12 @@ export default function HomePage() {
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <span className="heading-accent text-xl">Explore Our Menu</span>
+            <span className="heading-accent text-xl">Khám Phá Thực Đơn</span>
             <h2 className="text-3xl md:text-4xl font-bold heading-display mt-2">
-              Browse by Category
+              Danh Mục Món Ăn
             </h2>
             <p className="text-brown-500 mt-3 max-w-2xl mx-auto">
-              From classic street tacos to loaded burritos, find your perfect meal
+              Từ phở bò truyền thống đến bánh mì thịt nướng, tìm món ăn hoàn hảo cho bạn
             </p>
           </div>
 
@@ -213,16 +213,16 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <span className="heading-accent text-xl">Chef's Picks</span>
+              <span className="heading-accent text-xl">Món Ăn Nổi Bật</span>
               <h2 className="text-3xl md:text-4xl font-bold heading-display mt-2">
-                Popular Dishes
+                Món Được Yêu Thích
               </h2>
             </div>
             <Link
               to="/menu"
               className="hidden sm:flex items-center gap-2 text-primary font-medium hover:text-primary-light transition-colors"
             >
-              View All
+              Xem Tất Cả
               <ChevronRight className="w-5 h-5" />
             </Link>
           </div>
@@ -291,28 +291,28 @@ export default function HomePage() {
             <div className="relative grid md:grid-cols-2 gap-8 items-center p-8 md:p-12 lg:p-16">
               <div className="text-white">
                 <span className="inline-block px-4 py-1 bg-white/20 rounded-full text-sm font-medium mb-4">
-                  Limited Time Offer
+                  Ưu Đãi Đặc Biệt
                 </span>
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-                  Get 50% Off Your First Order!
+                  Giảm 20% Cho Đơn Hàng Đầu Tiên!
                 </h2>
                 <p className="text-white/80 text-lg mb-6">
-                  Use code <span className="font-bold">WELCOME50</span> at checkout. 
-                  Valid for new customers only.
+                  Sử dụng mã <span className="font-bold">CHAO20</span> khi thanh toán. 
+                  Chỉ áp dụng cho khách hàng mới.
                 </p>
                 <Link
                   to="/menu"
                   className="inline-flex items-center gap-2 bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-cream transition-colors"
                 >
-                  Claim Your Discount
+                  Nhận Ưu Đãi
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </div>
 
               <div className="hidden md:block">
                 <img
-                  src="https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?w=600&h=600&fit=crop"
-                  alt="Delicious Mexican Food"
+                  src="https://images.unsplash.com/photo-1574901685823-e9c1e3f4c3d4?w=600&h=600&fit=crop"
+                  alt="Món Ăn Việt Nam Đặc Sắc"
                   className="w-full max-w-sm mx-auto rounded-2xl shadow-2xl"
                 />
               </div>
@@ -325,9 +325,9 @@ export default function HomePage() {
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <span className="heading-accent text-xl">Why Choose Us</span>
+            <span className="heading-accent text-xl">Vì Sao Chọn Chúng Tôi</span>
             <h2 className="text-3xl md:text-4xl font-bold heading-display mt-2">
-              What Makes Us Special
+              Điều Gì Làm Chúng Tôi Đặc Biệt
             </h2>
           </div>
 
@@ -356,17 +356,17 @@ export default function HomePage() {
       <section className="section-padding bg-brown-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold heading-display mb-4">
-            Ready to Experience the Best Mexican Food?
+            Sẵn Sàng Thưởng Thức Ẩm Thực Việt?
           </h2>
           <p className="text-brown-300 text-lg mb-8">
-            Order online or book a table for an unforgettable dining experience
+            Đặt món online hoặc đặt bàn để có trải nghiệm ẩm thực đáng nhớ
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/menu" className="btn-primary text-lg px-8 py-4">
-              Order Online
+              Đặt Món
             </Link>
             <Link to="/table-booking" className="bg-white/10 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/20 transition-colors">
-              Book a Table
+              Đặt Bàn
             </Link>
           </div>
         </div>

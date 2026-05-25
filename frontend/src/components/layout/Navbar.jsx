@@ -27,11 +27,11 @@ export default function Navbar() {
   }, [location]);
 
   const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/about', label: 'About' },
-    { to: '/promotions', label: 'Promotions' },
-    { to: '/menu', label: 'Menu' },
-    { to: '/table-booking', label: 'Book Table' },
+    { to: '/', label: 'Trang Chủ' },
+    { to: '/about', label: 'Giới Thiệu' },
+    { to: '/promotions', label: 'Khuyến Mãi' },
+    { to: '/menu', label: 'Thực Đơn' },
+    { to: '/table-booking', label: 'Đặt Bàn' },
   ];
 
   const handleLogout = () => {
@@ -55,9 +55,12 @@ export default function Navbar() {
             className="flex items-center gap-2 group"
           >
             <ChefHat className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform" />
-            <span className="text-2xl font-bold heading-display">
-              Q<span className="text-primary">Food</span>
-            </span>
+            <div className="flex flex-col leading-tight">
+              <span className="text-2xl font-bold heading-display">
+                36<span className="text-primary">Food</span>
+              </span>
+              <span className="text-[10px] text-brown-500 -mt-1">Chuẩn cơm mẹ nấu</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -123,14 +126,14 @@ export default function Navbar() {
                       className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
                     >
                       <ClipboardList className="w-4 h-4" />
-                      My Orders
+                      Đơn Hàng
                     </Link>
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
-                      Logout
+                      Đăng Xuất
                     </button>
                   </div>
                 )}
@@ -141,13 +144,13 @@ export default function Navbar() {
                   to="/login"
                   className="px-4 py-2 text-brown-700 font-medium hover:text-primary transition-colors"
                 >
-                  Login
+                  Đăng Nhập
                 </Link>
                 <Link
                   to="/register"
                   className="btn-primary text-sm"
                 >
-                  Register
+                  Đăng Ký
                 </Link>
               </div>
             )}
@@ -193,13 +196,13 @@ export default function Navbar() {
                     to="/login"
                     className="px-4 py-3 text-brown-700 font-medium hover:bg-primary/5 rounded-lg"
                   >
-                    Login
+                    Đăng Nhập
                   </Link>
                   <Link
                     to="/register"
                     className="mx-4 my-2 btn-primary text-center"
                   >
-                    Register
+                    Đăng Ký
                   </Link>
                 </>
               )}

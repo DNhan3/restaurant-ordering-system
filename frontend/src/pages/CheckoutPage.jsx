@@ -134,10 +134,10 @@ export default function CheckoutPage() {
             className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
-            Back to Cart
+            Quay Lại Giỏ Hàng
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Checkout</h1>
-          <p className="text-white/80">Complete your order</p>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Thanh Toán</h1>
+          <p className="text-white/80">Hoàn tất đơn hàng của bạn</p>
         </div>
       </div>
 
@@ -147,13 +147,13 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Shipping Details */}
             <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-brown-900 mb-6">Shipping Details</h2>
+              <h2 className="text-xl font-bold text-brown-900 mb-6">Thông Tin Giao Hàng</h2>
 
               <div className="space-y-4">
                 {/* Phone */}
                 <div>
                   <label className="block text-sm font-medium text-brown-700 mb-2">
-                    Phone Number <span className="text-error">*</span>
+                    Số Điện Thoại <span className="text-error">*</span>
                   </label>
                   <input
                     type="tel"
@@ -174,14 +174,14 @@ export default function CheckoutPage() {
                 {/* Address */}
                 <div>
                   <label className="block text-sm font-medium text-brown-700 mb-2">
-                    Delivery Address <span className="text-error">*</span>
+                    Địa Chỉ Giao Hàng <span className="text-error">*</span>
                   </label>
                   <textarea
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
                     rows={3}
-                    placeholder="Enter your full delivery address"
+                    placeholder="Nhập địa chỉ giao hàng đầy đủ"
                     className={`input-field resize-none ${errors.address ? 'border-error focus:border-error' : ''}`}
                   />
                   {errors.address && (
@@ -196,7 +196,7 @@ export default function CheckoutPage() {
 
             {/* Payment Method */}
             <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-brown-900 mb-6">Payment Method</h2>
+              <h2 className="text-xl font-bold text-brown-900 mb-6">Phương Thức Thanh Toán</h2>
 
               <div className="space-y-4">
                 {/* Payment Options */}
@@ -222,8 +222,8 @@ export default function CheckoutPage() {
                       <Banknote className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="font-semibold text-brown-900">Cash on Delivery</p>
-                      <p className="text-sm text-brown-500">Pay when you receive</p>
+                      <p className="font-semibold text-brown-900">Tiền Mặt</p>
+                      <p className="text-sm text-brown-500">Thanh toán khi nhận hàng</p>
                     </div>
                     {formData.paymentMethod === 'cash' && (
                       <Check className="w-5 h-5 text-primary ml-auto" />
@@ -251,8 +251,8 @@ export default function CheckoutPage() {
                       <CreditCard className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="font-semibold text-brown-900">Credit Card</p>
-                      <p className="text-sm text-brown-500">Visa only</p>
+                      <p className="font-semibold text-brown-900">Thẻ</p>
+                      <p className="text-sm text-brown-500">Thẻ nội địa & quốc tế</p>
                     </div>
                     {formData.paymentMethod === 'card' && (
                       <Check className="w-5 h-5 text-primary ml-auto" />
@@ -356,7 +356,7 @@ export default function CheckoutPage() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-md p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-brown-900 mb-6">Order Summary</h2>
+              <h2 className="text-xl font-bold text-brown-900 mb-6">Tóm Tắt Đơn Hàng</h2>
 
               {/* Items Preview */}
               <div className="space-y-3 mb-6 max-h-48 overflow-y-auto">
@@ -379,7 +379,7 @@ export default function CheckoutPage() {
                       <p className="text-xs text-brown-500">x{item.quantity}</p>
                     </div>
                     <p className="text-sm font-semibold text-brown-900">
-                      ${((item.price - item.discount) * item.quantity).toFixed(2)}
+                      {((item.price - item.discount) * item.quantity).toLocaleString('vi-VN')}đ
                     </p>
                   </div>
                 ))}
@@ -388,26 +388,26 @@ export default function CheckoutPage() {
               {/* Totals */}
               <div className="border-t border-brown-200 pt-4 space-y-3">
                 <div className="flex justify-between text-brown-700">
-                  <span>Subtotal</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+                  <span>Tạm tính</span>
+                  <span className="font-medium">{subtotal.toLocaleString('vi-VN')}đ</span>
                 </div>
 
                 {discount > 0 && (
                   <div className="flex justify-between text-success">
-                    <span>Discount</span>
-                    <span className="font-medium">-${discount.toFixed(2)}</span>
+                    <span>Giảm Giá</span>
+                    <span className="font-medium">-{discount.toLocaleString('vi-VN')}đ</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-brown-700">
-                  <span>Delivery</span>
-                  <span className="font-medium">${deliveryFee.toFixed(2)}</span>
+                  <span>Phí Giao Hàng</span>
+                  <span className="font-medium">{deliveryFee.toLocaleString('vi-VN')}đ</span>
                 </div>
 
                 <div className="border-t border-brown-200 pt-3">
                   <div className="flex justify-between text-lg font-bold text-brown-900">
-                    <span>Total</span>
-                    <span className="text-primary">${total.toFixed(2)}</span>
+                    <span>Tổng Cộng</span>
+                    <span className="text-primary">{total.toLocaleString('vi-VN')}đ</span>
                   </div>
                 </div>
               </div>
@@ -421,19 +421,19 @@ export default function CheckoutPage() {
                 {isSubmitting ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Processing...
+                    Đang Xử Lý...
                   </>
                 ) : (
                   <>
                     <Lock className="w-5 h-5" />
-                    Place Order - ${total.toFixed(2)}
+                    Đặt Hàng - {total.toLocaleString('vi-VN')}đ
                   </>
                 )}
               </button>
 
               {/* Security Note */}
               <p className="text-xs text-brown-500 text-center mt-4">
-                Your payment is secured with SSL encryption
+                Thanh toán được bảo mật với mã hóa SSL
               </p>
             </div>
           </div>

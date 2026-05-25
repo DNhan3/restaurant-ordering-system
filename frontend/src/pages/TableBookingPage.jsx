@@ -120,9 +120,9 @@ export default function TableBookingPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-primary-light text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Book a Table</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Đặt Bàn</h1>
           <p className="text-white/80">
-            Reserve your spot for a memorable dining experience
+            Đặt chỗ cho trải nghiệm ẩm thực đáng nhớ
           </p>
         </div>
       </div>
@@ -138,36 +138,36 @@ export default function TableBookingPage() {
                     <CheckCircle className="w-10 h-10 text-success" />
                   </div>
                   <h2 className="text-2xl font-bold text-brown-900 mb-4">
-                    Booking Submitted!
+                    Đặt Bàn Thành Công!
                   </h2>
                   <p className="text-brown-600 mb-6">
-                    Thank you for your reservation. We'll contact you shortly to confirm your booking.
+                    Cảm ơn bạn đã đặt bàn. Chúng tôi sẽ liên hệ sớm để xác nhận.
                   </p>
                   <button
                     onClick={() => setSuccess(false)}
                     className="btn-primary"
                   >
-                    Make Another Booking
+                    Đặt Bàn Khác
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <h2 className="text-xl font-bold text-brown-900 mb-6">
-                    Reservation Details
+                    Thông Tin Đặt Bàn
                   </h2>
 
                   <div className="grid sm:grid-cols-2 gap-6">
                     {/* Name */}
                     <div>
                       <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Your Name <span className="text-error">*</span>
+                        Họ Tên <span className="text-error">*</span>
                       </label>
                       <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="John Doe"
+                        placeholder="Nguyễn Văn A"
                         className={`input-field ${errors.name ? 'border-error' : ''}`}
                       />
                       {errors.name && (
@@ -181,7 +181,7 @@ export default function TableBookingPage() {
                     {/* Phone */}
                     <div>
                       <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Phone Number <span className="text-error">*</span>
+                        Số Điện Thoại <span className="text-error">*</span>
                       </label>
                       <input
                         type="tel"
@@ -204,7 +204,7 @@ export default function TableBookingPage() {
                     {/* Number of People */}
                     <div>
                       <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Number of People <span className="text-error">*</span>
+                        Số Người <span className="text-error">*</span>
                       </label>
                       <input
                         type="number"
@@ -227,7 +227,7 @@ export default function TableBookingPage() {
                     {/* Number of Tables */}
                     <div>
                       <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Number of Tables <span className="text-error">*</span>
+                        Số Bàn <span className="text-error">*</span>
                       </label>
                       <input
                         type="number"
@@ -251,7 +251,7 @@ export default function TableBookingPage() {
                   {/* Date & Time */}
                   <div>
                     <label className="block text-sm font-medium text-brown-700 mb-2">
-                      Date & Time <span className="text-error">*</span>
+                      Ngày & Giờ <span className="text-error">*</span>
                     </label>
                     <input
                       type="datetime-local"
@@ -271,7 +271,7 @@ export default function TableBookingPage() {
                   {/* Membership Card */}
                   <div>
                     <label className="block text-sm font-medium text-brown-700 mb-2">
-                      Membership Card (Optional)
+                      Thẻ Thành Viên (Tùy Chọn)
                     </label>
                     <input
                       type="text"
@@ -289,21 +289,21 @@ export default function TableBookingPage() {
                       </p>
                     )}
                     <p className="text-xs text-brown-500 mt-1">
-                      Enter your membership card number for exclusive benefits
+                      Nhập số thẻ thành viên để hưởng ưu đãi đặc biệt
                     </p>
                   </div>
 
                   {/* Special Requests */}
                   <div>
                     <label className="block text-sm font-medium text-brown-700 mb-2">
-                      Special Requests (Optional)
+                      Yêu Cầu Đặc Biệt (Tùy Chọn)
                     </label>
                     <textarea
                       name="note"
                       value={formData.note}
                       onChange={handleChange}
                       rows={4}
-                      placeholder="Any special requests or dietary requirements..."
+                      placeholder="Yêu cầu đặc biệt hoặc chế độ ăn..."
                       className="input-field resize-none"
                     />
                   </div>
@@ -323,12 +323,12 @@ export default function TableBookingPage() {
                     {isSubmitting ? (
                       <>
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Submitting...
+                        Đang Xử Lý...
                       </>
                     ) : (
                       <>
                         <Calendar className="w-5 h-5" />
-                        Confirm Reservation
+                        Xác Nhận Đặt Bàn
                       </>
                     )}
                   </button>
@@ -341,15 +341,15 @@ export default function TableBookingPage() {
           <div className="space-y-6">
             {/* Restaurant Info */}
             <div className="bg-white rounded-2xl shadow-md p-6">
-              <h3 className="font-bold text-lg text-brown-900 mb-4">Restaurant Info</h3>
+              <h3 className="font-bold text-lg text-brown-900 mb-4">Thông Tin Nhà Hàng</h3>
               
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-brown-900">Address</p>
+                    <p className="font-medium text-brown-900">Địa Chỉ</p>
                     <p className="text-sm text-brown-500">
-                      02 Duong Khue, Cau Giay, Ha Noi, Viet Nam
+                      36 Phố Nông, Quận 1, TP. Hồ Chí Minh
                     </p>
                   </div>
                 </div>
@@ -357,9 +357,9 @@ export default function TableBookingPage() {
                 <div className="flex items-start gap-3">
                   <Phone className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-brown-900">Phone</p>
-                    <a href="tel:+84123123123" className="text-sm text-primary hover:underline">
-                      +84 123 123 123
+                    <p className="font-medium text-brown-900">Điện Thoại</p>
+                    <a href="tel:+84123456789" className="text-sm text-primary hover:underline">
+                      +84 123 456 789
                     </a>
                   </div>
                 </div>
@@ -367,9 +367,9 @@ export default function TableBookingPage() {
                 <div className="flex items-start gap-3">
                   <Clock className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-brown-900">Opening Hours</p>
+                    <p className="font-medium text-brown-900">Giờ Mở Cửa</p>
                     <p className="text-sm text-brown-500">
-                      Everyday: 7:00 AM - 10:00 PM
+                      Mỗi ngày: 7:00 - 22:00
                     </p>
                   </div>
                 </div>
@@ -378,13 +378,13 @@ export default function TableBookingPage() {
 
             {/* Booking Tips */}
             <div className="bg-cream rounded-2xl p-6">
-              <h3 className="font-bold text-lg text-brown-900 mb-4">Booking Tips</h3>
+              <h3 className="font-bold text-lg text-brown-900 mb-4">Mẹo Đặt Bàn</h3>
               <ul className="space-y-3">
                 {[
-                  'Book at least 24 hours in advance',
-                  'For large groups (20+), call us directly',
-                  'Tables are held for 15 minutes past reservation time',
-                  'Cancellations must be made 2 hours before',
+                  'Đặt trước ít nhất 24 giờ',
+                  'Nhóm đông (20+ người) vui lòng gọi điện',
+                  'Bàn giữ 15 phút sau giờ đặt',
+                  'Hủy đặt bàn trước 2 giờ',
                 ].map((tip, index) => (
                   <li key={index} className="flex items-start gap-2 text-sm text-brown-600">
                     <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
@@ -397,13 +397,13 @@ export default function TableBookingPage() {
             {/* Quick Booking CTA */}
             <div className="bg-primary/10 rounded-2xl p-6 text-center">
               <Users className="w-10 h-10 text-primary mx-auto mb-3" />
-              <h3 className="font-bold text-brown-900 mb-2">Planning a Group Event?</h3>
+              <h3 className="font-bold text-brown-900 mb-2">Tổ Chức Sự Kiện?</h3>
               <p className="text-sm text-brown-600 mb-4">
-                We offer special packages for parties and corporate events.
+                Chúng tôi có gói đặc biệt cho tiệc và sự kiện công ty.
               </p>
-              <a href="tel:+84123123123" className="btn-primary inline-flex items-center gap-2">
+              <a href="tel:+84123456789" className="btn-primary inline-flex items-center gap-2">
                 <Phone className="w-4 h-4" />
-                Call Us
+                Gọi Ngay
               </a>
             </div>
           </div>

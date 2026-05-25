@@ -1,20 +1,20 @@
 import { Link } from 'react-router-dom';
-import { ChefHat, ArrowRight, Users, Award, Clock, Globe } from 'lucide-react';
+import { Utensils, ArrowRight, Users, Award, Clock, Globe } from 'lucide-react';
 
 const TEAM_PHOTOS = [
   {
-    name: 'Chef Maria Rodriguez',
-    role: 'Head Chef',
+    name: 'Đầu Bếp Minh Hùng',
+    role: 'Đầu Bếp Chính',
     image: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&h=400&fit=crop',
   },
   {
-    name: 'Chef Carlos Mendez',
-    role: 'Grill Master',
+    name: 'Cô Lan',
+    role: 'Chuyên Gia Phở',
     image: 'https://images.unsplash.com/photo-1583394293214-28ez1e51a97d?w=400&h=400&fit=crop',
   },
   {
-    name: 'Chef Ana Garcia',
-    role: 'Pastry Chef',
+    name: 'Anh Tuấn',
+    role: 'Nghệ Nhân Bánh Mì',
     image: 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?w=400&h=400&fit=crop',
   },
 ];
@@ -26,21 +26,21 @@ export default function AboutPage() {
       <section className="relative bg-brown-900 text-white py-20 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&h=800&fit=crop"
+            src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=1600&h=800&fit=crop"
             alt=""
             className="w-full h-full object-cover"
           />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <span className="heading-accent text-2xl">Our Story</span>
+            <span className="heading-accent text-2xl">Câu Chuyện Của Chúng Tôi</span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mt-4 mb-6">
-              About <span className="text-primary">QFood</span>
+              Về <span className="text-primary">36Food</span>
             </h1>
             <p className="text-lg text-brown-300 leading-relaxed">
-              Founded in 2002 by Chef Quang, QFood has been serving authentic Mexican cuisine 
-              with passion and dedication. What started as a small family restaurant has grown 
-              into a beloved destination for food enthusiasts across the globe.
+              Được thành lập từ năm 2015 bởi gia đình có niềm đam mê với ẩm thực Việt, 
+              36Food đã phục vụ hàng triệu khách hàng với những món ăn ngon chuẩn vị mẹ nấu. 
+              Từ một quán nhỏ ven đường, giờ đây chúng tôi mang đến hương vị Việt đến mọi nhà.
             </p>
           </div>
         </div>
@@ -51,43 +51,43 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="heading-accent text-xl">Our Mission</span>
+              <span className="heading-accent text-xl">Sứ Mệnh Của Chúng Tôi</span>
               <h2 className="text-3xl md:text-4xl font-bold heading-display mt-2 mb-6">
-                Bringing People Together Through Food
+                Mang Hương Vị Việt Đến Mọi Nhà
               </h2>
               <p className="text-brown-600 leading-relaxed mb-6">
-                We believe that great food has the power to create lasting memories and bring 
-                people together. Every dish we prepare is made with love, using the freshest 
-                ingredients and traditional recipes passed down through generations.
+                Chúng tôi tin rằng ẩm thực Việt có sức mạnh kết nối con người và tạo nên 
+                những kỷ niệm đáng nhớ. Mỗi món ăn đều được chế biến tỉ mỉ với tình yêu, 
+                sử dụng nguyên liệu tươi sạch và công thức gia truyền.
               </p>
               <p className="text-brown-600 leading-relaxed mb-8">
-                From our signature tacos to our mouthwatering burritos, each item on our menu 
-                represents our commitment to authenticity, quality, and customer satisfaction.
+                Từ tô phở nóng hổi đến đĩa cơm tấm đậm đà, mỗi món trong thực đơn đều 
+                thể hiện sự cam kết của chúng tôi với chất lượng và sự hài lòng của khách hàng.
               </p>
               <Link to="/menu" className="btn-primary inline-flex items-center gap-2">
-                Explore Our Menu
+                Khám Phá Thực Đơn
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
                 <div className="bg-primary/10 rounded-2xl p-6 text-center">
-                  <span className="text-4xl font-bold text-primary">20+</span>
-                  <p className="text-brown-600 mt-1">Years of Experience</p>
+                  <span className="text-4xl font-bold text-primary">10+</span>
+                  <p className="text-brown-600 mt-1">Năm Kinh Nghiệm</p>
                 </div>
                 <div className="bg-secondary/10 rounded-2xl p-6 text-center">
                   <span className="text-4xl font-bold text-secondary">50+</span>
-                  <p className="text-brown-600 mt-1">Menu Items</p>
+                  <p className="text-brown-600 mt-1">Món Ăn</p>
                 </div>
               </div>
               <div className="space-y-4 mt-8">
                 <div className="bg-brown-100 rounded-2xl p-6 text-center">
                   <span className="text-4xl font-bold text-brown-700">100K+</span>
-                  <p className="text-brown-600 mt-1">Happy Customers</p>
+                  <p className="text-brown-600 mt-1">Khách Hàng</p>
                 </div>
                 <div className="bg-success/10 rounded-2xl p-6 text-center">
                   <span className="text-4xl font-bold text-success">4.9</span>
-                  <p className="text-brown-600 mt-1">Average Rating</p>
+                  <p className="text-brown-600 mt-1">Đánh Giá Trung Bình</p>
                 </div>
               </div>
             </div>
@@ -99,9 +99,9 @@ export default function AboutPage() {
       <section className="section-padding bg-cream">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <span className="heading-accent text-xl">What We Believe</span>
+            <span className="heading-accent text-xl">Giá Trị Cốt Lõi</span>
             <h2 className="text-3xl md:text-4xl font-bold heading-display mt-2">
-              Our Core Values
+              Những Điều Chúng Tôi Tin Tưởng
             </h2>
           </div>
 
@@ -109,23 +109,23 @@ export default function AboutPage() {
             {[
               {
                 icon: Users,
-                title: 'Community',
-                description: 'Building connections through shared dining experiences',
+                title: 'Cộng Đồng',
+                description: 'Kết nối mọi người qua những bữa ăn ngon',
               },
               {
                 icon: Award,
-                title: 'Quality',
-                description: 'Using only the finest, freshest ingredients',
+                title: 'Chất Lượng',
+                description: 'Sử dụng nguyên liệu tươi sạch nhất',
               },
               {
                 icon: Clock,
-                title: 'Tradition',
-                description: 'Honoring authentic Mexican cooking methods',
+                title: 'Truyền Thống',
+                description: 'Giữ gìn công thức nấu ăn Việt cổ truyền',
               },
               {
                 icon: Globe,
-                title: 'Growth',
-                description: 'Constantly innovating while staying true to our roots',
+                title: 'Phát Triển',
+                description: 'Không ngừng cải tiến nhưng giữ nguyên hương vị',
               },
             ].map((value, index) => (
               <div
@@ -147,9 +147,9 @@ export default function AboutPage() {
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <span className="heading-accent text-xl">Meet Our Team</span>
+            <span className="heading-accent text-xl">Gặp Gỡ Đội Ngũ</span>
             <h2 className="text-3xl md:text-4xl font-bold heading-display mt-2">
-              The People Behind the Magic
+              Những Người Tạo Nên 36Food
             </h2>
           </div>
 
@@ -174,19 +174,19 @@ export default function AboutPage() {
       {/* CTA Section */}
       <section className="section-padding bg-primary text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <ChefHat className="w-16 h-16 mx-auto mb-6" />
+          <Utensils className="w-16 h-16 mx-auto mb-6" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Experience QFood?
+            Sẵn Sàng Trải Nghiệm 36Food?
           </h2>
           <p className="text-white/80 text-lg mb-8">
-            Join us for an unforgettable culinary journey through the flavors of Mexico
+            Hãy cùng chúng tôi khám phá hương vị ẩm thực Việt Nam đích thực
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/menu" className="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-cream transition-colors">
-              Order Online
+              Đặt Món
             </Link>
             <Link to="/table-booking" className="bg-white/10 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-colors">
-              Book a Table
+              Đặt Bàn
             </Link>
           </div>
         </div>

@@ -4,41 +4,41 @@ import { Percent, Gift, Coffee, ArrowRight } from 'lucide-react';
 const PROMOTIONS = [
   {
     id: 1,
-    title: '50% Off Party Tacos',
-    description: 'Order more than 10 tacos and get 50% discount!',
-    conditions: ['Only weekend nights', 'Online payment only'],
-    badge: 'up to 50% off',
+    title: 'Giảm 20% Phở & Bún',
+    description: 'Đặt bất kỳ tô phở hoặc bún nào được giảm 20%!',
+    conditions: ['Chỉ áp dụng buổi trưa (10h-14h)', 'Chỉ giao hàng'],
+    badge: 'Giảm 20%',
     badgeColor: 'bg-primary',
-    image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=600&h=400&fit=crop',
-    code: 'TACO50',
+    image: 'https://images.unsplash.com/photo-1583224964978-2257b1c8f725?w=600&h=400&fit=crop',
+    code: 'PHO20',
   },
   {
     id: 2,
-    title: 'Free Burrito Upsize',
-    description: 'Get a free upsize on any burrito with your lunch order!',
-    conditions: ['Lunch hours: 10am - 2pm', 'Delivery orders only'],
-    badge: '25% extra',
+    title: 'Combo Bánh Mì + Trà Đá',
+    description: 'Mua 1 bánh mì được tặng 1 trà đá miễn phí!',
+    conditions: ['Áp dụng tất cả các loại bánh mì', 'Không kết hợp với khuyến mãi khác'],
+    badge: 'Miễn phí',
     badgeColor: 'bg-secondary',
-    image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1600688640154-9619e002df30?w=600&h=400&fit=crop',
     code: null,
   },
   {
     id: 3,
-    title: '100% Cashback on Drinks',
-    description: 'Get 100% cashback on drinks when your total bill exceeds $20!',
-    conditions: ['Minimum order: $20', 'Online payment only'],
-    badge: '100% cashback',
+    title: 'Gỏi Cuốn Tặng Kèm',
+    description: 'Đơn hàng từ 150.000đ được tặng 1 phần gỏi cuốn!',
+    conditions: ['Tối thiểu đơn 150.000đ', 'Chỉ online'],
+    badge: 'Tặng kèm',
     badgeColor: 'bg-success',
-    image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600&h=400&fit=crop',
-    code: 'DRINKBACK',
+    image: 'https://images.unsplash.com/photo-1562967916-eb82221dfb44?w=600&h=400&fit=crop',
+    code: 'GOICUON',
   },
 ];
 
 const SCHEDULE = [
-  { time: '7:00 - 9:00', name: 'Breakfast', discount: '10% Off', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] },
-  { time: '10:00 - 14:00', name: 'Happy Lunch', discount: 'Free Drink', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'] },
-  { time: '15:00 - 17:00', name: 'Afternoon Snack', discount: '20% Off', days: ['Mon', 'Wed', 'Fri', 'Sat'] },
-  { time: '18:00 - 21:00', name: 'Happy Dinner', discount: '15% Off', days: ['Tue', 'Thu', 'Sat', 'Sun'] },
+  { time: '7:00 - 9:00', name: 'Sáng Sớm', discount: 'Giảm 10%', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] },
+  { time: '10:00 - 14:00', name: 'Trưa Vui Vẻ', discount: 'Tặng Trà', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'] },
+  { time: '15:00 - 17:00', name: 'Chiều Xế', discount: 'Giảm 15%', days: ['Mon', 'Wed', 'Fri', 'Sat'] },
+  { time: '18:00 - 21:00', name: 'Tối Đặc Biệt', discount: 'Giảm 20%', days: ['Tue', 'Thu', 'Sat', 'Sun'] },
 ];
 
 export default function PromotionsPage() {
@@ -47,10 +47,10 @@ export default function PromotionsPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-secondary to-primary text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <span className="heading-accent text-2xl">Special Deals</span>
-          <h1 className="text-3xl md:text-4xl font-bold mt-2 mb-2">Promotions</h1>
+          <span className="heading-accent text-2xl">Ưu Đãi Đặc Biệt</span>
+          <h1 className="text-3xl md:text-4xl font-bold mt-2 mb-2">Khuyến Mãi</h1>
           <p className="text-white/80">
-            Discover our latest offers and save on your favorite dishes
+            Khám phá các ưu đãi mới nhất và tiết kiệm khi đặt món yêu thích
           </p>
         </div>
       </div>
@@ -59,7 +59,7 @@ export default function PromotionsPage() {
         {/* Featured Promotions */}
         <section className="mb-16">
           <h2 className="text-2xl font-bold heading-display text-brown-900 mb-8">
-            Featured Offers
+            Ưu Đãi Nổi Bật
           </h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -91,7 +91,7 @@ export default function PromotionsPage() {
 
                   {promo.code && (
                     <div className="bg-cream rounded-lg p-3 mb-4">
-                      <span className="text-xs text-brown-500">Promo Code:</span>
+                      <span className="text-xs text-brown-500">Mã Khuyến Mãi:</span>
                       <p className="font-mono font-bold text-primary">{promo.code}</p>
                     </div>
                   )}
@@ -100,7 +100,7 @@ export default function PromotionsPage() {
                     to="/menu"
                     className="btn-primary w-full text-center block"
                   >
-                    Claim Offer
+                    Nhận Ưu Đãi
                   </Link>
                 </div>
               </div>
@@ -111,7 +111,7 @@ export default function PromotionsPage() {
         {/* Daily Schedule */}
         <section className="mb-16">
           <h2 className="text-2xl font-bold heading-display text-brown-900 mb-8">
-            Daily Special Schedule
+            Lịch Khuyến Mãi Trong Ngày
           </h2>
 
           <div className="bg-white rounded-2xl shadow-md overflow-hidden">
@@ -119,10 +119,10 @@ export default function PromotionsPage() {
               <table className="w-full">
                 <thead className="bg-primary text-white">
                   <tr>
-                    <th className="px-6 py-4 text-left font-semibold">Time</th>
-                    <th className="px-6 py-4 text-left font-semibold">Special</th>
-                    <th className="px-6 py-4 text-left font-semibold">Discount</th>
-                    <th className="px-6 py-4 text-center font-semibold hidden sm:table-cell">Days</th>
+                    <th className="px-6 py-4 text-left font-semibold">Giờ</th>
+                    <th className="px-6 py-4 text-left font-semibold">Chương Trình</th>
+                    <th className="px-6 py-4 text-left font-semibold">Ưu Đãi</th>
+                    <th className="px-6 py-4 text-center font-semibold hidden sm:table-cell">Ngày</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-brown-100">
@@ -168,18 +168,18 @@ export default function PromotionsPage() {
                 <Gift className="w-8 h-8" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">Get Exclusive Deals</h3>
-                <p className="text-white/80">Subscribe to our newsletter for the latest offers</p>
+                <h3 className="text-xl font-bold">Nhận Ưu Đãi Độc Quyền</h3>
+                <p className="text-white/80">Đăng ký newsletter để nhận ưu đãi mới nhất</p>
               </div>
             </div>
             <div className="flex gap-3 w-full md:w-auto">
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Nhập email của bạn"
                 className="flex-1 md:w-64 px-4 py-3 rounded-xl text-brown-900 placeholder:text-brown-400 focus:outline-none focus:ring-2 focus:ring-secondary"
               />
               <button className="bg-brown-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-brown-800 transition-colors flex items-center gap-2">
-                Subscribe
+                Đăng Ký
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>

@@ -25,9 +25,9 @@ export default function CartPage() {
       <div className="bg-cream min-h-screen">
         <EmptyState
           icon={ShoppingBag}
-          title="Your cart is empty"
-          description="Looks like you haven't added anything to your cart yet. Start exploring our menu to find delicious dishes!"
-          actionLabel="Browse Menu"
+          title="Giỏ hàng trống"
+          description="Bạn chưa thêm món nào vào giỏ hàng. Hãy khám phá thực đơn để tìm những món ăn ngon!"
+          actionLabel="Xem Thực Đơn"
           actionTo="/menu"
         />
       </div>
@@ -39,9 +39,9 @@ export default function CartPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-primary-light text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Shopping Cart</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Giỏ Hàng</h1>
           <p className="text-white/80">
-            {getTotalItems()} {getTotalItems() === 1 ? 'item' : 'items'} in your cart
+            {getTotalItems()} {getTotalItems() === 1 ? 'món' : 'món'} trong giỏ hàng
           </p>
         </div>
       </div>
@@ -56,7 +56,7 @@ export default function CartPage() {
               className="inline-flex items-center gap-2 text-primary hover:text-primary-light font-medium mb-4"
             >
               <ArrowLeft className="w-5 h-5" />
-              Continue Shopping
+              Tiếp Tục Mua Sắm
             </Link>
 
             {/* Items List */}
@@ -89,7 +89,7 @@ export default function CartPage() {
                             {item.name}
                           </h3>
                           <p className="text-sm text-brown-500 mt-1">
-                            Unit price: ${(item.price - item.discount).toFixed(2)}
+                            Đơn giá: {(item.price - item.discount).toLocaleString('vi-VN')}đ
                           </p>
                         </div>
                         <button
@@ -124,11 +124,11 @@ export default function CartPage() {
                         {/* Item Total */}
                         <div className="text-right">
                           <p className="text-xl font-bold text-primary">
-                            ${((item.price - item.discount) * item.quantity).toFixed(2)}
+                            {((item.price - item.discount) * item.quantity).toLocaleString('vi-VN')}đ
                           </p>
                           {item.discount > 0 && (
                             <p className="text-sm text-brown-400 line-through">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              {(item.price * item.quantity).toLocaleString('vi-VN')}đ
                             </p>
                           )}
                         </div>
@@ -138,7 +138,7 @@ export default function CartPage() {
                       {item.discount > 0 && (
                         <div className="mt-3">
                           <span className="inline-flex items-center gap-1 bg-success/10 text-success text-sm font-medium px-3 py-1 rounded-full">
-                            You save ${(item.discount * item.quantity).toFixed(2)}
+                            Tiết kiệm {(item.discount * item.quantity).toLocaleString('vi-VN')}đ
                           </span>
                         </div>
                       )}
@@ -155,7 +155,7 @@ export default function CartPage() {
                 className="text-error hover:text-red-600 font-medium flex items-center gap-2"
               >
                 <Trash2 className="w-4 h-4" />
-                Clear Cart
+                Xóa Giỏ Hàng
               </button>
             </div>
           </div>
@@ -163,30 +163,30 @@ export default function CartPage() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-md p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-brown-900 mb-6">Order Summary</h2>
+              <h2 className="text-xl font-bold text-brown-900 mb-6">Tóm Tắt Đơn Hàng</h2>
 
               <div className="space-y-4">
                 <div className="flex justify-between text-brown-700">
-                  <span>Subtotal ({getTotalItems()} items)</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+                  <span>Tạm tính ({getTotalItems()} món)</span>
+                  <span className="font-medium">{subtotal.toLocaleString('vi-VN')}đ</span>
                 </div>
 
                 {discount > 0 && (
                   <div className="flex justify-between text-success">
-                    <span>Discount</span>
-                    <span className="font-medium">-${discount.toFixed(2)}</span>
+                    <span>Giảm Giá</span>
+                    <span className="font-medium">-{discount.toLocaleString('vi-VN')}đ</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-brown-700">
-                  <span>Delivery Fee</span>
-                  <span className="font-medium">${deliveryFee.toFixed(2)}</span>
+                  <span>Phí Giao Hàng</span>
+                  <span className="font-medium">{deliveryFee.toLocaleString('vi-VN')}đ</span>
                 </div>
 
                 <div className="border-t border-brown-200 pt-4">
                   <div className="flex justify-between text-lg font-bold text-brown-900">
-                    <span>Total</span>
-                    <span className="text-primary">${total.toFixed(2)}</span>
+                    <span>Tổng Cộng</span>
+                    <span className="text-primary">{total.toLocaleString('vi-VN')}đ</span>
                   </div>
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default function CartPage() {
                 to="/checkout"
                 className="w-full btn-primary py-4 mt-6 text-center block rounded-xl font-bold text-lg"
               >
-                Proceed to Checkout
+                Thanh Toán
               </Link>
 
               {/* Continue Shopping */}
@@ -204,18 +204,18 @@ export default function CartPage() {
                 to="/menu"
                 className="w-full btn-secondary py-4 mt-3 text-center block rounded-xl"
               >
-                Continue Shopping
+                Tiếp Tục Mua Sắm
               </Link>
 
               {/* Support */}
               <div className="mt-6 p-4 bg-cream rounded-xl">
-                <p className="text-sm text-brown-600 mb-2">Need help with your order?</p>
+                <p className="text-sm text-brown-600 mb-2">Cần hỗ trợ về đơn hàng?</p>
                 <a
-                  href="tel:+84123123123"
+                  href="tel:+84123456789"
                   className="flex items-center gap-2 text-primary font-medium hover:text-primary-light"
                 >
                   <Phone className="w-4 h-4" />
-                  +84 123 123 123
+                  +84 123 456 789
                 </a>
               </div>
             </div>

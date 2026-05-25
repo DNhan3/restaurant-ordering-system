@@ -169,9 +169,9 @@ export default function MenuPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-primary-light text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Our Menu</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Thực Đơn</h1>
           <p className="text-white/80">
-            Discover our delicious Mexican dishes made with fresh ingredients
+            Khám phá các món ăn Việt Nam ngon được chế biến tươi mỗi ngày
           </p>
         </div>
       </div>
@@ -184,7 +184,7 @@ export default function MenuPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
             <input
               type="text"
-              placeholder="Search for dishes..."
+              placeholder="Tìm kiếm món ăn..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border-2 border-brown-200 focus:border-primary focus:outline-none transition-colors"
@@ -210,7 +210,7 @@ export default function MenuPage() {
               }`}
             >
               <SlidersHorizontal className="w-5 h-5" />
-              <span className="hidden sm:inline">Filters</span>
+              <span className="hidden sm:inline">Bộ Lọc</span>
               {hasActiveFilters && (
                 <span className="w-5 h-5 bg-white text-primary text-xs font-bold rounded-full flex items-center justify-center">
                   {selectedStatuses.length + (selectedCategory !== 'all' ? 1 : 0) + (selectedPriceRange !== 'all' ? 1 : 0) + (selectedType !== 'all' ? 1 : 0)}
@@ -239,13 +239,13 @@ export default function MenuPage() {
         {showFilters && (
           <div className="bg-white rounded-2xl p-6 mb-8 shadow-md animate-slide-up">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-semibold text-lg text-brown-900">Filters</h3>
+              <h3 className="font-semibold text-lg text-brown-900">Bộ Lọc</h3>
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
                   className="text-sm text-primary hover:text-primary-light font-medium"
                 >
-                  Clear all filters
+                  Xóa bộ lọc
                 </button>
               )}
             </div>
@@ -254,7 +254,7 @@ export default function MenuPage() {
               {/* Categories */}
               <div>
                 <label className="block text-sm font-medium text-brown-700 mb-3">
-                  Category
+                  Danh Mục
                 </label>
                 <div className="space-y-2">
                   {CATEGORIES.map((cat) => (
@@ -275,7 +275,7 @@ export default function MenuPage() {
               {/* Price Range */}
               <div>
                 <label className="block text-sm font-medium text-brown-700 mb-3">
-                  Price Range
+                  Khoảng Giá
                 </label>
                 <div className="space-y-2">
                   {PRICE_RANGES.map((range) => (
@@ -296,7 +296,7 @@ export default function MenuPage() {
               {/* Status */}
               <div>
                 <label className="block text-sm font-medium text-brown-700 mb-3">
-                  Special Offers
+                  Ưu Đãi Đặc Biệt
                 </label>
                 <div className="space-y-2">
                   {STATUS_OPTIONS.map((status) => (
@@ -316,7 +316,7 @@ export default function MenuPage() {
               {/* Type */}
               <div>
                 <label className="block text-sm font-medium text-brown-700 mb-3">
-                  Food Type
+                  Loại Món
                 </label>
                 <div className="space-y-2">
                   {TYPE_OPTIONS.map((type) => (
@@ -340,8 +340,8 @@ export default function MenuPage() {
         {/* Results Info */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-brown-500">
-            Showing <span className="font-semibold">{paginatedFoods.length}</span> of{' '}
-            <span className="font-semibold">{filteredFoods.length}</span> dishes
+            Hiển thị <span className="font-semibold">{paginatedFoods.length}</span> trong{' '}
+            <span className="font-semibold">{filteredFoods.length}</span> món
           </p>
         </div>
 
@@ -349,9 +349,9 @@ export default function MenuPage() {
         {filteredFoods.length === 0 ? (
           <EmptyState
             icon={Search}
-            title="No dishes found"
-            description="Try adjusting your filters or search query"
-            actionLabel="Clear Filters"
+            title="Không tìm thấy món"
+            description="Thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm"
+            actionLabel="Xóa Bộ Lọc"
             actionTo="/menu"
           />
         ) : (

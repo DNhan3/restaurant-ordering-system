@@ -1,11 +1,11 @@
 export const CATEGORIES = [
-  { id: 'all', name: 'All', icon: 'UtensilsCrossed' },
-  { id: 'taco', name: 'Taco', icon: 'CircleDot' },
-  { id: 'burrito', name: 'Burrito', icon: 'Wind' },
-  { id: 'nachos', name: 'Nachos', icon: 'Flame' },
-  { id: 'side', name: 'Side Food', icon: 'Salad' },
-  { id: 'dessert', name: 'Dessert', icon: 'Cookie' },
-  { id: 'drink', name: 'Drink', icon: 'GlassWater' },
+  { id: 'all', name: 'Tất Cả', icon: 'UtensilsCrossed' },
+  { id: 'pho', name: 'Phở & Bún', icon: 'CircleDot' },
+  { id: 'com', name: 'Cơm', icon: 'Wind' },
+  { id: 'banhmi', name: 'Bánh Mì', icon: 'Flame' },
+  { id: 'cuon', name: 'Cuốn & Khai Vị', icon: 'Salad' },
+  { id: 'douong', name: 'Đồ Uống', icon: 'GlassWater' },
+  { id: 'combo', name: 'Combo', icon: 'Gift' },
 ];
 
 export const FOOD_STATUS = {
@@ -26,13 +26,13 @@ export const ORDER_STATUS = {
 };
 
 export const ORDER_STATUS_LABELS = [
-  'Cancelled',
-  'Confirmed',
-  'Preparing',
-  'Checking',
-  'Delivering',
-  'Delivered',
-  'Completed',
+  'Đã Hủy',
+  'Đã Xác Nhận',
+  'Đang Chuẩn Bị',
+  'Đang Kiểm Tra',
+  'Đang Giao',
+  'Đã Giao',
+  'Hoàn Thành',
 ];
 
-export const DELIVERY_FEE = 15;
+export const DELIVERY_FEE = 15000; // 15,000 VND
