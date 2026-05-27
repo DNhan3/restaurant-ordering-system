@@ -11,7 +11,7 @@ export class AppService {
         '/cart',
         '/checkout',
         '/orders',
-        '/booking',
+        '/bookings',
         '/login',
         '/register',
         '/admin',

@@ -1,14 +1,14 @@
 import api from '../api/axios';
-import { API_URL } from '../config';
 
 export const bookingService = {
   create: async (data) => {
-    const response = await api.post(`${API_URL}/booking`, data);
+    console.log('Creating booking with data:', data);
+    const response = await api.post('/bookings', data);
     return response.data;
   },
 
   getAll: async () => {
-    const response = await api.get(`${API_URL}/booking`);
+    const response = await api.get('/bookings');
     return response.data;
   },
 };

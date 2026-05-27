@@ -1,15 +1,24 @@
 import { IsInt, IsString } from 'class-validator';
 
 export class CreateBookingDto {
+  @IsString()
+  book_name!: string;
+
   @IsInt()
-  userId!: number;
+  book_phone!: number;
+
+  @IsInt()
+  book_people!: number;
+
+  @IsInt()
+  book_tables!: number;
+
+  @IsInt()
+  user_id!: number | null;
 
   @IsString()
-  date!: string;
+  book_when!: string;
 
   @IsString()
-  time!: string;
-
-  @IsString()
-  phone!: string;
+  book_note!: string;
 }

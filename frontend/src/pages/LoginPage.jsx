@@ -53,16 +53,16 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password);
-      navigate('/');
+      
     } catch (error) {
       if ([400, 401, 404].includes(error?.response?.status)) {
         setGeneralError('Incorrect email or password');
       } else {
         setGeneralError('Login failed. Please try again.');
       }
-      navigate('/');
     } finally {
       setIsLoading(false);
+      navigate('/');
     }
   };
 

@@ -1,54 +1,58 @@
 import api from '../api/axios';
-import { API_URL } from '../config';
 
 export const orderService = {
+  checkout: async (data) => {
+    const response = await api.post('/checkout', data);
+    return response.data?.order ?? response.data;
+  },
+
   getOrders: async (userId) => {
-    const response = await api.get(`${API_URL}/billstatus/user/${userId}`);
+    const response = await api.get(`/bill-status/user/${userId}`);
     return response.data;
   },
 
   getAllOrders: async () => {
-    const response = await api.get(`${API_URL}/billstatus`);
+    const response = await api.get('/bill-status');
     return response.data;
   },
 
   getOrderDetails: async (billId) => {
-    const response = await api.get(`${API_URL}/billdetails/${billId}`);
+    const response = await api.get(`/bill-details/bill/${billId}`);
     return response.data;
   },
 
   getBillStatus: async (billId) => {
-    const response = await api.get(`${API_URL}/billstatus/bill/${billId}`);
+    const response = await api.get(`/bill-status/bill/${billId}`);
     return response.data;
   },
 
   createOrder: async (data) => {
-    const response = await api.post(`${API_URL}/billstatus`, data);
+    const response = await api.post('/bill-status', data);
     return response.data;
   },
 
   updateStatus: async (billId) => {
-    const response = await api.put(`${API_URL}/billstatus/${billId}`);
+    const response = await api.put(`/bill-status/${billId}`, {});
     return response.data;
   },
 
   updatePaid: async (billId) => {
-    const response = await api.put(`${API_URL}/billstatus/paid/${billId}`);
+    const response = await api.put(`/bill-status/paid/${billId}`);
     return response.data;
   },
 
   cancelOrder: async (billId) => {
-    const response = await api.put(`${API_URL}/billstatus/cancel/${billId}`);
+    const response = await api.put(`/bill-status/cancel/${billId}`);
     return response.data;
   },
 
   createBillDetail: async (data) => {
-    const response = await api.post(`${API_URL}/billdetails`, data);
+    const response = await api.post('/bill-details', data);
     return response.data;
   },
 
   getNewBillId: async () => {
-    const response = await api.get(`${API_URL}/billstatus/new`);
+    const response = await api.get('/bill-status/new');
     return response.data;
   },
 };

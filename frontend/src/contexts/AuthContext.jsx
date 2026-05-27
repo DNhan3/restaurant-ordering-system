@@ -41,7 +41,13 @@ export function AuthProvider({ children }) {
   });
   const [admin, setAdmin] = useState(() => {
     const saved = localStorage.getItem(ADMIN_STORAGE_KEY);
-    return saved || null;
+    if (!saved) return null;
+
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return { role: saved };
+    }
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,7 +65,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (admin) {
-      localStorage.setItem(ADMIN_STORAGE_KEY, admin);
+      localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(admin));
     } else {
       localStorage.removeItem(ADMIN_STORAGE_KEY);
     }
@@ -72,12 +78,10 @@ export function AuthProvider({ children }) {
       throw new Error('Registration failed');
     }
     setUser(normalizeUser(user));
-    console.log('Registration successful, user set to:', user);
     await login(userData.email, userData.password);
   };
 
   const login = async (email, password) => {
-    console.log('Attempting login with:', { email, password });
     const resp = await authService.login(email, password);
     const user = resp?.user ?? resp;
     if (!user) {
@@ -90,13 +94,14 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  const loginAsAdmin = (password) => {
-    const adminKey = '25082002';
-    if (password === adminKey) {
-      setAdmin('admin');
-      return true;
+  const loginAsAdmin = async (password) => {
+    const resp = await authService.adminLogin(password);
+    const admin = resp?.admin;
+    if (!admin) {
+      throw new Error('Invalid admin credentials');
     }
-    return false;
+    setAdmin(admin);
+    return true;
   };
 
   const logoutAdmin = () => {

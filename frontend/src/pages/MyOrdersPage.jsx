@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ClipboardList, ChevronDown, ChevronUp, MapPin, Phone, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { orderService, foodService } from '../services/api';
+import { orderService } from '../services/api';
 import { ORDER_STATUS_LABELS } from '../utils/constants';
 import EmptyState from '../components/common/EmptyState';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -39,14 +39,7 @@ export default function MyOrdersPage() {
 
     try {
       const details = await orderService.getOrderDetails(billId);
-      const foods = await foodService.getAll();
-      
-      const detailsWithFoods = details.map((detail) => {
-        const food = foods.find((f) => f.food_id === detail.food_id);
-        return { ...detail, food };
-      });
-
-      setOrderDetails((prev) => ({ ...prev, [billId]: detailsWithFoods }));
+      setOrderDetails((prev) => ({ ...prev, [billId]: details }));
     } catch (error) {
       console.error('Failed to load order details:', error);
     }

@@ -11,6 +11,11 @@ export class BillDetailsController {
     return this.billDetailsService.create(createBillDetailDto);
   }
 
+  @Get('bill/:billStatusId')
+  findByBillStatus(@Param('billStatusId', ParseIntPipe) billStatusId: number) {
+    return this.billDetailsService.findByBillStatus(billStatusId);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.billDetailsService.findOne(id);

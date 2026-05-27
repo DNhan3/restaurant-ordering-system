@@ -15,7 +15,6 @@ export default function TableBookingPage() {
     phone: user?.user_phone || '',
     people: '',
     tables: '1',
-    card: '',
     when: '',
     note: '',
   });
@@ -39,8 +38,8 @@ export default function TableBookingPage() {
 
     if (!formData.phone) {
       newErrors.phone = 'Phone number is required';
-    } else if (!formData.phone.startsWith('84') || formData.phone.length !== 11) {
-      newErrors.phone = 'Phone must start with 84 and be 11 digits';
+    } else if (!formData.phone.startsWith('0') || formData.phone.length !== 10) {
+      newErrors.phone = 'Phone must start with 0 and be 10 digits';
     }
 
     if (!formData.people) {
@@ -53,10 +52,6 @@ export default function TableBookingPage() {
       newErrors.tables = 'Number of tables is required';
     } else if (parseInt(formData.tables) < 1 || parseInt(formData.tables) > 50) {
       newErrors.tables = 'Number of tables must be between 1 and 50';
-    }
-
-    if (formData.card && (formData.card.length !== 10 || !/^\d+$/.test(formData.card))) {
-      newErrors.card = 'Card number must be 10 digits';
     }
 
     if (!formData.when) {
@@ -91,10 +86,9 @@ export default function TableBookingPage() {
         book_phone: parseInt(formData.phone),
         book_people: parseInt(formData.people),
         book_tables: parseInt(formData.tables),
-        user_id: formData.card ? parseInt(formData.card) : null,
+        user_id: user?.user_id || null,
         book_when: formData.when,
         book_note: formData.note,
-        book_birthday_promo: formData.isBirthday,
       };
 
       await bookingService.create(bookingData);
@@ -104,7 +98,6 @@ export default function TableBookingPage() {
         phone: '',
         people: '',
         tables: '1',
-        card: '',
         when: '',
         note: '',
       });
@@ -189,7 +182,7 @@ export default function TableBookingPage() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="84123456789"
+                        placeholder="0123456789"
                         className={`input-field ${errors.phone ? 'border-error' : ''}`}
                       />
                       {errors.phone && (
@@ -267,31 +260,6 @@ export default function TableBookingPage() {
                         {errors.when}
                       </p>
                     )}
-                  </div>
-
-                  {/* Membership Card */}
-                  <div>
-                    <label className="block text-sm font-medium text-brown-700 mb-2">
-                      Thẻ Thành Viên (Tùy Chọn)
-                    </label>
-                    <input
-                      type="text"
-                      name="card"
-                      value={formData.card}
-                      onChange={handleChange}
-                      placeholder="1234567890"
-                      maxLength={10}
-                      className={`input-field ${errors.card ? 'border-error' : ''}`}
-                    />
-                    {errors.card && (
-                      <p className="text-error text-sm mt-1 flex items-center gap-1">
-                        <AlertCircle className="w-4 h-4" />
-                        {errors.card}
-                      </p>
-                    )}
-                    <p className="text-xs text-brown-500 mt-1">
-                      Nhập số thẻ thành viên để hưởng ưu đãi đặc biệt
-                    </p>
                   </div>
 
                   {/* Special Requests */}

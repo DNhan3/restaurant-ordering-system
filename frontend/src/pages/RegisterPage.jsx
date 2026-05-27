@@ -47,8 +47,6 @@ export default function RegisterPage() {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
-    } else if (!/[!@#$%^&*]/.test(formData.password)) {
-      newErrors.password = 'Password must contain at least 1 special character';
     }
 
     if (!formData.confirmPassword) {
@@ -75,8 +73,6 @@ export default function RegisterPage() {
         password: formData.password,
       };
       await register(userData);
-      setSuccess(true);
-      navigate('/');
     } catch (error) {
       console.error('Registration failed:', error);
       if (error?.response?.status === 409) {
@@ -87,6 +83,8 @@ export default function RegisterPage() {
       }
     } finally {
       setIsLoading(false);
+      setSuccess(true);
+      navigate('/');
     }
   };
 

@@ -29,6 +29,11 @@ export class CartItemsController {
     return this.cartItemsService.findByUserAndFood(userId, foodId);
   }
 
+  @Get('user/:userId')
+  findByUser(@Param('userId', ParseIntPipe) userId: number) {
+    return this.cartItemsService.findByUser(userId);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.cartItemsService.findOne(id);
@@ -45,6 +50,11 @@ export class CartItemsController {
     @Param('foodId', ParseIntPipe) foodId: number,
   ) {
     return this.cartItemsService.removeByUserAndFood(userId, foodId);
+  }
+
+  @Delete('user/:userId')
+  removeByUser(@Param('userId', ParseIntPipe) userId: number) {
+    return this.cartItemsService.removeByUser(userId);
   }
 
   @Delete(':id')

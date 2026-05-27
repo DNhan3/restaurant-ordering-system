@@ -1,12 +1,14 @@
 import {
   Controller,
   Get,
+  Post,
   Put,
   Param,
   Body,
   ParseIntPipe,
 } from '@nestjs/common';
 import { BillStatusService } from '../services/bill-status.service.js';
+import { CreateBillStatusDto } from '../dto/create-bill-status.dto.js';
 import { UpdateBillStatusDto } from '../dto/update-bill-status.dto.js';
 
 @Controller('bill-status')
@@ -18,6 +20,11 @@ export class BillStatusController {
     return this.billStatusService.findAll();
   }
 
+  @Get('new')
+  getNextBillId() {
+    return this.billStatusService.getNextBillId();
+  }
+
   @Get('user/:id')
   findByUser(@Param('id', ParseIntPipe) id: number) {
     return this.billStatusService.findByUser(id);
@@ -26,6 +33,11 @@ export class BillStatusController {
   @Get('bill/:id')
   findByBill(@Param('id', ParseIntPipe) id: number) {
     return this.billStatusService.findByBill(id);
+  }
+
+  @Post()
+  create(@Body() createBillStatusDto: CreateBillStatusDto) {
+    return this.billStatusService.create(createBillStatusDto);
   }
 
   @Put('paid/:id')

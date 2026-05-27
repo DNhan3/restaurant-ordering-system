@@ -1,7 +1,10 @@
-import { Link } from 'react-router-dom';
-import { CheckCircle, ArrowRight, Home, ShoppingBag } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { CheckCircle, Home, ShoppingBag } from 'lucide-react';
 
 export default function OrderSuccessPage() {
+  const location = useLocation();
+  const orderId = location.state?.orderId;
+
   return (
     <div className="bg-cream min-h-[70vh] flex items-center justify-center px-4">
       <div className="max-w-lg w-full text-center">
@@ -29,7 +32,9 @@ export default function OrderSuccessPage() {
           <div className="space-y-3 text-left">
             <div className="flex justify-between items-center pb-3 border-b border-brown-100">
               <span className="text-brown-500">Mã Đơn Hàng</span>
-              <span className="font-semibold text-brown-900">#{Math.floor(Math.random() * 9000) + 1000}</span>
+              <span className="font-semibold text-brown-900">
+                {orderId ? `#${orderId}` : 'Processing'}
+              </span>
             </div>
             <div className="flex justify-between items-center pb-3 border-b border-brown-100">
               <span className="text-brown-500">Dự Kiến Giao Hàng</span>

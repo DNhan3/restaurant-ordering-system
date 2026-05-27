@@ -8,8 +8,9 @@ export default function AdminLoginPage() {
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -18,12 +19,15 @@ export default function AdminLoginPage() {
       return;
     }
 
-    const success = loginAsAdmin(password);
-    if (!success) {
-      setError('Invalid admin password');
-      return;
+    try {
+      setIsSubmitting(true);
+      await loginAsAdmin(password);
+      navigate('/admin/dashboard');
+    } catch (error) {
+      setError(error.response?.data?.message || 'Invalid admin password');
+    } finally {
+      setIsSubmitting(false);
     }
-    navigate('/admin/dashboard');
   };
 
   return (
@@ -66,9 +70,10 @@ export default function AdminLoginPage() {
 
             <button
               type="submit"
-              className="w-full btn-primary py-4"
+              disabled={isSubmitting}
+              className="w-full btn-primary py-4 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Access Admin Dashboard
+              {isSubmitting ? 'Checking...' : 'Access Admin Dashboard'}
             </button>
           </form>
         </div>

@@ -5,6 +5,7 @@ import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import EmptyState from '../components/common/EmptyState';
 import { DELIVERY_FEE } from '../utils/constants';
+import { orderService } from '../services/api';
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -96,12 +97,25 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
-      // Simulate order processing
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const order = await orderService.checkout({
+        userId: user.user_id,
+        phone: formData.phone,
+        address: formData.address,
+        paymentMethod: formData.paymentMethod,
+        subtotal,
+        discount,
+        deliveryFee,
+        total,
+        paid: formData.paymentMethod === 'card',
+        items: items.map((item) => ({
+          foodId: item.foodId,
+          quantity: item.quantity,
+          price: item.price - item.discount,
+        })),
+      });
 
-      // Clear cart and redirect
       clearCart();
-      navigate('/order-success');
+      navigate('/order-success', { state: { orderId: order?.bill_id } });
     } catch (error) {
       console.error('Checkout failed:', error);
       setErrors({ submit: 'Failed to process order. Please try again.' });
