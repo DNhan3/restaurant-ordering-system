@@ -9,12 +9,12 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { CartItemsService } from '../services/cart-items.service.js';
-import { CreateCartItemDto } from '../dto/create-cart-item.dto.js';
-import { UpdateCartItemDto } from '../dto/update-cart-item.dto.js';
+import { CreateCartItemDto } from '../dto/create.dto.js';
+import { UpdateCartItemDto } from '../dto/update.dto.js';
 
 @Controller('cart-items')
 export class CartItemsController {
-  constructor(private readonly cartItemsService: CartItemsService) {}
+  constructor(private readonly cartItemsService: CartItemsService) { }
 
   @Post()
   create(@Body() createCartItemDto: CreateCartItemDto) {

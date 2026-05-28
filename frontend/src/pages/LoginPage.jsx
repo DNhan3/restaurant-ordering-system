@@ -51,8 +51,13 @@ export default function LoginPage() {
     setGeneralError('');
 
     try {
-      await login(formData.email, formData.password);
-      navigate('/');
+      const user = await login(formData.email, formData.password);
+      if (user?.role === 'shipper') {
+        localStorage.setItem('qfood_shipper', JSON.stringify(user));
+        navigate('/shipper/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       if ([400, 401, 404].includes(error?.response?.status)) {
         setGeneralError('Incorrect email or password');

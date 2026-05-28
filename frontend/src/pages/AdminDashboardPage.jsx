@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { billingService } from '../services/api';
+import { adminService, billingService } from '../services/api';
 import { BILL_STATUS_LABELS } from '../utils/constants';
 import AdminDashboardView from '../views/AdminDashboardView';
 
@@ -15,6 +15,8 @@ const BILL_STATUS_OPTIONS = [
   { value: 6, label: BILL_STATUS_LABELS[6], apiStatus: 'completed' },
 ];
 
+const INITIAL_SHIPPER_FORM = { email: '', name: '', password: '' };
+
 export default function AdminDashboardPage() {
   const { admin, logoutAdmin } = useAuth();
   const navigate = useNavigate();
@@ -25,6 +27,12 @@ export default function AdminDashboardPage() {
   const [billDetails, setBillDetails] = useState([]);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [savingBillId, setSavingBillId] = useState(null);
+  const [shippers, setShippers] = useState([]);
+  const [showShipperForm, setShowShipperForm] = useState(false);
+  const [shipperForm, setShipperForm] = useState(INITIAL_SHIPPER_FORM);
+  const [shipperError, setShipperError] = useState('');
+  const [shipperSuccess, setShipperSuccess] = useState('');
+  const [isCreatingShipper, setIsCreatingShipper] = useState(false);
 
   const loadBills = useCallback(async () => {
     try {
@@ -47,9 +55,18 @@ export default function AdminDashboardPage() {
     }
   }, []);
 
+  const loadShippers = useCallback(async () => {
+    try {
+      const data = await adminService.getShippers();
+      setShippers(data);
+    } catch (error) {
+      console.error('Failed to load shippers:', error);
+    }
+  }, []);
+
   const refreshDashboard = useCallback(async () => {
-    await Promise.all([loadBills(), loadBillingSummary()]);
-  }, [loadBills, loadBillingSummary]);
+    await Promise.all([loadBills(), loadBillingSummary(), loadShippers()]);
+  }, [loadBills, loadBillingSummary, loadShippers]);
 
   useEffect(() => {
     if (!admin) {
@@ -136,6 +153,40 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleToggleShipperForm = () => {
+    setShowShipperForm((current) => !current);
+    setShipperError('');
+    setShipperSuccess('');
+  };
+
+  const handleShipperFormChange = (field, value) => {
+    setShipperForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleCreateShipper = async (event) => {
+    event.preventDefault();
+    setShipperError('');
+    setShipperSuccess('');
+
+    if (!shipperForm.email || !shipperForm.name || !shipperForm.password) {
+      setShipperError('Vui lòng điền đầy đủ thông tin');
+      return;
+    }
+
+    try {
+      setIsCreatingShipper(true);
+      await adminService.createShipper(shipperForm);
+      setShipperSuccess(`Đã tạo tài khoản shipper: ${shipperForm.email}`);
+      setShipperForm(INITIAL_SHIPPER_FORM);
+      setShowShipperForm(false);
+      await loadShippers();
+    } catch (error) {
+      setShipperError(error.response?.data?.message || 'Không thể tạo tài khoản');
+    } finally {
+      setIsCreatingShipper(false);
+    }
+  };
+
   const handleLogout = () => {
     logoutAdmin();
     navigate('/');
@@ -155,6 +206,12 @@ export default function AdminDashboardPage() {
       isLoadingDetails={isLoadingDetails}
       savingBillId={savingBillId}
       billStatusOptions={BILL_STATUS_OPTIONS}
+      shippers={shippers}
+      showShipperForm={showShipperForm}
+      shipperForm={shipperForm}
+      shipperError={shipperError}
+      shipperSuccess={shipperSuccess}
+      isCreatingShipper={isCreatingShipper}
       onRefresh={refreshDashboard}
       onLogout={handleLogout}
       onViewBill={handleViewBill}
@@ -162,6 +219,9 @@ export default function AdminDashboardPage() {
       onNextStatus={handleNextStatus}
       onSetStatus={handleSetStatus}
       onSetPaid={handleSetPaid}
+      onToggleShipperForm={handleToggleShipperForm}
+      onShipperFormChange={handleShipperFormChange}
+      onCreateShipper={handleCreateShipper}
     />
   );
 }
