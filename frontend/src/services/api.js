@@ -5,4 +5,7 @@ export * from './bookingService';
 export * from './userService';
 export * from './billingService';
 export * from './shipperService';
+<<<<<<< HEAD
 export * from './adminService';
+=======
+>>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
