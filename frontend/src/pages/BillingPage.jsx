@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Receipt, ChevronDown, ChevronUp, MapPin, Phone, Clock } from 'lucide-react';
+import { Receipt, ChevronDown, ChevronUp, MapPin, Phone, Clock, XCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { billingService } from '../services/api';
 import { ORDER_STATUS_LABELS } from '../utils/constants';
@@ -13,6 +13,7 @@ export default function BillingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [expandedBill, setExpandedBill] = useState(null);
   const [billDetails, setBillDetails] = useState({});
+  const [cancelingBillId, setCancelingBillId] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -51,6 +52,31 @@ export default function BillingPage() {
     } else {
       setExpandedBill(bill.bill_id);
       await loadBillDetails(bill.bill_id);
+    }
+  };
+
+  const canCancelBill = (status) => status > 0 && status < 4;
+
+  const handleCancelBill = async (event, bill) => {
+    event.stopPropagation();
+
+    if (!canCancelBill(bill.bill_status)) return;
+
+    const shouldCancel = window.confirm(`Cancel bill #${bill.bill_id}?`);
+    if (!shouldCancel) return;
+
+    try {
+      setCancelingBillId(bill.bill_id);
+      const updated = await billingService.cancelBill(bill.bill_id);
+      setBills((prev) =>
+        prev.map((currentBill) =>
+          currentBill.bill_id === bill.bill_id ? updated : currentBill,
+        ),
+      );
+    } catch (error) {
+      console.error('Failed to cancel bill:', error);
+    } finally {
+      setCancelingBillId(null);
     }
   };
 
@@ -175,6 +201,17 @@ export default function BillingPage() {
                         <p className="text-xl font-bold text-primary">${bill.bill_total}</p>
                         <p className="text-sm text-brown-500">Total</p>
                       </div>
+                      {canCancelBill(bill.bill_status) && (
+                        <button
+                          type="button"
+                          onClick={(event) => handleCancelBill(event, bill)}
+                          disabled={cancelingBillId === bill.bill_id}
+                          className="inline-flex items-center gap-1 rounded-lg border border-error/30 px-3 py-2 text-sm font-medium text-error hover:bg-error/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <XCircle className="w-4 h-4" />
+                          {cancelingBillId === bill.bill_id ? 'Cancelling' : 'Cancel'}
+                        </button>
+                      )}
                       <Link
                         to={`/orders/${bill.bill_id}/receipt`}
                         onClick={(event) => event.stopPropagation()}
