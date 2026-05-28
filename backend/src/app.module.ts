@@ -13,6 +13,7 @@ import { AdminModule } from './modules/admin.module.js';
 import { AuthModule } from './modules/auth.module.js';
 import { CartModule } from './modules/cart.module.js';
 import { BillingModule } from './modules/billing.module.js';
+import { ShipperModule } from './modules/shipper.module.js';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { BillingModule } from './modules/billing.module.js';
     AuthModule,
     CartModule,
     BillingModule,
+    ShipperModule,
   ],
   controllers: [AppController],
   providers: [AppService],
