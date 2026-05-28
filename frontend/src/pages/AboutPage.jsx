@@ -5,16 +5,19 @@ const TEAM_PHOTOS = [
   {
     name: 'Chef. Đức Nhân',
     role: 'Bếp Trưởng',
-    image: '',
+    studentID: 'ITCSIU24063',
+    image: 'src/assets/DNhan.jpg',
   },
   {
     name: 'Chef. Nguyên Trung',
     role: 'Chuyên Gia Phở',
+    studentID: 'SV002',
     image: '',
   },
   {
     name: 'Chef. Triệu Hưng',
     role: 'Nghệ Nhân Bánh Mì',
+    studentID: 'SV003',
     image: '',
   },
 ];
@@ -156,7 +159,7 @@ export default function AboutPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {TEAM_PHOTOS.map((member, index) => (
               <div key={index} className="text-center group">
-                <div className="relative mb-4 overflow-hidden rounded-2xl">
+                <div className="relative mb-4 overflow-hidden rounded-2xl max-w-xs mx-auto">
                   <img
                     src={member.image}
                     alt={member.name}
@@ -164,6 +167,7 @@ export default function AboutPage() {
                   />
                 </div>
                 <h3 className="font-semibold text-lg text-brown-900">{member.name}</h3>
+                <p className="text-brown-700 text-md mt-1">{member.studentID}</p>
                 <p className="text-primary font-medium">{member.role}</p>
               </div>
             ))}
