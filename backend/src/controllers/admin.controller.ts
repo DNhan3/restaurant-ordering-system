@@ -104,4 +104,14 @@ export class AdminController {
       imageUrl,
     };
   }
+
+  @Post('shippers')
+  createShipper(@Body() body: { email: string; name: string; password: string }) {
+    return this.adminService.createShipper(body);
+  }
+
+  @Get('shippers')
+  getShippers() {
+    return this.adminService.getShippers();
+  }
 }

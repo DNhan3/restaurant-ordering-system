@@ -33,6 +33,10 @@ export class UpdateBillStatusDto {
   @IsOptional()
   @IsBoolean()
   paid?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  shipperId?: number | null;
 }
 
 export class UpdateCartItemDto {

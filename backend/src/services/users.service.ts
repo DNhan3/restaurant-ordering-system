@@ -54,4 +54,9 @@ export class UsersService {
     });
     return this.userRepository.save(user);
   }
+
+  async findByRole(role: string): Promise<Omit<User, 'password'>[]> {
+    const users = await this.userRepository.findBy({ role });
+    return users.map(({ password: _pw, ...rest }) => rest as Omit<User, 'password'>);
+  }
 }
