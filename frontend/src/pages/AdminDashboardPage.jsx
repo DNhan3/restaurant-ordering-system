@@ -19,6 +19,8 @@ const BILL_STATUS_OPTIONS = [
   { value: 6, label: BILL_STATUS_LABELS[6], apiStatus: 'completed' },
 ];
 
+const canAdvanceStatus = (status) => status > 0 && status < 6;
+
 export default function AdminDashboardPage() {
   const { admin, logoutAdmin } = useAuth();
   const navigate = useNavigate();
@@ -75,9 +77,15 @@ export default function AdminDashboardPage() {
     await loadBillDetails(bill.bill_id);
   };
 
-  const handleNextStatus = async (billId) => {
+  const handleNextStatus = async (bill) => {
+    const nextOption = BILL_STATUS_OPTIONS.find(
+      (status) => status.value === bill.bill_status + 1,
+    );
+
+    if (!nextOption) return;
+
     try {
-      await updateBill(billId, {} );
+      await updateBill(bill.bill_id, { status: nextOption.apiStatus });
     } catch (error) {
       console.error('Failed to update status:', error);
     }
@@ -395,9 +403,27 @@ export default function AdminDashboardPage() {
                             </td>
                             <td className="px-4 py-3 font-semibold text-primary">${bill.bill_total}</td>
                             <td className="px-4 py-3">
-                              <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.bill_status)}`}>
-                                {BILL_STATUS_LABELS[bill.bill_status] || 'Unknown'}
-                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.bill_status)}`}>
+                                  {BILL_STATUS_LABELS[bill.bill_status] || 'Unknown'}
+                                </span>
+                                {canAdvanceStatus(bill.bill_status) && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleNextStatus(bill)}
+                                    disabled={savingBillId === bill.bill_id}
+                                    title={`Move to ${BILL_STATUS_LABELS[bill.bill_status + 1]}`}
+                                    aria-label={`Move bill #${bill.bill_id} to ${BILL_STATUS_LABELS[bill.bill_status + 1]}`}
+                                    className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-success/30 text-success hover:bg-success/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                  >
+                                    {savingBillId === bill.bill_id ? (
+                                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                    ) : (
+                                      <ArrowRight className="h-3.5 w-3.5" />
+                                    )}
+                                  </button>
+                                )}
+                              </div>
                               {bill.bill_paid === 'true' && (
                                 <span className="ml-2 inline-flex items-center gap-1 text-xs text-success">
                                   <DollarSign className="w-3 h-3" />
@@ -413,19 +439,6 @@ export default function AdminDashboardPage() {
                                 >
                                   View Details
                                 </button>
-                                {bill.bill_status > 0 && bill.bill_status < 6 && (
-                                  <button
-                                    onClick={() => handleNextStatus(bill.bill_id)}
-                                    disabled={savingBillId === bill.bill_id}
-                                    className="text-sm text-success hover:underline flex items-center gap-1"
-                                  >
-                                    <Check className="w-3 h-3" />
-                                    {BILL_STATUS_LABELS[bill.bill_status + 1]}
-                                  </button>
-                                )}
-                                {(bill.bill_status === 0 || bill.bill_status >= 6) && (
-                                  <span className="text-sm text-brown-400">No next state</span>
-                                )}
                               </div>
                             </td>
                           </tr>
