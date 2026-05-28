@@ -30,10 +30,11 @@ export default function RegisterPage() {
 
   const validateForm = () => {
     const newErrors = {};
+    const normalizedName = formData.name.trim().replace(/\s+/g, ' ');
 
-    if (!formData.name) {
+    if (!normalizedName) {
       newErrors.name = 'Name is required';
-    } else if (!/^[A-Za-z\s]+$/.test(formData.name.replace(/\s/g, ''))) {
+    } else if (!/^[A-Za-z]+(?:\s+[A-Za-z]+)*$/.test(normalizedName)) {
       newErrors.name = 'Name can only contain letters';
     }
 
@@ -68,11 +69,13 @@ export default function RegisterPage() {
 
     try {
       const userData = {
-        name: formData.name,
+        name: formData.name.trim().replace(/\s+/g, ' '),
         email: formData.email,
         password: formData.password,
       };
       await register(userData);
+      setSuccess(true);
+      navigate('/');
     } catch (error) {
       console.error('Registration failed:', error);
       if (error?.response?.status === 409) {
@@ -83,8 +86,6 @@ export default function RegisterPage() {
       }
     } finally {
       setIsLoading(false);
-      setSuccess(true);
-      navigate('/');
     }
   };
 
@@ -126,7 +127,7 @@ export default function RegisterPage() {
             {/* Name */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Full Name
+                User Name
               </label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />

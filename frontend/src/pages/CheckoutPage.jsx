@@ -5,7 +5,7 @@ import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import EmptyState from '../components/common/EmptyState';
 import { DELIVERY_FEE } from '../utils/constants';
-import { orderService } from '../services/api';
+import { billingService } from '../services/api';
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -46,8 +46,8 @@ export default function CheckoutPage() {
     // Phone validation
     if (!formData.phone) {
       newErrors.phone = 'Phone number is required';
-    } else if (!formData.phone.startsWith('84') || formData.phone.length !== 11) {
-      newErrors.phone = 'Phone must start with 84 and be 11 digits';
+    } else if (!formData.phone.startsWith('0') || formData.phone.length !== 10) {
+      newErrors.phone = 'Phone must start with 0 and be 10 digits';
     }
 
     // Address validation
@@ -97,7 +97,7 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
-      const order = await orderService.checkout({
+      const order = await billingService.checkout({
         userId: user.user_id,
         phone: formData.phone,
         address: formData.address,

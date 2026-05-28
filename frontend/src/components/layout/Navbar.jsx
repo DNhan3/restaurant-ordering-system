@@ -122,11 +122,11 @@ export default function Navbar() {
                       </p>
                     </div>
                     <Link
-                      to="/my-orders"
+                      to="/billing"
                       className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
                     >
                       <ClipboardList className="w-4 h-4" />
-                      Đơn Hàng
+                      Billing
                     </Link>
                     <button
                       onClick={handleLogout}

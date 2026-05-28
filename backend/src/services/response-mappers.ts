@@ -69,6 +69,7 @@ export const mapBillStatusResponse = (
     bill_delivery: toNumber(billStatus.deliveryFee),
     bill_phone: billStatus.phone ?? '',
     bill_address: billStatus.address ?? '',
+    bill_payment_method: billStatus.paymentMethod ?? 'cash',
     bill_when: billStatus.createdAt,
     bill_details: details,
     user: billStatus.user,

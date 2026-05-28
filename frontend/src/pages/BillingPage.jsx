@@ -1,56 +1,56 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ClipboardList, ChevronDown, ChevronUp, MapPin, Phone, Clock } from 'lucide-react';
+import { Receipt, ChevronDown, ChevronUp, MapPin, Phone, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { orderService } from '../services/api';
+import { billingService } from '../services/api';
 import { ORDER_STATUS_LABELS } from '../utils/constants';
 import EmptyState from '../components/common/EmptyState';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
-export default function MyOrdersPage() {
+export default function BillingPage() {
   const { user } = useAuth();
-  const [orders, setOrders] = useState([]);
+  const [bills, setBills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [expandedOrder, setExpandedOrder] = useState(null);
-  const [orderDetails, setOrderDetails] = useState({});
+  const [expandedBill, setExpandedBill] = useState(null);
+  const [billDetails, setBillDetails] = useState({});
 
   useEffect(() => {
     if (user) {
-      loadOrders();
+      loadBills();
     } else {
       setIsLoading(false);
     }
   }, [user]);
 
-  const loadOrders = async () => {
+  const loadBills = async () => {
     try {
       setIsLoading(true);
-      const data = await orderService.getOrders(user.user_id);
-      setOrders(data);
+      const data = await billingService.getUserBills(user.user_id);
+      setBills(data);
     } catch (error) {
-      console.error('Failed to load orders:', error);
+      console.error('Failed to load bills:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadOrderDetails = async (billId) => {
-    if (orderDetails[billId]) return;
+  const loadBillDetails = async (billId) => {
+    if (billDetails[billId]) return;
 
     try {
-      const details = await orderService.getOrderDetails(billId);
-      setOrderDetails((prev) => ({ ...prev, [billId]: details }));
+      const details = await billingService.getBillDetails(billId);
+      setBillDetails((prev) => ({ ...prev, [billId]: details }));
     } catch (error) {
-      console.error('Failed to load order details:', error);
+      console.error('Failed to load bill details:', error);
     }
   };
 
-  const toggleOrderDetails = async (order) => {
-    if (expandedOrder === order.bill_id) {
-      setExpandedOrder(null);
+  const toggleBillDetails = async (bill) => {
+    if (expandedBill === bill.bill_id) {
+      setExpandedBill(null);
     } else {
-      setExpandedOrder(order.bill_id);
-      await loadOrderDetails(order.bill_id);
+      setExpandedBill(bill.bill_id);
+      await loadBillDetails(bill.bill_id);
     }
   };
 
@@ -82,7 +82,7 @@ export default function MyOrdersPage() {
       <div className="bg-cream min-h-screen">
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <h2 className="text-2xl font-bold text-brown-900 mb-4">Please Login</h2>
-          <p className="text-brown-500 mb-6">You need to login to view your orders</p>
+          <p className="text-brown-500 mb-6">You need to login to view billing.</p>
           <Link to="/login" className="btn-primary">
             Login
           </Link>
@@ -99,13 +99,13 @@ export default function MyOrdersPage() {
     );
   }
 
-  if (orders.length === 0) {
+  if (bills.length === 0) {
     return (
       <div className="bg-cream min-h-screen">
         <EmptyState
-          icon={ClipboardList}
-          title="No orders yet"
-          description="You haven't placed any orders yet. Start exploring our menu to find delicious dishes!"
+          icon={Receipt}
+          title="No bills yet"
+          description="Your checkout history and receipts will appear here."
           actionLabel="Browse Menu"
           actionTo="/menu"
         />
@@ -118,37 +118,37 @@ export default function MyOrdersPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-primary-light text-white py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">My Orders</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Billing</h1>
           <p className="text-white/80">
-            Track and manage your orders
+            Track checkout status, payment, and receipts
           </p>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-4">
-          {orders.map((order) => {
-            const isExpanded = expandedOrder === order.bill_id;
-            const steps = getProgressSteps(order.bill_status);
-            const details = orderDetails[order.bill_id] || [];
+          {bills.map((bill) => {
+            const isExpanded = expandedBill === bill.bill_id;
+            const steps = getProgressSteps(bill.bill_status);
+            const details = billDetails[bill.bill_id] || [];
 
             return (
-              <div key={order.bill_id} className="bg-white rounded-2xl shadow-md overflow-hidden">
-                {/* Order Header */}
+              <div key={bill.bill_id} className="bg-white rounded-2xl shadow-md overflow-hidden">
+                {/* Bill Header */}
                 <div
                   className="p-4 md:p-6 cursor-pointer hover:bg-cream/50 transition-colors"
-                  onClick={() => toggleOrderDetails(order)}
+                  onClick={() => toggleBillDetails(bill)}
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="font-bold text-lg text-brown-900">
-                          Order #{order.bill_id}
+                          Bill #{bill.bill_id}
                         </h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.bill_status)}`}>
-                          {ORDER_STATUS_LABELS[order.bill_status]}
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.bill_status)}`}>
+                          {ORDER_STATUS_LABELS[bill.bill_status]}
                         </span>
-                        {order.bill_paid === 'true' && (
+                        {bill.bill_paid === 'true' && (
                           <span className="px-3 py-1 bg-success/10 text-success rounded-full text-xs font-medium">
                             Paid
                           </span>
@@ -157,24 +157,32 @@ export default function MyOrdersPage() {
                       <div className="flex flex-wrap items-center gap-4 text-sm text-brown-500">
                         <span className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
-                          {new Date(order.bill_when).toLocaleString()}
+                          {new Date(bill.bill_when).toLocaleString()}
                         </span>
                         <span className="flex items-center gap-1">
                           <MapPin className="w-4 h-4" />
-                          {order.bill_address}
+                          {bill.bill_address}
                         </span>
                         <span className="flex items-center gap-1">
                           <Phone className="w-4 h-4" />
-                          {order.bill_phone}
+                          {bill.bill_phone}
                         </span>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="text-xl font-bold text-primary">${order.bill_total}</p>
+                        <p className="text-xl font-bold text-primary">${bill.bill_total}</p>
                         <p className="text-sm text-brown-500">Total</p>
                       </div>
+                      <Link
+                        to={`/orders/${bill.bill_id}/receipt`}
+                        onClick={(event) => event.stopPropagation()}
+                        className="hidden sm:inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                      >
+                          <Receipt className="w-4 h-4" />
+                          Receipt
+                        </Link>
                       {isExpanded ? (
                         <ChevronUp className="w-5 h-5 text-brown-400" />
                       ) : (
@@ -184,7 +192,7 @@ export default function MyOrdersPage() {
                   </div>
 
                   {/* Progress Steps */}
-                  {order.bill_status > 0 && order.bill_status < 6 && (
+                  {bill.bill_status > 0 && bill.bill_status < 6 && (
                     <div className="mt-4 pt-4 border-t border-brown-100">
                       <div className="flex items-center justify-between">
                         {steps.map((step, index) => (
@@ -220,12 +228,12 @@ export default function MyOrdersPage() {
                   )}
                 </div>
 
-                {/* Order Details */}
+                {/* Bill Details */}
                 {isExpanded && (
                   <div className="border-t border-brown-100 bg-cream/30 p-4 md:p-6 animate-fade-in">
-                    {orderDetails[order.bill_id] ? (
+                    {billDetails[bill.bill_id] ? (
                       <div className="space-y-4">
-                        <h4 className="font-semibold text-brown-900">Order Items</h4>
+                        <h4 className="font-semibold text-brown-900">Bill Items</h4>
                         <div className="grid gap-3">
                           {details.map((item, index) => (
                             <div key={index} className="flex items-center gap-4 bg-white p-3 rounded-xl">
@@ -259,15 +267,15 @@ export default function MyOrdersPage() {
                         <div className="border-t border-brown-100 pt-4 mt-4">
                           <div className="flex justify-between text-sm mb-2">
                             <span className="text-brown-500">Discount</span>
-                            <span className="text-success">-${order.bill_discount}</span>
+                            <span className="text-success">-${bill.bill_discount}</span>
                           </div>
                           <div className="flex justify-between text-sm mb-2">
                             <span className="text-brown-500">Delivery Fee</span>
-                            <span className="text-brown-900">${order.bill_delivery}</span>
+                            <span className="text-brown-900">${bill.bill_delivery}</span>
                           </div>
                           <div className="flex justify-between font-bold text-lg">
-                            <span>Total</span>
-                            <span className="text-primary">${order.bill_total}</span>
+                            <span>Bill Total</span>
+                            <span className="text-primary">${bill.bill_total}</span>
                           </div>
                         </div>
                       </div>

@@ -143,7 +143,7 @@ export default function HomePage() {
             <div className="relative animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <div className="relative z-10">
                 <img
-                  src="https://images.unsplash.com/photo-1583224964978-2257b1c8f725?w=800&h=800&fit=crop"
+                  src="https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=600&h=600&fit=crop"
                   alt="Phở Bò Việt Nam"
                   className="w-full max-w-lg mx-auto rounded-3xl shadow-2xl"
                 />

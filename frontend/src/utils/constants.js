@@ -35,4 +35,6 @@ export const ORDER_STATUS_LABELS = [
   'Hoàn Thành',
 ];
 
+export const BILL_STATUS_LABELS = ORDER_STATUS_LABELS;
+
 export const DELIVERY_FEE = 15000; // 15,000 VND

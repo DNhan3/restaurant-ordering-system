@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { CheckCircle, Home, ShoppingBag } from 'lucide-react';
+import { CheckCircle, Home, Receipt, ShoppingBag } from 'lucide-react';
 
 export default function OrderSuccessPage() {
   const location = useLocation();
@@ -59,6 +59,15 @@ export default function OrderSuccessPage() {
             <Home className="w-5 h-5" />
             Về Trang Chủ
           </Link>
+          {orderId && (
+            <Link
+              to={`/orders/${orderId}/receipt`}
+              className="flex-1 btn-secondary flex items-center justify-center gap-2"
+            >
+              <Receipt className="w-5 h-5" />
+              View Receipt
+            </Link>
+          )}
           <Link
             to="/menu"
             className="flex-1 btn-primary flex items-center justify-center gap-2"

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, ChefHat } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { authService } from '../services/api';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -53,7 +52,7 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password);
-      
+      navigate('/');
     } catch (error) {
       if ([400, 401, 404].includes(error?.response?.status)) {
         setGeneralError('Incorrect email or password');
@@ -62,7 +61,6 @@ export default function LoginPage() {
       }
     } finally {
       setIsLoading(false);
-      navigate('/');
     }
   };
 

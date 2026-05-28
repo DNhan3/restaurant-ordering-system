@@ -82,6 +82,7 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (email, password) => {
+    setUser(null);
     const resp = await authService.login(email, password);
     const user = resp?.user ?? resp;
     if (!user) {
@@ -95,6 +96,7 @@ export function AuthProvider({ children }) {
   };
 
   const loginAsAdmin = async (password) => {
+    setAdmin(null);
     const resp = await authService.adminLogin(password);
     const admin = resp?.admin;
     if (!admin) {

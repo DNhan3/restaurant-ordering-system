@@ -10,11 +10,13 @@ import TableBookingPage from './pages/TableBookingPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
-import MyOrdersPage from './pages/MyOrdersPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import AdminDishesPage from './pages/AdminDishesPage';
+import BillingPage from './pages/BillingPage';
+import ReceiptPage from './pages/ReceiptPage';
 
 function App() {
   return (
@@ -32,7 +34,10 @@ function App() {
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/order-success" element={<OrderSuccessPage />} />
-              <Route path="/my-orders" element={<MyOrdersPage />} />
+              <Route path="/my-orders" element={<Navigate to="/billing" replace />} />
+              <Route path="/orders/:billId/receipt" element={<ReceiptPage />} />
+              <Route path="/billing" element={<BillingPage />} />
+              <Route path="/billing/:billId" element={<ReceiptPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Route>
@@ -40,6 +45,7 @@ function App() {
             {/* Admin routes */}
             <Route path="/admin" element={<AdminLoginPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+            <Route path="/admin/dishes" element={<AdminDishesPage />} />
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

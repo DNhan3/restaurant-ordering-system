@@ -12,7 +12,7 @@ import { BillStatusModule } from './modules/bill-status.module.js';
 import { AdminModule } from './modules/admin.module.js';
 import { AuthModule } from './modules/auth.module.js';
 import { CartModule } from './modules/cart.module.js';
-import { OrdersModule } from './modules/orders.module.js';
+import { BillingModule } from './modules/billing.module.js';
 
 @Module({
   imports: [
@@ -40,7 +40,7 @@ import { OrdersModule } from './modules/orders.module.js';
     AdminModule,
     AuthModule,
     CartModule,
-    OrdersModule,
+    BillingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
