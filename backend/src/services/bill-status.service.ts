@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BillStatus, BillStatusEnum } from '../models/bill-status.entity.js';
-import { CreateBillStatusDto } from '../dto/create-bill-status.dto.js';
-import { UpdateBillStatusDto } from '../dto/update-bill-status.dto.js';
+import { CreateBillStatusDto } from '../dto/create.dto.js';
+import { UpdateBillStatusDto } from '../dto/update.dto.js';
 import { mapBillStatusResponse } from './response-mappers.js';
 
 const ORDER_STATUS_FLOW = [
@@ -20,7 +20,7 @@ export class BillStatusService {
   constructor(
     @InjectRepository(BillStatus)
     private readonly billStatusRepository: Repository<BillStatus>,
-  ) {}
+  ) { }
 
   async findAll() {
     const billStatuses = await this.billStatusRepository.find({

@@ -6,15 +6,15 @@ import {
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 import { FoodsService } from './foods.service.js';
-import { CreateFoodDto } from '../dto/create-food.dto.js';
-import { UpdateFoodDto } from '../dto/update-food.dto.js';
+import { CreateFoodDto } from '../dto/create.dto.js';
+import { UpdateFoodDto } from '../dto/update.dto.js';
 
 @Injectable()
 export class AdminService {
   constructor(
     private readonly configService: ConfigService,
     private readonly foodsService: FoodsService,
-  ) {}
+  ) { }
 
   async login(body: unknown) {
     const { password } = body as { password?: string };
