@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle } from 'lucide-react';
+<<<<<<< HEAD
+>>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
+=======
 >>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
 import { useAuth } from '../contexts/AuthContext';
 import { adminService, billingService } from '../services/api';
@@ -36,7 +39,11 @@ export default function AdminDashboardPage() {
   const [shippers, setShippers] = useState([]);
   const [showShipperForm, setShowShipperForm] = useState(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [shipperForm, setShipperForm] = useState(INITIAL_SHIPPER_FORM);
+=======
+  const [shipperForm, setShipperForm] = useState({ email: '', name: '', password: '' });
+>>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
 =======
   const [shipperForm, setShipperForm] = useState({ email: '', name: '', password: '' });
 >>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
@@ -217,7 +224,10 @@ export default function AdminDashboardPage() {
   };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
   const loadShippers = async () => {
     try {
       const api = (await import('../api/axios')).default;
