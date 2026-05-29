@@ -17,7 +17,6 @@ import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminDishesPage from './pages/AdminDishesPage';
 import BillingPage from './pages/BillingPage';
 import ReceiptPage from './pages/ReceiptPage';
-import ShipperLoginPage from './pages/ShipperLoginPage';
 import ShipperDashboardPage from './pages/ShipperDashboardPage';
 
 function App() {
@@ -50,7 +49,6 @@ function App() {
             <Route path="/admin/dishes" element={<AdminDishesPage />} />
 
             {/* Shipper routes */}
-            <Route path="/shipper" element={<ShipperLoginPage />} />
             <Route path="/shipper/dashboard" element={<ShipperDashboardPage />} />
 
             {/* Fallback */}
