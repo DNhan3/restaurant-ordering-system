@@ -40,9 +40,4 @@ export const billingService = {
     const response = await api.put(`/bill-status/${billId}`, data);
     return response.data;
   },
-
-  cancelBill: async (billId) => {
-    const response = await api.put(`/bill-status/cancel/${billId}`);
-    return response.data;
-  },
 };

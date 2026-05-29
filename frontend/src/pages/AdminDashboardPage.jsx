@@ -4,11 +4,7 @@ import { useNavigate } from 'react-router-dom';
 =======
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle } from 'lucide-react';
-<<<<<<< HEAD
->>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
-=======
->>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
+import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { adminService, billingService } from '../services/api';
 import { BILL_STATUS_LABELS } from '../utils/constants';
@@ -23,8 +19,6 @@ const BILL_STATUS_OPTIONS = [
   { value: 5, label: BILL_STATUS_LABELS[5], apiStatus: 'delivered' },
   { value: 6, label: BILL_STATUS_LABELS[6], apiStatus: 'completed' },
 ];
-
-const INITIAL_SHIPPER_FORM = { email: '', name: '', password: '' };
 
 export default function AdminDashboardPage() {
   const { admin, logoutAdmin } = useAuth();
@@ -126,9 +120,12 @@ export default function AdminDashboardPage() {
     await loadBillDetails(bill.bill_id);
   };
 
-  const handleCloseBill = () => {
-    setSelectedBill(null);
-    setBillDetails([]);
+  const handleNextStatus = async (billId) => {
+    try {
+      await updateBill(billId, {} );
+    } catch (error) {
+      console.error('Failed to update status:', error);
+    }
   };
 
   const updateBill = async (billId, data) => {
@@ -516,27 +513,9 @@ export default function AdminDashboardPage() {
                             </td>
                             <td className="px-4 py-3 font-semibold text-primary">${bill.bill_total}</td>
                             <td className="px-4 py-3">
-                              <div className="flex items-center gap-2">
-                                <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.bill_status)}`}>
-                                  {BILL_STATUS_LABELS[bill.bill_status] || 'Unknown'}
-                                </span>
-                                {canAdvanceStatus(bill.bill_status) && (
-                                  <button
-                                    type="button"
-                                    onClick={() => handleNextStatus(bill)}
-                                    disabled={savingBillId === bill.bill_id}
-                                    title={`Move to ${BILL_STATUS_LABELS[bill.bill_status + 1]}`}
-                                    aria-label={`Move bill #${bill.bill_id} to ${BILL_STATUS_LABELS[bill.bill_status + 1]}`}
-                                    className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-success/30 text-success hover:bg-success/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                  >
-                                    {savingBillId === bill.bill_id ? (
-                                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                                    ) : (
-                                      <ArrowRight className="h-3.5 w-3.5" />
-                                    )}
-                                  </button>
-                                )}
-                              </div>
+                              <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.bill_status)}`}>
+                                {BILL_STATUS_LABELS[bill.bill_status] || 'Unknown'}
+                              </span>
                               {bill.bill_paid === 'true' && (
                                 <span className="ml-2 inline-flex items-center gap-1 text-xs text-success">
                                   <DollarSign className="w-3 h-3" />
@@ -552,6 +531,19 @@ export default function AdminDashboardPage() {
                                 >
                                   View Details
                                 </button>
+                                {bill.bill_status > 0 && bill.bill_status < 6 && (
+                                  <button
+                                    onClick={() => handleNextStatus(bill.bill_id)}
+                                    disabled={savingBillId === bill.bill_id}
+                                    className="text-sm text-success hover:underline flex items-center gap-1"
+                                  >
+                                    <Check className="w-3 h-3" />
+                                    {BILL_STATUS_LABELS[bill.bill_status + 1]}
+                                  </button>
+                                )}
+                                {(bill.bill_status === 0 || bill.bill_status >= 6) && (
+                                  <span className="text-sm text-brown-400">No next state</span>
+                                )}
                               </div>
                             </td>
                           </tr>
