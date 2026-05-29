@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle, ArrowRight } from 'lucide-react';
+import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle, ArrowRight, Trash2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { billingService } from '../services/api';
 import { BILL_STATUS_LABELS } from '../utils/constants';
@@ -37,6 +37,7 @@ export default function AdminDashboardPage() {
   const [shipperError, setShipperError] = useState('');
   const [shipperSuccess, setShipperSuccess] = useState('');
   const [isCreatingShipper, setIsCreatingShipper] = useState(false);
+  const [deletingShipperId, setDeletingShipperId] = useState(null);
 
   useEffect(() => {
     if (!admin) {
@@ -176,6 +177,27 @@ export default function AdminDashboardPage() {
       setShipperError(err.response?.data?.message || 'Không thể tạo tài khoản');
     } finally {
       setIsCreatingShipper(false);
+    }
+  };
+
+  const handleDeleteShipper = async (shipper) => {
+    const confirmed = window.confirm(`Delete shipper account "${shipper.name}"?`);
+
+    if (!confirmed) return;
+
+    setShipperError('');
+    setShipperSuccess('');
+
+    try {
+      setDeletingShipperId(shipper.id);
+      const api = (await import('../api/axios')).default;
+      await api.delete(`/admin/shippers/${shipper.id}`);
+      setShippers((current) => current.filter((item) => item.id !== shipper.id));
+      setShipperSuccess(`Đã xóa tài khoản shipper: ${shipper.email}`);
+    } catch (err) {
+      setShipperError(err.response?.data?.message || 'Không thể xóa tài khoản shipper');
+    } finally {
+      setDeletingShipperId(null);
     }
   };
 
@@ -348,6 +370,7 @@ export default function AdminDashboardPage() {
                     <th className="px-4 py-2.5 text-left text-sm font-semibold text-brown-700">ID</th>
                     <th className="px-4 py-2.5 text-left text-sm font-semibold text-brown-700">Tên</th>
                     <th className="px-4 py-2.5 text-left text-sm font-semibold text-brown-700">Email</th>
+                    <th className="px-4 py-2.5 text-right text-sm font-semibold text-brown-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-brown-100">
@@ -356,6 +379,22 @@ export default function AdminDashboardPage() {
                       <td className="px-4 py-2.5 text-sm text-brown-600">#{s.id}</td>
                       <td className="px-4 py-2.5 text-sm font-medium text-brown-900">{s.name}</td>
                       <td className="px-4 py-2.5 text-sm text-brown-600">{s.email}</td>
+                      <td className="px-4 py-2.5 text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteShipper(s)}
+                          disabled={deletingShipperId === s.id}
+                          title="Delete shipper"
+                          aria-label={`Delete shipper ${s.name}`}
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          {deletingShipperId === s.id ? (
+                            <RefreshCw className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

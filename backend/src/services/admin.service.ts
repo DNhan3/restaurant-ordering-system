@@ -17,7 +17,7 @@ export class AdminService {
     private readonly configService: ConfigService,
     private readonly foodsService: FoodsService,
     private readonly usersService: UsersService,
-  ) { }
+  ) {}
 
   async login(body: unknown) {
     const { password } = body as { password?: string };
@@ -98,5 +98,16 @@ export class AdminService {
 
   async getShippers() {
     return this.usersService.findByRole('shipper');
+  }
+
+  async deleteShipper(id: string) {
+    const shipperId = Number(id);
+
+    if (!Number.isInteger(shipperId) || shipperId <= 0) {
+      throw new BadRequestException('valid shipper id is required');
+    }
+
+    const shipper = await this.usersService.deleteByIdAndRole(shipperId, 'shipper');
+    return { message: 'Shipper account deleted', shipper };
   }
 }

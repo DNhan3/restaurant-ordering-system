@@ -59,4 +59,17 @@ export class UsersService {
     const users = await this.userRepository.findBy({ role });
     return users.map(({ password: _pw, ...rest }) => rest as Omit<User, 'password'>);
   }
+
+  async deleteByIdAndRole(id: number, role: string): Promise<Omit<User, 'password'>> {
+    const user = await this.userRepository.findOneBy({ id, role });
+
+    if (!user) {
+      throw new NotFoundException(`${role} with id ${id} not found`);
+    }
+
+    await this.userRepository.remove(user);
+    const { password: _pw, ...rest } = user;
+
+    return rest as Omit<User, 'password'>;
+  }
 }

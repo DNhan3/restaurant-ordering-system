@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -113,5 +114,10 @@ export class AdminController {
   @Get('shippers')
   getShippers() {
     return this.adminService.getShippers();
+  }
+
+  @Delete('shippers/:id')
+  deleteShipper(@Param('id') id: string) {
+    return this.adminService.deleteShipper(id);
   }
 }
