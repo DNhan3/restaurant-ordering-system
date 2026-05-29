@@ -1,14 +1,13 @@
-<<<<<<< HEAD
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-=======
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt } from 'lucide-react';
+import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { adminService, billingService } from '../services/api';
+import { billingService } from '../services/api';
 import { BILL_STATUS_LABELS } from '../utils/constants';
-import AdminDashboardView from '../views/AdminDashboardView';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+
+const formatCurrency = (value) =>
+  `${Number(value || 0).toLocaleString('vi-VN')}d`;
 
 const BILL_STATUS_OPTIONS = [
   { value: 0, label: BILL_STATUS_LABELS[0], apiStatus: 'cancelled' },
@@ -20,6 +19,8 @@ const BILL_STATUS_OPTIONS = [
   { value: 6, label: BILL_STATUS_LABELS[6], apiStatus: 'completed' },
 ];
 
+const canAdvanceStatus = (status) => status > 0 && status < 6;
+
 export default function AdminDashboardPage() {
   const { admin, logoutAdmin } = useAuth();
   const navigate = useNavigate();
@@ -30,24 +31,7 @@ export default function AdminDashboardPage() {
   const [billDetails, setBillDetails] = useState([]);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [savingBillId, setSavingBillId] = useState(null);
-  const [shippers, setShippers] = useState([]);
-  const [showShipperForm, setShowShipperForm] = useState(false);
-<<<<<<< HEAD
-<<<<<<< HEAD
-  const [shipperForm, setShipperForm] = useState(INITIAL_SHIPPER_FORM);
-=======
-  const [shipperForm, setShipperForm] = useState({ email: '', name: '', password: '' });
->>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
-=======
-  const [shipperForm, setShipperForm] = useState({ email: '', name: '', password: '' });
->>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
-  const [shipperError, setShipperError] = useState('');
-  const [shipperSuccess, setShipperSuccess] = useState('');
-  const [isCreatingShipper, setIsCreatingShipper] = useState(false);
 
-<<<<<<< HEAD
-  const loadBills = useCallback(async () => {
-=======
   useEffect(() => {
     if (!admin) {
       navigate('/admin');
@@ -55,11 +39,9 @@ export default function AdminDashboardPage() {
     }
     loadBills();
     loadBillingSummary();
-    loadShippers();
   }, [admin, navigate]);
 
   const loadBills = async () => {
->>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
     try {
       setIsLoading(true);
       const data = await billingService.getAllBills();
@@ -69,39 +51,7 @@ export default function AdminDashboardPage() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
-
-  const loadBillingSummary = useCallback(async () => {
-    try {
-      const summary = await billingService.getSummary();
-      setBillingSummary(summary);
-    } catch (error) {
-      console.error('Failed to load billing summary:', error);
-    }
-  }, []);
-
-  const loadShippers = useCallback(async () => {
-    try {
-      const data = await adminService.getShippers();
-      setShippers(data);
-    } catch (error) {
-      console.error('Failed to load shippers:', error);
-    }
-  }, []);
-
-  const refreshDashboard = useCallback(async () => {
-    await Promise.all([loadBills(), loadBillingSummary(), loadShippers()]);
-  }, [loadBills, loadBillingSummary, loadShippers]);
-
-  useEffect(() => {
-    if (!admin) {
-      navigate('/admin');
-      return;
-    }
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    refreshDashboard();
-  }, [admin, navigate, refreshDashboard]);
+  };
 
   const loadBillDetails = async (billId) => {
     try {
@@ -120,9 +70,15 @@ export default function AdminDashboardPage() {
     await loadBillDetails(bill.bill_id);
   };
 
-  const handleNextStatus = async (billId) => {
+  const handleNextStatus = async (bill) => {
+    const nextOption = BILL_STATUS_OPTIONS.find(
+      (status) => status.value === bill.bill_status + 1,
+    );
+
+    if (!nextOption) return;
+
     try {
-      await updateBill(billId, {} );
+      await updateBill(bill.bill_id, { status: nextOption.apiStatus });
     } catch (error) {
       console.error('Failed to update status:', error);
     }
@@ -142,20 +98,6 @@ export default function AdminDashboardPage() {
       return updated;
     } finally {
       setSavingBillId(null);
-    }
-  };
-
-  const handleNextStatus = async (bill) => {
-    const nextOption = BILL_STATUS_OPTIONS.find(
-      (status) => status.value === bill.bill_status + 1,
-    );
-
-    if (!nextOption) return;
-
-    try {
-      await updateBill(bill.bill_id, { status: nextOption.apiStatus });
-    } catch (error) {
-      console.error('Failed to update status:', error);
     }
   };
 
@@ -181,83 +123,18 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const handleToggleShipperForm = () => {
-    setShowShipperForm((current) => !current);
-    setShipperError('');
-    setShipperSuccess('');
-  };
-
-  const handleShipperFormChange = (field, value) => {
-    setShipperForm((current) => ({ ...current, [field]: value }));
-  };
-
-  const handleCreateShipper = async (event) => {
-    event.preventDefault();
-    setShipperError('');
-    setShipperSuccess('');
-
-    if (!shipperForm.email || !shipperForm.name || !shipperForm.password) {
-      setShipperError('Vui lòng điền đầy đủ thông tin');
-      return;
-    }
-
+  const loadBillingSummary = async () => {
     try {
-      setIsCreatingShipper(true);
-      await adminService.createShipper(shipperForm);
-      setShipperSuccess(`Đã tạo tài khoản shipper: ${shipperForm.email}`);
-      setShipperForm(INITIAL_SHIPPER_FORM);
-      setShowShipperForm(false);
-      await loadShippers();
+      const summary = await billingService.getSummary();
+      setBillingSummary(summary);
     } catch (error) {
-      setShipperError(error.response?.data?.message || 'Không thể tạo tài khoản');
-    } finally {
-      setIsCreatingShipper(false);
+      console.error('Failed to load billing summary:', error);
     }
   };
 
   const handleLogout = () => {
     logoutAdmin();
     navigate('/');
-  };
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
-  const loadShippers = async () => {
-    try {
-      const api = (await import('../api/axios')).default;
-      const response = await api.get('/admin/shippers');
-      setShippers(response.data);
-    } catch (error) {
-      console.error('Failed to load shippers:', error);
-    }
-  };
-
-  const handleCreateShipper = async (e) => {
-    e.preventDefault();
-    setShipperError('');
-    setShipperSuccess('');
-
-    if (!shipperForm.email || !shipperForm.name || !shipperForm.password) {
-      setShipperError('Vui lòng điền đầy đủ thông tin');
-      return;
-    }
-
-    try {
-      setIsCreatingShipper(true);
-      const api = (await import('../api/axios')).default;
-      await api.post('/admin/shippers', shipperForm);
-      setShipperSuccess(`Đã tạo tài khoản shipper: ${shipperForm.email}`);
-      setShipperForm({ email: '', name: '', password: '' });
-      setShowShipperForm(false);
-      await loadShippers();
-    } catch (err) {
-      setShipperError(err.response?.data?.message || 'Không thể tạo tài khoản');
-    } finally {
-      setIsCreatingShipper(false);
-    }
   };
 
   const getStatusColor = (status) => {
@@ -273,40 +150,11 @@ export default function AdminDashboardPage() {
     return colors[status] || 'bg-gray-100 text-gray-700';
   };
 
->>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
   if (!admin) {
     return null;
   }
 
   return (
-<<<<<<< HEAD
-    <AdminDashboardView
-      bills={bills}
-      billingSummary={billingSummary}
-      isLoading={isLoading}
-      selectedBill={selectedBill}
-      billDetails={billDetails}
-      isLoadingDetails={isLoadingDetails}
-      savingBillId={savingBillId}
-      billStatusOptions={BILL_STATUS_OPTIONS}
-      shippers={shippers}
-      showShipperForm={showShipperForm}
-      shipperForm={shipperForm}
-      shipperError={shipperError}
-      shipperSuccess={shipperSuccess}
-      isCreatingShipper={isCreatingShipper}
-      onRefresh={refreshDashboard}
-      onLogout={handleLogout}
-      onViewBill={handleViewBill}
-      onCloseBill={handleCloseBill}
-      onNextStatus={handleNextStatus}
-      onSetStatus={handleSetStatus}
-      onSetPaid={handleSetPaid}
-      onToggleShipperForm={handleToggleShipperForm}
-      onShipperFormChange={handleShipperFormChange}
-      onCreateShipper={handleCreateShipper}
-    />
-=======
     <div className="bg-cream min-h-screen">
       {/* Header */}
       <div className="bg-brown-900 text-white py-6">
@@ -372,110 +220,6 @@ export default function AdminDashboardPage() {
           />
         </div>
 
-        {/* Shipper Management */}
-        <div className="bg-white rounded-2xl shadow-md p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-brown-900 flex items-center gap-2">
-              <Truck className="w-5 h-5 text-blue-600" />
-              Quản Lý Shipper
-            </h2>
-            <button
-              onClick={() => { setShowShipperForm(!showShipperForm); setShipperError(''); setShipperSuccess(''); }}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-            >
-              <UserPlus className="w-4 h-4" />
-              {showShipperForm ? 'Đóng' : 'Tạo Shipper Mới'}
-            </button>
-          </div>
-
-          {shipperSuccess && (
-            <div className="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-3 rounded-xl text-sm mb-4">
-              <Check className="w-4 h-4 shrink-0" />
-              {shipperSuccess}
-            </div>
-          )}
-
-          {showShipperForm && (
-            <form onSubmit={handleCreateShipper} className="bg-blue-50/50 rounded-xl p-5 mb-4 border border-blue-100">
-              <h3 className="font-semibold text-brown-900 mb-4">Tạo tài khoản shipper mới</h3>
-              <div className="grid sm:grid-cols-3 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-brown-700 mb-1">Tên</label>
-                  <input
-                    type="text"
-                    value={shipperForm.name}
-                    onChange={(e) => setShipperForm({ ...shipperForm, name: e.target.value })}
-                    placeholder="Nguyễn Văn A"
-                    className="input-field"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-brown-700 mb-1">Email</label>
-                  <input
-                    type="email"
-                    value={shipperForm.email}
-                    onChange={(e) => setShipperForm({ ...shipperForm, email: e.target.value })}
-                    placeholder="shipper@email.com"
-                    className="input-field"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-brown-700 mb-1">Mật khẩu</label>
-                  <input
-                    type="text"
-                    value={shipperForm.password}
-                    onChange={(e) => setShipperForm({ ...shipperForm, password: e.target.value })}
-                    placeholder="Mật khẩu cho shipper"
-                    className="input-field"
-                  />
-                </div>
-              </div>
-              {shipperError && (
-                <p className="text-red-600 text-sm mb-3 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
-                  {shipperError}
-                </p>
-              )}
-              <button
-                type="submit"
-                disabled={isCreatingShipper}
-                className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 flex items-center gap-2"
-              >
-                {isCreatingShipper ? (
-                  <><RefreshCw className="w-4 h-4 animate-spin" /> Đang tạo...</>
-                ) : (
-                  <><UserPlus className="w-4 h-4" /> Tạo Tài Khoản</>
-                )}
-              </button>
-            </form>
-          )}
-
-          {shippers.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-brown-50">
-                  <tr>
-                    <th className="px-4 py-2.5 text-left text-sm font-semibold text-brown-700">ID</th>
-                    <th className="px-4 py-2.5 text-left text-sm font-semibold text-brown-700">Tên</th>
-                    <th className="px-4 py-2.5 text-left text-sm font-semibold text-brown-700">Email</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-brown-100">
-                  {shippers.map((s) => (
-                    <tr key={s.id} className="hover:bg-cream/50 transition-colors">
-                      <td className="px-4 py-2.5 text-sm text-brown-600">#{s.id}</td>
-                      <td className="px-4 py-2.5 text-sm font-medium text-brown-900">{s.name}</td>
-                      <td className="px-4 py-2.5 text-sm text-brown-600">{s.email}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="text-sm text-brown-400 text-center py-4">Chưa có tài khoản shipper nào</p>
-          )}
-        </div>
-
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <LoadingSpinner size="xl" />
@@ -513,9 +257,27 @@ export default function AdminDashboardPage() {
                             </td>
                             <td className="px-4 py-3 font-semibold text-primary">${bill.bill_total}</td>
                             <td className="px-4 py-3">
-                              <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.bill_status)}`}>
-                                {BILL_STATUS_LABELS[bill.bill_status] || 'Unknown'}
-                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.bill_status)}`}>
+                                  {BILL_STATUS_LABELS[bill.bill_status] || 'Unknown'}
+                                </span>
+                                {canAdvanceStatus(bill.bill_status) && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleNextStatus(bill)}
+                                    disabled={savingBillId === bill.bill_id}
+                                    title={`Move to ${BILL_STATUS_LABELS[bill.bill_status + 1]}`}
+                                    aria-label={`Move bill #${bill.bill_id} to ${BILL_STATUS_LABELS[bill.bill_status + 1]}`}
+                                    className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-success/30 text-success hover:bg-success/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                  >
+                                    {savingBillId === bill.bill_id ? (
+                                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                    ) : (
+                                      <ArrowRight className="h-3.5 w-3.5" />
+                                    )}
+                                  </button>
+                                )}
+                              </div>
                               {bill.bill_paid === 'true' && (
                                 <span className="ml-2 inline-flex items-center gap-1 text-xs text-success">
                                   <DollarSign className="w-3 h-3" />
@@ -531,19 +293,6 @@ export default function AdminDashboardPage() {
                                 >
                                   View Details
                                 </button>
-                                {bill.bill_status > 0 && bill.bill_status < 6 && (
-                                  <button
-                                    onClick={() => handleNextStatus(bill.bill_id)}
-                                    disabled={savingBillId === bill.bill_id}
-                                    className="text-sm text-success hover:underline flex items-center gap-1"
-                                  >
-                                    <Check className="w-3 h-3" />
-                                    {BILL_STATUS_LABELS[bill.bill_status + 1]}
-                                  </button>
-                                )}
-                                {(bill.bill_status === 0 || bill.bill_status >= 6) && (
-                                  <span className="text-sm text-brown-400">No next state</span>
-                                )}
                               </div>
                             </td>
                           </tr>
@@ -698,6 +447,5 @@ function BillingMetric({ icon: Icon, label, value, tone = 'default' }) {
       </div>
       <p className={`text-2xl font-bold ${toneClass}`}>{value}</p>
     </div>
->>>>>>> 565c79c3554f87ceb06e776d19e6d9a2ebb9d5c8
   );
 }

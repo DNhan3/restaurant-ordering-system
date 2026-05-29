@@ -8,12 +8,12 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { BillStatusService } from '../services/bill-status.service.js';
-import { CreateBillStatusDto } from '../dto/create.dto.js';
-import { UpdateBillStatusDto } from '../dto/update.dto.js';
+import { CreateBillStatusDto } from '../dto/create-bill-status.dto.js';
+import { UpdateBillStatusDto } from '../dto/update-bill-status.dto.js';
 
 @Controller('bill-status')
 export class BillStatusController {
-  constructor(private readonly billStatusService: BillStatusService) { }
+  constructor(private readonly billStatusService: BillStatusService) {}
 
   @Get()
   findAll() {

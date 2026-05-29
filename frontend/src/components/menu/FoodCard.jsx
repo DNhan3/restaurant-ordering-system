@@ -120,11 +120,11 @@ export default function FoodCard({ food, onQuickView }) {
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-primary">
-              {Number(discountedPrice || 0).toLocaleString('vi-VN') + 'đ'}
+              ${discountedPrice.toFixed(2)}
             </span>
             {hasDiscount && (
               <span className="text-sm text-brown-400 line-through">
-                {Number(parseFloat(price) || 0).toLocaleString('vi-VN') + 'đ'}
+                ${parseFloat(price).toFixed(2)}
               </span>
             )}
           </div>

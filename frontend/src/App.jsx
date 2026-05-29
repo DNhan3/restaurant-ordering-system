@@ -17,8 +17,6 @@ import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminDishesPage from './pages/AdminDishesPage';
 import BillingPage from './pages/BillingPage';
 import ReceiptPage from './pages/ReceiptPage';
-import ShipperLoginPage from './pages/ShipperLoginPage';
-import ShipperDashboardPage from './pages/ShipperDashboardPage';
 
 function App() {
   return (
@@ -48,10 +46,6 @@ function App() {
             <Route path="/admin" element={<AdminLoginPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
             <Route path="/admin/dishes" element={<AdminDishesPage />} />
-
-            {/* Shipper routes */}
-            <Route path="/shipper" element={<ShipperLoginPage />} />
-            <Route path="/shipper/dashboard" element={<ShipperDashboardPage />} />
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

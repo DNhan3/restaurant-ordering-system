@@ -9,12 +9,12 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { FoodsService } from '../services/foods.service.js';
-import { CreateFoodDto } from '../dto/create.dto.js';
-import { UpdateFoodDto } from '../dto/update.dto.js';
+import { CreateFoodDto } from '../dto/create-food.dto.js';
+import { UpdateFoodDto } from '../dto/update-food.dto.js';
 
 @Controller('foods')
 export class FoodsController {
-  constructor(private readonly foodsService: FoodsService) { }
+  constructor(private readonly foodsService: FoodsService) {}
 
   @Get()
   findAll() {

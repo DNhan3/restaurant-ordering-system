@@ -5,19 +5,16 @@ const TEAM_PHOTOS = [
   {
     name: 'Chef. Đức Nhân',
     role: 'Bếp Trưởng',
-    studentID: 'ITCSIU24063',
-    image: 'src/assets/DNhan.jpg',
+    image: '',
   },
   {
     name: 'Chef. Nguyên Trung',
     role: 'Chuyên Gia Phở',
-    studentID: 'SV002',
     image: '',
   },
   {
-    name: 'Chef. Triều Hưng',
+    name: 'Chef. Triệu Hưng',
     role: 'Nghệ Nhân Bánh Mì',
-    studentID: 'SV003',
     image: '',
   },
 ];
@@ -41,7 +38,7 @@ export default function AboutPage() {
               Về 36<span className="text-primary">Food</span>
             </h1>
             <p className="text-lg text-brown-300 leading-relaxed">
-              Được thành lập từ năm 2016 bởi những người có niềm đam mê với ẩm thực Việt,
+              Được thành lập từ năm 2016 bởi những người có niềm đam mê với ẩm thực Việt, 
               36Food đã phục vụ hàng nghìn khách hàng với những món ăn ngon chuẩn vị.
               Từ một quán nhỏ ven đường, giờ đây chúng tôi mang đến hương vị Việt đến mọi nhà.
             </p>
@@ -59,12 +56,12 @@ export default function AboutPage() {
                 Mang Hương Vị Việt Đến Mọi Nhà
               </h2>
               <p className="text-brown-600 leading-relaxed mb-6">
-                Chúng tôi tin rằng ẩm thực Việt có sức mạnh kết nối con người và tạo nên
-                những kỷ niệm đáng nhớ. Mỗi món ăn đều được chế biến tỉ mỉ với tình yêu,
+                Chúng tôi tin rằng ẩm thực Việt có sức mạnh kết nối con người và tạo nên 
+                những kỷ niệm đáng nhớ. Mỗi món ăn đều được chế biến tỉ mỉ với tình yêu, 
                 sử dụng nguyên liệu tươi sạch và công thức gia truyền.
               </p>
               <p className="text-brown-600 leading-relaxed mb-8">
-                Từ tô phở nóng hổi đến đĩa cơm tấm đậm đà, mỗi món trong thực đơn đều
+                Từ tô phở nóng hổi đến đĩa cơm tấm đậm đà, mỗi món trong thực đơn đều 
                 thể hiện sự cam kết của chúng tôi với chất lượng và sự hài lòng của khách hàng.
               </p>
               <Link to="/menu" className="btn-primary inline-flex items-center gap-2">
@@ -159,7 +156,7 @@ export default function AboutPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {TEAM_PHOTOS.map((member, index) => (
               <div key={index} className="text-center group">
-                <div className="relative mb-4 overflow-hidden rounded-2xl max-w-xs mx-auto">
+                <div className="relative mb-4 overflow-hidden rounded-2xl">
                   <img
                     src={member.image}
                     alt={member.name}
@@ -167,7 +164,6 @@ export default function AboutPage() {
                   />
                 </div>
                 <h3 className="font-semibold text-lg text-brown-900">{member.name}</h3>
-                <p className="text-brown-700 text-md mt-1">{member.studentID}</p>
                 <p className="text-primary font-medium">{member.role}</p>
               </div>
             ))}

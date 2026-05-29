@@ -57,13 +57,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-Để access admin:
-- tự tạo ADMIN_HASH_PASSWORD= ở trong .env rồi tự tạo password và hash nó rồi cho vào sau cái ADMIN_HASH_PASSWORD đó
-- viết /admin ở trên thanh localhost để đi tới trang login admin rồi nhập password tự tạo (ko phải hash) để access admin dashboard
- 
-Để login thành shipper:
-- tạo user shipper trong admin dashboard (tên, email, password)
-- vào trang đăng nhập bình thường với email và password của shipper để access shipper dashboard
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.

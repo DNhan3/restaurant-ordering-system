@@ -16,14 +16,14 @@ import { mkdirSync } from 'node:fs';
 import { extname, join } from 'node:path';
 import { diskStorage } from 'multer';
 import { AdminService } from '../services/admin.service.js';
-import { CreateFoodDto } from '../dto/create.dto.js';
-import { UpdateFoodDto } from '../dto/update.dto.js';
+import { CreateFoodDto } from '../dto/create-food.dto.js';
+import { UpdateFoodDto } from '../dto/update-food.dto.js';
 
 const foodUploadsPath = join(process.cwd(), 'uploads', 'foods');
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) { }
+  constructor(private readonly adminService: AdminService) {}
 
   @Get()
   getDashboard() {
@@ -103,15 +103,5 @@ export class AdminController {
       imagePath,
       imageUrl,
     };
-  }
-
-  @Post('shippers')
-  createShipper(@Body() body: { email: string; name: string; password: string }) {
-    return this.adminService.createShipper(body);
-  }
-
-  @Get('shippers')
-  getShippers() {
-    return this.adminService.getShippers();
   }
 }
