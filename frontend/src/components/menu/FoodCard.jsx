@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Star, ShoppingCart, Eye } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
+import { formatPrice } from '../../utils/formatters';
 
 export default function FoodCard({ food, onQuickView }) {
   const [isAdding, setIsAdding] = useState(false);
@@ -100,11 +101,10 @@ export default function FoodCard({ food, onQuickView }) {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-4 h-4 ${
-                  i < Math.floor(vote || 0)
+                className={`w-4 h-4 ${i < Math.floor(vote || 0)
                     ? 'fill-secondary text-secondary'
                     : 'text-brown-300'
-                }`}
+                  }`}
               />
             ))}
           </div>
@@ -120,11 +120,11 @@ export default function FoodCard({ food, onQuickView }) {
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-primary">
-              ${discountedPrice.toFixed(2)}
+              {formatPrice(discountedPrice)}
             </span>
             {hasDiscount && (
               <span className="text-sm text-brown-400 line-through">
-                ${parseFloat(price).toFixed(2)}
+                {formatPrice(price)}
               </span>
             )}
           </div>
@@ -132,14 +132,13 @@ export default function FoodCard({ food, onQuickView }) {
           <button
             onClick={handleAddToCart}
             disabled={isAdding}
-            className={`p-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 ${
-              isAdding
+            className={`p-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 ${isAdding
                 ? 'bg-success text-white'
                 : 'bg-primary text-white hover:bg-primary-light hover:shadow-lg active:scale-95'
-            }`}
+              }`}
           >
             <ShoppingCart className="w-5 h-5" />
-            <span className="hidden sm:inline">{isAdding ? 'Added!' : 'Add'}</span>
+            <span className="hidden sm:inline">{isAdding ? 'Đã Thêm!' : 'Thêm'}</span>
           </button>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import EmptyState from '../components/common/EmptyState';
 import { DELIVERY_FEE } from '../utils/constants';
 import { billingService } from '../services/api';
+import { formatPrice } from '../utils/formatters';
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -129,9 +130,9 @@ export default function CheckoutPage() {
       <div className="bg-cream min-h-screen">
         <EmptyState
           icon={CreditCard}
-          title="Nothing to checkout"
-          description="Your cart is empty. Add some items before checking out."
-          actionLabel="Browse Menu"
+          title="Giỏ hàng trống"
+          description="Giỏ hàng của bạn chưa có món nào. Hãy thêm món ăn để tiến hành thanh toán."
+          actionLabel="Xem Thực Đơn"
           actionTo="/menu"
         />
       </div>
@@ -216,11 +217,10 @@ export default function CheckoutPage() {
                 {/* Payment Options */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <label
-                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                      formData.paymentMethod === 'cash'
+                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.paymentMethod === 'cash'
                         ? 'border-primary bg-primary/5'
                         : 'border-brown-200 hover:border-primary/50'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"
@@ -230,9 +230,8 @@ export default function CheckoutPage() {
                       onChange={handleChange}
                       className="sr-only"
                     />
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      formData.paymentMethod === 'cash' ? 'bg-primary text-white' : 'bg-brown-100'
-                    }`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${formData.paymentMethod === 'cash' ? 'bg-primary text-white' : 'bg-brown-100'
+                      }`}>
                       <Banknote className="w-5 h-5" />
                     </div>
                     <div>
@@ -245,11 +244,10 @@ export default function CheckoutPage() {
                   </label>
 
                   <label
-                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                      formData.paymentMethod === 'card'
+                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.paymentMethod === 'card'
                         ? 'border-primary bg-primary/5'
                         : 'border-brown-200 hover:border-primary/50'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"
@@ -259,9 +257,8 @@ export default function CheckoutPage() {
                       onChange={handleChange}
                       className="sr-only"
                     />
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      formData.paymentMethod === 'card' ? 'bg-primary text-white' : 'bg-brown-100'
-                    }`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${formData.paymentMethod === 'card' ? 'bg-primary text-white' : 'bg-brown-100'
+                      }`}>
                       <CreditCard className="w-5 h-5" />
                     </div>
                     <div>
@@ -278,13 +275,13 @@ export default function CheckoutPage() {
                 {formData.paymentMethod === 'card' && (
                   <div className="p-4 bg-cream rounded-xl space-y-4 animate-fade-in">
                     <p className="text-sm text-brown-600">
-                      Enter your card details (Visa only)
+                      Nhập thông tin thẻ của bạn
                     </p>
 
                     {/* Card Number */}
                     <div>
                       <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Card Number <span className="text-error">*</span>
+                        Số Thẻ <span className="text-error">*</span>
                       </label>
                       <input
                         type="text"
@@ -303,7 +300,7 @@ export default function CheckoutPage() {
                     {/* Cardholder Name */}
                     <div>
                       <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Cardholder Name <span className="text-error">*</span>
+                        Tên Chủ Thẻ <span className="text-error">*</span>
                       </label>
                       <input
                         type="text"
@@ -322,7 +319,7 @@ export default function CheckoutPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-brown-700 mb-2">
-                          Expiry Date <span className="text-error">*</span>
+                          Ngày Hết Hạn <span className="text-error">*</span>
                         </label>
                         <input
                           type="month"
@@ -393,7 +390,7 @@ export default function CheckoutPage() {
                       <p className="text-xs text-brown-500">x{item.quantity}</p>
                     </div>
                     <p className="text-sm font-semibold text-brown-900">
-                      {((item.price - item.discount) * item.quantity).toLocaleString('vi-VN')}đ
+                      {formatPrice((item.price - item.discount) * item.quantity)}
                     </p>
                   </div>
                 ))}
@@ -403,25 +400,25 @@ export default function CheckoutPage() {
               <div className="border-t border-brown-200 pt-4 space-y-3">
                 <div className="flex justify-between text-brown-700">
                   <span>Tạm tính</span>
-                  <span className="font-medium">{subtotal.toLocaleString('vi-VN')}đ</span>
+                  <span className="font-medium">{formatPrice(subtotal)}</span>
                 </div>
 
                 {discount > 0 && (
                   <div className="flex justify-between text-success">
                     <span>Giảm Giá</span>
-                    <span className="font-medium">-{discount.toLocaleString('vi-VN')}đ</span>
+                    <span className="font-medium">-{formatPrice(discount)}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-brown-700">
                   <span>Phí Giao Hàng</span>
-                  <span className="font-medium">{deliveryFee.toLocaleString('vi-VN')}đ</span>
+                  <span className="font-medium">{formatPrice(deliveryFee)}</span>
                 </div>
 
                 <div className="border-t border-brown-200 pt-3">
                   <div className="flex justify-between text-lg font-bold text-brown-900">
                     <span>Tổng Cộng</span>
-                    <span className="text-primary">{total.toLocaleString('vi-VN')}đ</span>
+                    <span className="text-primary">{formatPrice(total)}</span>
                   </div>
                 </div>
               </div>
@@ -440,7 +437,7 @@ export default function CheckoutPage() {
                 ) : (
                   <>
                     <Lock className="w-5 h-5" />
-                    Đặt Hàng - {total.toLocaleString('vi-VN')}đ
+                    Đặt Hàng - {formatPrice(total)}
                   </>
                 )}
               </button>

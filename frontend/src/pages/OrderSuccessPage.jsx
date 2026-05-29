@@ -23,7 +23,7 @@ export default function OrderSuccessPage() {
           Đơn hàng của bạn đã được đặt thành công!
         </p>
         <p className="text-brown-500 mb-8">
-          Chúng tôi đã gửi email với chi tiết đơn hàng. Đội ngũ đang chuẩn bị món ăn 
+          Chúng tôi đã gửi email với chi tiết đơn hàng. Đội ngũ đang chuẩn bị món ăn
           và sẽ giao đến bạn sớm nhất có thể.
         </p>
 
@@ -65,7 +65,7 @@ export default function OrderSuccessPage() {
               className="flex-1 btn-secondary flex items-center justify-center gap-2"
             >
               <Receipt className="w-5 h-5" />
-              View Receipt
+              View Hóa Đơn
             </Link>
           )}
           <Link
