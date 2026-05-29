@@ -147,11 +147,10 @@ export default function ReceiptPage() {
                 </h2>
               </div>
               <div
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium ${
-                  selectedInvoice.bill_paid
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium ${selectedInvoice.bill_paid
                     ? 'bg-success/10 text-success'
                     : 'bg-warning/10 text-warning'
-                }`}
+                  }`}
               >
                 {selectedInvoice.bill_paid ? (
                   <CheckCircle className="w-4 h-4" />

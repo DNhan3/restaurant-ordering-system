@@ -106,11 +106,10 @@ export default function QuickViewModal({ food, isOpen, onClose }) {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-5 h-5 ${
-                      i < Math.floor(vote || 0)
+                    className={`w-5 h-5 ${i < Math.floor(vote || 0)
                         ? 'fill-secondary text-secondary'
                         : 'text-brown-300'
-                    }`}
+                      }`}
                   />
                 ))}
               </div>
@@ -161,11 +160,10 @@ export default function QuickViewModal({ food, isOpen, onClose }) {
               <button
                 onClick={handleAddToCart}
                 disabled={isAdding}
-                className={`w-full py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
-                  isAdding
+                className={`w-full py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${isAdding
                     ? 'bg-success text-white'
                     : 'bg-primary text-white hover:bg-primary-light active:scale-[0.98]'
-                }`}
+                  }`}
               >
                 <ShoppingCart className="w-5 h-5" />
                 {isAdding ? 'Đã Thêm!' : 'Thêm Vào Giỏ'}
