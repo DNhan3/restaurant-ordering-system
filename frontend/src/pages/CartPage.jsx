@@ -3,6 +3,7 @@ import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag, Phone } from 'lucide-react
 import { useCart } from '../contexts/CartContext';
 import EmptyState from '../components/common/EmptyState';
 import { DELIVERY_FEE } from '../utils/constants';
+import { formatPrice } from '../utils/formatters';
 
 export default function CartPage() {
   const {
@@ -89,7 +90,7 @@ export default function CartPage() {
                             {item.name}
                           </h3>
                           <p className="text-sm text-brown-500 mt-1">
-                            Đơn giá: {(item.price - item.discount).toLocaleString('vi-VN')}đ
+                            Đơn giá: {formatPrice(item.price - item.discount)}
                           </p>
                         </div>
                         <button
@@ -124,11 +125,11 @@ export default function CartPage() {
                         {/* Item Total */}
                         <div className="text-right">
                           <p className="text-xl font-bold text-primary">
-                            {((item.price - item.discount) * item.quantity).toLocaleString('vi-VN')}đ
+                            {formatPrice((item.price - item.discount) * item.quantity)}
                           </p>
                           {item.discount > 0 && (
                             <p className="text-sm text-brown-400 line-through">
-                              {(item.price * item.quantity).toLocaleString('vi-VN')}đ
+                              {formatPrice(item.price * item.quantity)}
                             </p>
                           )}
                         </div>
@@ -138,7 +139,7 @@ export default function CartPage() {
                       {item.discount > 0 && (
                         <div className="mt-3">
                           <span className="inline-flex items-center gap-1 bg-success/10 text-success text-sm font-medium px-3 py-1 rounded-full">
-                            Tiết kiệm {(item.discount * item.quantity).toLocaleString('vi-VN')}đ
+                            Tiết kiệm {formatPrice(item.discount * item.quantity)}
                           </span>
                         </div>
                       )}
@@ -168,25 +169,25 @@ export default function CartPage() {
               <div className="space-y-4">
                 <div className="flex justify-between text-brown-700">
                   <span>Tạm tính ({getTotalItems()} món)</span>
-                  <span className="font-medium">{subtotal.toLocaleString('vi-VN')}đ</span>
+                  <span className="font-medium">{formatPrice(subtotal)}</span>
                 </div>
 
                 {discount > 0 && (
                   <div className="flex justify-between text-success">
                     <span>Giảm Giá</span>
-                    <span className="font-medium">-{discount.toLocaleString('vi-VN')}đ</span>
+                    <span className="font-medium">-{formatPrice(discount)}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-brown-700">
                   <span>Phí Giao Hàng</span>
-                  <span className="font-medium">{deliveryFee.toLocaleString('vi-VN')}đ</span>
+                  <span className="font-medium">{formatPrice(deliveryFee)}</span>
                 </div>
 
                 <div className="border-t border-brown-200 pt-4">
                   <div className="flex justify-between text-lg font-bold text-brown-900">
                     <span>Tổng Cộng</span>
-                    <span className="text-primary">{total.toLocaleString('vi-VN')}đ</span>
+                    <span className="text-primary">{formatPrice(total)}</span>
                   </div>
                 </div>
               </div>

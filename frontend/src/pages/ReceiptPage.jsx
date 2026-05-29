@@ -13,11 +13,9 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { billingService } from '../services/api';
+import { formatPrice } from '../utils/formatters';
 import EmptyState from '../components/common/EmptyState';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-
-const formatCurrency = (value) =>
-  `${Number(value || 0).toLocaleString('vi-VN')}d`;
 
 const getPaymentIcon = (method) =>
   method === 'card' ? CreditCard : Banknote;
@@ -52,13 +50,13 @@ export default function ReceiptPage() {
         setSelectedInvoice(invoiceFromRoute);
       } else if (billId) {
         setSelectedInvoice(null);
-        setError('This receipt is not available for your account.');
+        setError('Hóa đơn này không có sẵn cho tài khoản của bạn.');
       } else {
         setSelectedInvoice(data[0] ?? null);
       }
     } catch (err) {
       console.error('Failed to load receipt:', err);
-      setError('Unable to load receipt information.');
+      setError('Không thể tải thông tin hóa đơn.');
     } finally {
       setIsLoading(false);
     }
@@ -68,10 +66,10 @@ export default function ReceiptPage() {
     return (
       <div className="bg-cream min-h-screen">
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-          <h2 className="text-2xl font-bold text-brown-900 mb-4">Please Login</h2>
-          <p className="text-brown-500 mb-6">You need to login to view receipts.</p>
+          <h2 className="text-2xl font-bold text-brown-900 mb-4">Vui Lòng Đăng Nhập</h2>
+          <p className="text-brown-500 mb-6">Bạn cần đăng nhập để xem hóa đơn.</p>
           <Link to="/login" className="btn-primary">
-            Login
+            Đăng Nhập
           </Link>
         </div>
       </div>
@@ -106,9 +104,9 @@ export default function ReceiptPage() {
       <div className="bg-cream min-h-screen">
         <EmptyState
           icon={Receipt}
-          title="Receipt not found"
-          description="Open receipts from billing so we can show the matching checkout."
-          actionLabel="View Billing"
+          title="Không tìm thấy hóa đơn"
+          description="Mở hóa đơn từ trang billing để chúng tôi hiển thị hóa đơn phù hợp."
+          actionLabel="Xem Hóa Đơn"
           actionTo="/billing"
         />
       </div>
@@ -128,10 +126,10 @@ export default function ReceiptPage() {
             className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
-            Back to billing
+            Quay Lại Hóa Đơn
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Order Receipt</h1>
-          <p className="text-white/75">Receipt and payment details for one order.</p>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Hóa Đơn</h1>
+          <p className="text-white/75">Chi tiết hóa đơn và thanh toán cho đơn hàng.</p>
         </div>
       </div>
 
@@ -142,10 +140,10 @@ export default function ReceiptPage() {
               <div>
                 <div className="inline-flex items-center gap-2 text-primary font-semibold mb-2">
                   <Receipt className="w-5 h-5" />
-                  Order #{selectedInvoice.bill_id} Receipt
+                  Hóa Đơn #{selectedInvoice.bill_id}
                 </div>
                 <h2 className="text-2xl font-bold text-brown-900">
-                  {formatCurrency(selectedInvoice.bill_total)}
+                  {formatPrice(selectedInvoice.bill_total)}
                 </h2>
               </div>
               <div
@@ -160,42 +158,42 @@ export default function ReceiptPage() {
                 ) : (
                   <AlertCircle className="w-4 h-4" />
                 )}
-                {selectedInvoice.bill_paid ? 'Paid' : 'Payment due'}
+                {selectedInvoice.bill_paid ? 'Đã Thanh Toán' : 'Chưa Thanh Toán'}
               </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4 mb-6 text-sm">
                   <InvoiceMeta
                     icon={CalendarClock}
-                    label="Created"
-                    value={new Date(selectedInvoice.bill_when).toLocaleString()}
+                    label="Ngày Tạo"
+                    value={new Date(selectedInvoice.bill_when).toLocaleString('vi-VN')}
                   />
                   <InvoiceMeta
                     icon={PaymentIcon}
-                    label="Payment"
+                    label="Thanh Toán"
                     value={
                       selectedInvoice.bill_payment_method === 'card'
-                        ? 'Card'
-                        : 'Cash'
+                        ? 'Thẻ'
+                        : 'Tiền Mặt'
                     }
                   />
                   <InvoiceMeta
                     icon={Phone}
-                    label="Phone"
+                    label="Điện Thoại"
                     value={selectedInvoice.bill_phone || '-'}
                   />
                   <InvoiceMeta
                     icon={MapPin}
-                    label="Delivery"
+                    label="Địa Chỉ"
                     value={selectedInvoice.bill_address || '-'}
                   />
             </div>
 
             <div className="border border-brown-100 rounded-xl overflow-hidden">
                   <div className="grid grid-cols-[1fr_72px_120px] gap-3 bg-brown-100 px-4 py-3 text-sm font-semibold text-brown-900">
-                    <span>Item</span>
-                    <span className="text-center">Qty</span>
-                    <span className="text-right">Total</span>
+                    <span>Món</span>
+                    <span className="text-center">SL</span>
+                    <span className="text-right">Tổng</span>
                   </div>
                   {selectedInvoice.bill_details.map((item) => (
                     <div
@@ -204,33 +202,33 @@ export default function ReceiptPage() {
                     >
                       <div>
                         <p className="font-medium text-brown-900">
-                          {item.food?.food_name || `Item #${item.food_id}`}
+                          {item.food?.food_name || `Món #${item.food_id}`}
                         </p>
                         <p className="text-brown-500">
-                          {formatCurrency(item.item_price)}
+                          {formatPrice(item.item_price)}
                         </p>
                       </div>
                       <span className="text-center text-brown-700">
                         {item.item_qty}
                       </span>
                       <span className="text-right font-semibold text-brown-900">
-                        {formatCurrency(item.line_total)}
+                        {formatPrice(item.line_total)}
                       </span>
                     </div>
                   ))}
             </div>
 
             <div className="mt-6 ml-auto max-w-sm space-y-3">
-                  <InvoiceTotal label="Subtotal" value={selectedInvoice.bill_subtotal} />
+                  <InvoiceTotal label="Tạm Tính" value={selectedInvoice.bill_subtotal} />
                   <InvoiceTotal
-                    label="Discount"
+                    label="Giảm Giá"
                     value={-Number(selectedInvoice.bill_discount || 0)}
                     tone="success"
                   />
-                  <InvoiceTotal label="Delivery" value={selectedInvoice.bill_delivery} />
+                  <InvoiceTotal label="Phí Giao Hàng" value={selectedInvoice.bill_delivery} />
                   <div className="border-t border-brown-100 pt-3">
                     <InvoiceTotal
-                      label="Amount due"
+                      label="Tổng Cộng"
                       value={selectedInvoice.bill_amount_due}
                       strong
                     />
@@ -265,7 +263,7 @@ function InvoiceTotal({ label, value, tone = 'default', strong = false }) {
   return (
     <div className={`flex justify-between ${strong ? 'text-lg font-bold' : 'text-sm'}`}>
       <span className="text-brown-500">{label}</span>
-      <span className={toneClass}>{formatCurrency(value)}</span>
+      <span className={toneClass}>{formatPrice(value)}</span>
     </div>
   );
 }

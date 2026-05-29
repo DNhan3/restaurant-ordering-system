@@ -4,6 +4,7 @@ import { Receipt, ChevronDown, ChevronUp, MapPin, Phone, Clock, XCircle } from '
 import { useAuth } from '../contexts/AuthContext';
 import { billingService } from '../services/api';
 import { ORDER_STATUS_LABELS } from '../utils/constants';
+import { formatPrice } from '../utils/formatters';
 import EmptyState from '../components/common/EmptyState';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
@@ -62,7 +63,7 @@ export default function BillingPage() {
 
     if (!canCancelBill(bill.bill_status)) return;
 
-    const shouldCancel = window.confirm(`Cancel bill #${bill.bill_id}?`);
+    const shouldCancel = window.confirm(`Hủy đơn hàng #${bill.bill_id}?`);
     if (!shouldCancel) return;
 
     try {
@@ -94,7 +95,7 @@ export default function BillingPage() {
   };
 
   const getProgressSteps = (status) => {
-    const steps = ['Confirmed', 'Preparing', 'Checking', 'Delivering', 'Delivered'];
+    const steps = ['Đã Xác Nhận', 'Đang Chuẩn Bị', 'Đang Kiểm Tra', 'Đang Giao', 'Đã Giao'];
     const currentIndex = status - 1;
     return steps.map((step, index) => ({
       name: step,
@@ -107,10 +108,10 @@ export default function BillingPage() {
     return (
       <div className="bg-cream min-h-screen">
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-          <h2 className="text-2xl font-bold text-brown-900 mb-4">Please Login</h2>
-          <p className="text-brown-500 mb-6">You need to login to view billing.</p>
+          <h2 className="text-2xl font-bold text-brown-900 mb-4">Vui Lòng Đăng Nhập</h2>
+          <p className="text-brown-500 mb-6">Bạn cần đăng nhập để xem hóa đơn.</p>
           <Link to="/login" className="btn-primary">
-            Login
+            Đăng Nhập
           </Link>
         </div>
       </div>
@@ -130,9 +131,9 @@ export default function BillingPage() {
       <div className="bg-cream min-h-screen">
         <EmptyState
           icon={Receipt}
-          title="No bills yet"
-          description="Your checkout history and receipts will appear here."
-          actionLabel="Browse Menu"
+          title="Chưa có đơn hàng"
+          description="Lịch sử đặt hàng và hóa đơn của bạn sẽ xuất hiện tại đây."
+          actionLabel="Xem Thực Đơn"
           actionTo="/menu"
         />
       </div>
@@ -144,9 +145,9 @@ export default function BillingPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-primary-light text-white py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Billing</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Hóa Đơn</h1>
           <p className="text-white/80">
-            Track checkout status, payment, and receipts
+            Theo dõi trạng thái đơn hàng, thanh toán và hóa đơn
           </p>
         </div>
       </div>
@@ -176,7 +177,7 @@ export default function BillingPage() {
                         </span>
                         {bill.bill_paid === 'true' && (
                           <span className="px-3 py-1 bg-success/10 text-success rounded-full text-xs font-medium">
-                            Paid
+                            Đã Thanh Toán
                           </span>
                         )}
                       </div>
@@ -198,8 +199,8 @@ export default function BillingPage() {
 
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="text-xl font-bold text-primary">${bill.bill_total}</p>
-                        <p className="text-sm text-brown-500">Total</p>
+                        <p className="text-xl font-bold text-primary">{formatPrice(bill.bill_total)}</p>
+                        <p className="text-sm text-brown-500">Tổng Cộng</p>
                       </div>
                       {canCancelBill(bill.bill_status) && (
                         <button
@@ -209,7 +210,7 @@ export default function BillingPage() {
                           className="inline-flex items-center gap-1 rounded-lg border border-error/30 px-3 py-2 text-sm font-medium text-error hover:bg-error/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                           <XCircle className="w-4 h-4" />
-                          {cancelingBillId === bill.bill_id ? 'Cancelling' : 'Cancel'}
+                          {cancelingBillId === bill.bill_id ? 'Đang Hủy' : 'Hủy Đơn'}
                         </button>
                       )}
                       <Link
@@ -218,7 +219,7 @@ export default function BillingPage() {
                         className="hidden sm:inline-flex items-center gap-1 text-sm text-primary hover:underline"
                       >
                           <Receipt className="w-4 h-4" />
-                          Receipt
+                          Hóa Đơn
                         </Link>
                       {isExpanded ? (
                         <ChevronUp className="w-5 h-5 text-brown-400" />
@@ -270,7 +271,7 @@ export default function BillingPage() {
                   <div className="border-t border-brown-100 bg-cream/30 p-4 md:p-6 animate-fade-in">
                     {billDetails[bill.bill_id] ? (
                       <div className="space-y-4">
-                        <h4 className="font-semibold text-brown-900">Bill Items</h4>
+                        <h4 className="font-semibold text-brown-900">Các Món</h4>
                         <div className="grid gap-3">
                           {details.map((item, index) => (
                             <div key={index} className="flex items-center gap-4 bg-white p-3 rounded-xl">
@@ -291,11 +292,11 @@ export default function BillingPage() {
                                 )}
                               </div>
                               <div className="flex-1">
-                                <p className="font-medium text-brown-900">{item.food?.food_name || `Item #${item.food_id}`}</p>
-                                <p className="text-sm text-brown-500">Qty: {item.item_qty}</p>
+                                <p className="font-medium text-brown-900">{item.food?.food_name || `Món #${item.food_id}`}</p>
+                                <p className="text-sm text-brown-500">SL: {item.item_qty}</p>
                               </div>
                               <p className="font-semibold text-primary">
-                                ${((parseFloat(item.food?.food_price || 0) - parseFloat(item.food?.food_discount || 0)) * item.item_qty).toFixed(2)}
+                                {formatPrice((parseFloat(item.food?.food_price || 0) - parseFloat(item.food?.food_discount || 0)) * item.item_qty)}
                               </p>
                             </div>
                           ))}
@@ -303,16 +304,16 @@ export default function BillingPage() {
 
                         <div className="border-t border-brown-100 pt-4 mt-4">
                           <div className="flex justify-between text-sm mb-2">
-                            <span className="text-brown-500">Discount</span>
-                            <span className="text-success">-${bill.bill_discount}</span>
+                            <span className="text-brown-500">Giảm Giá</span>
+                            <span className="text-success">-{formatPrice(bill.bill_discount)}</span>
                           </div>
                           <div className="flex justify-between text-sm mb-2">
-                            <span className="text-brown-500">Delivery Fee</span>
-                            <span className="text-brown-900">${bill.bill_delivery}</span>
+                            <span className="text-brown-500">Phí Giao Hàng</span>
+                            <span className="text-brown-900">{formatPrice(bill.bill_delivery)}</span>
                           </div>
                           <div className="flex justify-between font-bold text-lg">
-                            <span>Bill Total</span>
-                            <span className="text-primary">${bill.bill_total}</span>
+                            <span>Tổng Cộng</span>
+                            <span className="text-primary">{formatPrice(bill.bill_total)}</span>
                           </div>
                         </div>
                       </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Star, ShoppingCart, Eye } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
+import { formatPrice } from '../../utils/formatters';
 
 export default function FoodCard({ food, onQuickView }) {
   const [isAdding, setIsAdding] = useState(false);
@@ -120,11 +121,11 @@ export default function FoodCard({ food, onQuickView }) {
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-primary">
-              ${discountedPrice.toFixed(2)}
+              {formatPrice(discountedPrice)}
             </span>
             {hasDiscount && (
               <span className="text-sm text-brown-400 line-through">
-                ${parseFloat(price).toFixed(2)}
+                {formatPrice(price)}
               </span>
             )}
           </div>
@@ -139,7 +140,7 @@ export default function FoodCard({ food, onQuickView }) {
             }`}
           >
             <ShoppingCart className="w-5 h-5" />
-            <span className="hidden sm:inline">{isAdding ? 'Added!' : 'Add'}</span>
+            <span className="hidden sm:inline">{isAdding ? 'Đã Thêm!' : 'Thêm'}</span>
           </button>
         </div>
       </div>

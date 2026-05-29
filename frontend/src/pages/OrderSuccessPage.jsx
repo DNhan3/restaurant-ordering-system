@@ -65,7 +65,7 @@ export default function OrderSuccessPage() {
               className="flex-1 btn-secondary flex items-center justify-center gap-2"
             >
               <Receipt className="w-5 h-5" />
-              View Receipt
+              View Hóa Đơn
             </Link>
           )}
           <Link
