@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle } from 'lucide-react';
+import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { billingService } from '../services/api';
 import { BILL_STATUS_LABELS } from '../utils/constants';
