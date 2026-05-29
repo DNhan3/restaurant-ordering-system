@@ -11,7 +11,7 @@ import { CartService } from '../services/cart.service.js';
 
 @Controller('cart')
 export class CartController {
-  constructor(private readonly cartService: CartService) {}
+  constructor(private readonly cartService: CartService) { }
 
   @Get()
   getCart() {

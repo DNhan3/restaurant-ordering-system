@@ -61,9 +61,16 @@ export class BillStatus {
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
+  @Column({ name: 'shipper_id', nullable: true })
+  shipperId!: number | null;
+
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user!: User;
+
+  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'shipper_id' })
+  shipper!: User | null;
 
   @OneToMany(() => BillDetail, (detail) => detail.billStatus)
   billDetails!: BillDetail[];
