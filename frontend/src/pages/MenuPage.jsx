@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight, Grid, LayoutList } from 'lucide-react';
 import FoodCard from '../components/menu/FoodCard';
 import QuickViewModal from '../components/menu/QuickViewModal';
@@ -30,7 +31,42 @@ const TYPE_OPTIONS = [
 
 const ITEMS_PER_PAGE = 12;
 
+const getCategoryFromSearchParams = (searchParams) => {
+  const requestedCategory = searchParams.get('category') || searchParams.get('catagory') || 'all';
+  const normalizedCategory = requestedCategory.toLowerCase();
+
+  return CATEGORIES.some((category) => category.id === normalizedCategory)
+    ? normalizedCategory
+    : 'all';
+};
+
+const getSearchParamOption = (searchParams, key, validOptions, fallback = 'all') => {
+  const requestedOption = searchParams.get(key) || fallback;
+  return validOptions.some((option) => option.id === requestedOption) ? requestedOption : fallback;
+};
+
+const getStatusValuesFromSearchParams = (searchParams) => {
+  const requestedStatuses = searchParams.get('status')?.split(',').filter(Boolean) || [];
+  const statusById = new Map(STATUS_OPTIONS.map((status) => [status.id, status.value]));
+
+  return requestedStatuses
+    .map((statusId) => statusById.get(statusId))
+    .filter(Boolean);
+};
+
+const getStatusIds = (statusValues) => {
+  return STATUS_OPTIONS
+    .filter((status) => statusValues.includes(status.value))
+    .map((status) => status.id);
+};
+
+const getPageFromSearchParams = (searchParams) => {
+  const page = Number(searchParams.get('page'));
+  return Number.isInteger(page) && page > 0 ? page : 1;
+};
+
 export default function MenuPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [foods, setFoods] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -54,6 +90,15 @@ export default function MenuPage() {
   useEffect(() => {
     loadFoods();
   }, []);
+
+  useEffect(() => {
+    setSelectedCategory(getCategoryFromSearchParams(searchParams));
+    setSearchQuery(searchParams.get('search') || '');
+    setSelectedPriceRange(getSearchParamOption(searchParams, 'price', PRICE_RANGES));
+    setSelectedStatuses(getStatusValuesFromSearchParams(searchParams));
+    setSelectedType(getSearchParamOption(searchParams, 'type', TYPE_OPTIONS));
+    setCurrentPage(getPageFromSearchParams(searchParams));
+  }, [searchParams]);
 
   const loadFoods = async () => {
     try {
@@ -113,25 +158,77 @@ export default function MenuPage() {
     return filteredFoods.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredFoods, currentPage]);
 
-  // Reset page when filters change
+  const updateSearchParams = (updates, resetPage = true) => {
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (!value || value === 'all' || (Array.isArray(value) && value.length === 0)) {
+          nextParams.delete(key);
+          return;
+        }
+
+        nextParams.set(key, Array.isArray(value) ? value.join(',') : value);
+      });
+
+      nextParams.delete('catagory');
+
+      if (resetPage) {
+        nextParams.delete('page');
+      }
+
+      return nextParams;
+    });
+  };
+
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCategory, selectedPriceRange, selectedStatuses, selectedType]);
+    if (currentPage > totalPages && totalPages > 0) {
+      updateSearchParams({ page: totalPages === 1 ? null : totalPages }, false);
+    }
+  }, [currentPage, totalPages]);
 
   const toggleStatus = (status) => {
-    setSelectedStatuses((prev) =>
-      prev.includes(status)
-        ? prev.filter((s) => s !== status)
-        : [...prev, status]
-    );
+    const nextStatuses = selectedStatuses.includes(status)
+      ? selectedStatuses.filter((s) => s !== status)
+      : [...selectedStatuses, status];
+
+    setSelectedStatuses(nextStatuses);
+    updateSearchParams({ status: getStatusIds(nextStatuses) });
   };
 
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedCategory('all');
+    setSearchParams({});
     setSelectedPriceRange('all');
     setSelectedStatuses([]);
     setSelectedType('all');
+  };
+
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategory(categoryId);
+    updateSearchParams({ category: categoryId });
+  };
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    updateSearchParams({ search: query });
+  };
+
+  const handlePriceRangeChange = (priceRangeId) => {
+    setSelectedPriceRange(priceRangeId);
+    updateSearchParams({ price: priceRangeId });
+  };
+
+  const handleTypeChange = (typeId) => {
+    setSelectedType(typeId);
+    updateSearchParams({ type: typeId });
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    updateSearchParams({ page: page === 1 ? null : page }, false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const hasActiveFilters =
@@ -147,13 +244,11 @@ export default function MenuPage() {
   };
 
   const handlePrevPage = () => {
-    setCurrentPage((p) => Math.max(1, p - 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handlePageChange(Math.max(1, currentPage - 1));
   };
 
   const handleNextPage = () => {
-    setCurrentPage((p) => Math.min(totalPages, p + 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handlePageChange(Math.min(totalPages, currentPage + 1));
   };
 
   if (isLoading) {
@@ -186,12 +281,12 @@ export default function MenuPage() {
               type="text"
               placeholder="Tìm kiếm món ăn..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border-2 border-brown-200 focus:border-primary focus:outline-none transition-colors"
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => handleSearchChange('')}
                 className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-brown-100 rounded-full"
               >
                 <X className="w-4 h-4 text-brown-400" />
@@ -263,7 +358,7 @@ export default function MenuPage() {
                         type="radio"
                         name="category"
                         checked={selectedCategory === cat.id}
-                        onChange={() => setSelectedCategory(cat.id)}
+                        onChange={() => handleCategoryChange(cat.id)}
                         className="w-4 h-4 text-primary focus:ring-primary"
                       />
                       <span className="text-sm text-brown-700">{cat.name}</span>
@@ -284,7 +379,7 @@ export default function MenuPage() {
                         type="radio"
                         name="price"
                         checked={selectedPriceRange === range.id}
-                        onChange={() => setSelectedPriceRange(range.id)}
+                        onChange={() => handlePriceRangeChange(range.id)}
                         className="w-4 h-4 text-primary focus:ring-primary"
                       />
                       <span className="text-sm text-brown-700">{range.label}</span>
@@ -325,7 +420,7 @@ export default function MenuPage() {
                         type="radio"
                         name="type"
                         checked={selectedType === type.id}
-                        onChange={() => setSelectedType(type.id)}
+                        onChange={() => handleTypeChange(type.id)}
                         className="w-4 h-4 text-primary focus:ring-primary"
                       />
                       <span className="text-sm text-brown-700">{type.label}</span>
@@ -395,10 +490,7 @@ export default function MenuPage() {
                       return (
                         <button
                           key={page}
-                          onClick={() => {
-                            setCurrentPage(page);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                          }}
+                          onClick={() => handlePageChange(page)}
                           className={`w-10 h-10 rounded-xl font-medium transition-colors ${
                             page === currentPage
                               ? 'bg-primary text-white'
