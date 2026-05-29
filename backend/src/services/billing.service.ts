@@ -105,7 +105,7 @@ export class BillingService {
 
         return billStatusRepository.findOne({
           where: { id: billStatus.id },
-          relations: { user: true, shipper: true, billDetails: { food: true } },
+          relations: { user: true, billDetails: { food: true } },
         });
       },
     );
@@ -120,7 +120,7 @@ export class BillingService {
   async findUserInvoices(userId: number) {
     const bills = await this.billStatusRepository.find({
       where: { userId },
-      relations: { user: true, shipper: true, billDetails: { food: true } },
+      relations: { user: true, billDetails: { food: true } },
       order: { createdAt: 'DESC' },
     });
 
@@ -174,7 +174,7 @@ export class BillingService {
   private async findEntity(id: number): Promise<BillStatus> {
     const bill = await this.billStatusRepository.findOne({
       where: { id },
-      relations: { user: true, shipper: true, billDetails: { food: true } },
+      relations: { user: true, billDetails: { food: true } },
     });
 
     if (!bill) {

@@ -218,9 +218,9 @@ export default function BillingPage() {
                         onClick={(event) => event.stopPropagation()}
                         className="hidden sm:inline-flex items-center gap-1 text-sm text-primary hover:underline"
                       >
-                        <Receipt className="w-4 h-4" />
-                        Hóa Đơn
-                      </Link>
+                          <Receipt className="w-4 h-4" />
+                          Hóa Đơn
+                        </Link>
                       {isExpanded ? (
                         <ChevronUp className="w-5 h-5 text-brown-400" />
                       ) : (

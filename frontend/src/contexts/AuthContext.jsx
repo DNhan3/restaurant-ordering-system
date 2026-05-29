@@ -88,9 +88,7 @@ export function AuthProvider({ children }) {
     if (!user) {
       throw new Error('Incorrect email or password');
     }
-    const normalized = normalizeUser(user);
-    setUser(normalized);
-    return normalized;
+    setUser(normalizeUser(user));
   };
 
   const logout = () => {

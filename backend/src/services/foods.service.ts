@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Food } from '../models/food.entity.js';
-import { CreateFoodDto } from '../dto/create.dto.js';
-import { UpdateFoodDto } from '../dto/update.dto.js';
+import { CreateFoodDto } from '../dto/create-food.dto.js';
+import { UpdateFoodDto } from '../dto/update-food.dto.js';
 import { mapFoodResponse } from './response-mappers.js';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class FoodsService {
   constructor(
     @InjectRepository(Food)
     private readonly foodRepository: Repository<Food>,
-  ) { }
+  ) {}
 
   async findAll() {
     const foods = await this.foodRepository.find();

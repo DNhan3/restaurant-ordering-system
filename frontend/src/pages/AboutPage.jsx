@@ -13,7 +13,7 @@ const TEAM_PHOTOS = [
     image: '',
   },
   {
-    name: 'Chef. Triều Hưng',
+    name: 'Chef. Triệu Hưng',
     role: 'Nghệ Nhân Bánh Mì',
     image: '',
   },
@@ -38,7 +38,7 @@ export default function AboutPage() {
               Về 36<span className="text-primary">Food</span>
             </h1>
             <p className="text-lg text-brown-300 leading-relaxed">
-              Được thành lập từ năm 2016 bởi những người có niềm đam mê với ẩm thực Việt,
+              Được thành lập từ năm 2016 bởi những người có niềm đam mê với ẩm thực Việt, 
               36Food đã phục vụ hàng nghìn khách hàng với những món ăn ngon chuẩn vị.
               Từ một quán nhỏ ven đường, giờ đây chúng tôi mang đến hương vị Việt đến mọi nhà.
             </p>
@@ -56,12 +56,12 @@ export default function AboutPage() {
                 Mang Hương Vị Việt Đến Mọi Nhà
               </h2>
               <p className="text-brown-600 leading-relaxed mb-6">
-                Chúng tôi tin rằng ẩm thực Việt có sức mạnh kết nối con người và tạo nên
-                những kỷ niệm đáng nhớ. Mỗi món ăn đều được chế biến tỉ mỉ với tình yêu,
+                Chúng tôi tin rằng ẩm thực Việt có sức mạnh kết nối con người và tạo nên 
+                những kỷ niệm đáng nhớ. Mỗi món ăn đều được chế biến tỉ mỉ với tình yêu, 
                 sử dụng nguyên liệu tươi sạch và công thức gia truyền.
               </p>
               <p className="text-brown-600 leading-relaxed mb-8">
-                Từ tô phở nóng hổi đến đĩa cơm tấm đậm đà, mỗi món trong thực đơn đều
+                Từ tô phở nóng hổi đến đĩa cơm tấm đậm đà, mỗi món trong thực đơn đều 
                 thể hiện sự cam kết của chúng tôi với chất lượng và sự hài lòng của khách hàng.
               </p>
               <Link to="/menu" className="btn-primary inline-flex items-center gap-2">

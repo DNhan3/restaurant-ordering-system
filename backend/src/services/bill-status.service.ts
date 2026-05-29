@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BillStatus, BillStatusEnum } from '../models/bill-status.entity.js';
-import { CreateBillStatusDto } from '../dto/create.dto.js';
-import { UpdateBillStatusDto } from '../dto/update.dto.js';
+import { CreateBillStatusDto } from '../dto/create-bill-status.dto.js';
+import { UpdateBillStatusDto } from '../dto/update-bill-status.dto.js';
 import { mapBillStatusResponse } from './response-mappers.js';
 
 const ORDER_STATUS_FLOW = [
@@ -20,11 +20,11 @@ export class BillStatusService {
   constructor(
     @InjectRepository(BillStatus)
     private readonly billStatusRepository: Repository<BillStatus>,
-  ) { }
+  ) {}
 
   async findAll() {
     const billStatuses = await this.billStatusRepository.find({
-      relations: { user: true, shipper: true, billDetails: { food: true } },
+      relations: { user: true, billDetails: { food: true } },
       order: { createdAt: 'DESC' },
     });
     return billStatuses.map(mapBillStatusResponse);
@@ -42,7 +42,7 @@ export class BillStatusService {
   async findByUser(userId: number) {
     const billStatuses = await this.billStatusRepository.find({
       where: { userId },
-      relations: { user: true, shipper: true, billDetails: { food: true } },
+      relations: { user: true, billDetails: { food: true } },
       order: { createdAt: 'DESC' },
     });
     return billStatuses.map(mapBillStatusResponse);
@@ -102,7 +102,7 @@ export class BillStatusService {
   private async findEntity(id: number): Promise<BillStatus> {
     const billStatus = await this.billStatusRepository.findOne({
       where: { id },
-      relations: { user: true, shipper: true, billDetails: { food: true } },
+      relations: { user: true, billDetails: { food: true } },
     });
     if (!billStatus) {
       throw new NotFoundException(`Bill status with id ${id} not found`);
