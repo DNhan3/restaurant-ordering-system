@@ -147,11 +147,10 @@ export default function ReceiptPage() {
                 </h2>
               </div>
               <div
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium ${
-                  selectedInvoice.bill_paid
-                    ? 'bg-success/10 text-success'
-                    : 'bg-warning/10 text-warning'
-                }`}
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium ${selectedInvoice.bill_paid
+                  ? 'bg-success/10 text-success'
+                  : 'bg-warning/10 text-warning'
+                  }`}
               >
                 {selectedInvoice.bill_paid ? (
                   <CheckCircle className="w-4 h-4" />
@@ -163,76 +162,76 @@ export default function ReceiptPage() {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4 mb-6 text-sm">
-                  <InvoiceMeta
-                    icon={CalendarClock}
-                    label="Ngày Tạo"
-                    value={new Date(selectedInvoice.bill_when).toLocaleString('vi-VN')}
-                  />
-                  <InvoiceMeta
-                    icon={PaymentIcon}
-                    label="Thanh Toán"
-                    value={
-                      selectedInvoice.bill_payment_method === 'card'
-                        ? 'Thẻ'
-                        : 'Tiền Mặt'
-                    }
-                  />
-                  <InvoiceMeta
-                    icon={Phone}
-                    label="Điện Thoại"
-                    value={selectedInvoice.bill_phone || '-'}
-                  />
-                  <InvoiceMeta
-                    icon={MapPin}
-                    label="Địa Chỉ"
-                    value={selectedInvoice.bill_address || '-'}
-                  />
+              <InvoiceMeta
+                icon={CalendarClock}
+                label="Ngày Tạo"
+                value={new Date(selectedInvoice.bill_when).toLocaleString('vi-VN')}
+              />
+              <InvoiceMeta
+                icon={PaymentIcon}
+                label="Thanh Toán"
+                value={
+                  selectedInvoice.bill_payment_method === 'card'
+                    ? 'Thẻ'
+                    : 'Tiền Mặt'
+                }
+              />
+              <InvoiceMeta
+                icon={Phone}
+                label="Điện Thoại"
+                value={selectedInvoice.bill_phone || '-'}
+              />
+              <InvoiceMeta
+                icon={MapPin}
+                label="Địa Chỉ"
+                value={selectedInvoice.bill_address || '-'}
+              />
             </div>
 
             <div className="border border-brown-100 rounded-xl overflow-hidden">
-                  <div className="grid grid-cols-[1fr_72px_120px] gap-3 bg-brown-100 px-4 py-3 text-sm font-semibold text-brown-900">
-                    <span>Món</span>
-                    <span className="text-center">SL</span>
-                    <span className="text-right">Tổng</span>
+              <div className="grid grid-cols-[1fr_72px_120px] gap-3 bg-brown-100 px-4 py-3 text-sm font-semibold text-brown-900">
+                <span>Món</span>
+                <span className="text-center">SL</span>
+                <span className="text-right">Tổng</span>
+              </div>
+              {selectedInvoice.bill_details.map((item) => (
+                <div
+                  key={item.bill_detail_id}
+                  className="grid grid-cols-[1fr_72px_120px] gap-3 px-4 py-3 border-t border-brown-100 text-sm"
+                >
+                  <div>
+                    <p className="font-medium text-brown-900">
+                      {item.food?.food_name || `Món #${item.food_id}`}
+                    </p>
+                    <p className="text-brown-500">
+                      {formatPrice(item.item_price)}
+                    </p>
                   </div>
-                  {selectedInvoice.bill_details.map((item) => (
-                    <div
-                      key={item.bill_detail_id}
-                      className="grid grid-cols-[1fr_72px_120px] gap-3 px-4 py-3 border-t border-brown-100 text-sm"
-                    >
-                      <div>
-                        <p className="font-medium text-brown-900">
-                          {item.food?.food_name || `Món #${item.food_id}`}
-                        </p>
-                        <p className="text-brown-500">
-                          {formatPrice(item.item_price)}
-                        </p>
-                      </div>
-                      <span className="text-center text-brown-700">
-                        {item.item_qty}
-                      </span>
-                      <span className="text-right font-semibold text-brown-900">
-                        {formatPrice(item.line_total)}
-                      </span>
-                    </div>
-                  ))}
+                  <span className="text-center text-brown-700">
+                    {item.item_qty}
+                  </span>
+                  <span className="text-right font-semibold text-brown-900">
+                    {formatPrice(item.line_total)}
+                  </span>
+                </div>
+              ))}
             </div>
 
             <div className="mt-6 ml-auto max-w-sm space-y-3">
-                  <InvoiceTotal label="Tạm Tính" value={selectedInvoice.bill_subtotal} />
-                  <InvoiceTotal
-                    label="Giảm Giá"
-                    value={-Number(selectedInvoice.bill_discount || 0)}
-                    tone="success"
-                  />
-                  <InvoiceTotal label="Phí Giao Hàng" value={selectedInvoice.bill_delivery} />
-                  <div className="border-t border-brown-100 pt-3">
-                    <InvoiceTotal
-                      label="Tổng Cộng"
-                      value={selectedInvoice.bill_amount_due}
-                      strong
-                    />
-                  </div>
+              <InvoiceTotal label="Tạm Tính" value={selectedInvoice.bill_subtotal} />
+              <InvoiceTotal
+                label="Giảm Giá"
+                value={-Number(selectedInvoice.bill_discount || 0)}
+                tone="success"
+              />
+              <InvoiceTotal label="Phí Giao Hàng" value={selectedInvoice.bill_delivery} />
+              <div className="border-t border-brown-100 pt-3">
+                <InvoiceTotal
+                  label="Tổng Cộng"
+                  value={selectedInvoice.bill_amount_due}
+                  strong
+                />
+              </div>
             </div>
           </div>
         </div>

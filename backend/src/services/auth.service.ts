@@ -4,12 +4,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from './users.service.js';
-import { CreateUserDto } from '../dto/create-user.dto.js';
+import { CreateUserDto } from '../dto/create.dto.js';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   async login(body: unknown) {
     const { email, password } = body as Partial<CreateUserDto>;

@@ -3,7 +3,7 @@ import { BillingService } from '../services/billing.service.js';
 
 @Controller()
 export class CheckoutController {
-  constructor(private readonly billingService: BillingService) {}
+  constructor(private readonly billingService: BillingService) { }
 
   @Post('checkout')
   checkout(@Body() body: unknown) {

@@ -217,11 +217,10 @@ export default function CheckoutPage() {
                 {/* Payment Options */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <label
-                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                      formData.paymentMethod === 'cash'
+                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.paymentMethod === 'cash'
                         ? 'border-primary bg-primary/5'
                         : 'border-brown-200 hover:border-primary/50'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"
@@ -231,9 +230,8 @@ export default function CheckoutPage() {
                       onChange={handleChange}
                       className="sr-only"
                     />
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      formData.paymentMethod === 'cash' ? 'bg-primary text-white' : 'bg-brown-100'
-                    }`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${formData.paymentMethod === 'cash' ? 'bg-primary text-white' : 'bg-brown-100'
+                      }`}>
                       <Banknote className="w-5 h-5" />
                     </div>
                     <div>
@@ -246,11 +244,10 @@ export default function CheckoutPage() {
                   </label>
 
                   <label
-                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                      formData.paymentMethod === 'card'
+                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.paymentMethod === 'card'
                         ? 'border-primary bg-primary/5'
                         : 'border-brown-200 hover:border-primary/50'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"
@@ -260,9 +257,8 @@ export default function CheckoutPage() {
                       onChange={handleChange}
                       className="sr-only"
                     />
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      formData.paymentMethod === 'card' ? 'bg-primary text-white' : 'bg-brown-100'
-                    }`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${formData.paymentMethod === 'card' ? 'bg-primary text-white' : 'bg-brown-100'
+                      }`}>
                       <CreditCard className="w-5 h-5" />
                     </div>
                     <div>

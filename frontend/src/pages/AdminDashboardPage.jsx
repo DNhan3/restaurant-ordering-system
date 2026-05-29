@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, ArrowRight } from 'lucide-react';
+import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { billingService } from '../services/api';
 import { BILL_STATUS_LABELS } from '../utils/constants';
@@ -31,6 +31,12 @@ export default function AdminDashboardPage() {
   const [billDetails, setBillDetails] = useState([]);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [savingBillId, setSavingBillId] = useState(null);
+  const [shippers, setShippers] = useState([]);
+  const [showShipperForm, setShowShipperForm] = useState(false);
+  const [shipperForm, setShipperForm] = useState({ email: '', name: '', password: '' });
+  const [shipperError, setShipperError] = useState('');
+  const [shipperSuccess, setShipperSuccess] = useState('');
+  const [isCreatingShipper, setIsCreatingShipper] = useState(false);
 
   useEffect(() => {
     if (!admin) {
@@ -39,6 +45,7 @@ export default function AdminDashboardPage() {
     }
     loadBills();
     loadBillingSummary();
+    loadShippers();
   }, [admin, navigate]);
 
   const loadBills = async () => {
@@ -137,6 +144,41 @@ export default function AdminDashboardPage() {
     navigate('/');
   };
 
+  const loadShippers = async () => {
+    try {
+      const api = (await import('../api/axios')).default;
+      const response = await api.get('/admin/shippers');
+      setShippers(response.data);
+    } catch (error) {
+      console.error('Failed to load shippers:', error);
+    }
+  };
+
+  const handleCreateShipper = async (e) => {
+    e.preventDefault();
+    setShipperError('');
+    setShipperSuccess('');
+
+    if (!shipperForm.email || !shipperForm.name || !shipperForm.password) {
+      setShipperError('Vui lòng điền đầy đủ thông tin');
+      return;
+    }
+
+    try {
+      setIsCreatingShipper(true);
+      const api = (await import('../api/axios')).default;
+      await api.post('/admin/shippers', shipperForm);
+      setShipperSuccess(`Đã tạo tài khoản shipper: ${shipperForm.email}`);
+      setShipperForm({ email: '', name: '', password: '' });
+      setShowShipperForm(false);
+      await loadShippers();
+    } catch (err) {
+      setShipperError(err.response?.data?.message || 'Không thể tạo tài khoản');
+    } finally {
+      setIsCreatingShipper(false);
+    }
+  };
+
   const getStatusColor = (status) => {
     const colors = {
       0: 'bg-gray-100 text-gray-700',
@@ -218,6 +260,110 @@ export default function AdminDashboardPage() {
             value={formatCurrency(billingSummary?.unpaidRevenue)}
             tone="warning"
           />
+        </div>
+
+        {/* Shipper Management */}
+        <div className="bg-white rounded-2xl shadow-md p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-brown-900 flex items-center gap-2">
+              <Truck className="w-5 h-5 text-blue-600" />
+              Quản Lý Shipper
+            </h2>
+            <button
+              onClick={() => { setShowShipperForm(!showShipperForm); setShipperError(''); setShipperSuccess(''); }}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+            >
+              <UserPlus className="w-4 h-4" />
+              {showShipperForm ? 'Đóng' : 'Tạo Shipper Mới'}
+            </button>
+          </div>
+
+          {shipperSuccess && (
+            <div className="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-3 rounded-xl text-sm mb-4">
+              <Check className="w-4 h-4 shrink-0" />
+              {shipperSuccess}
+            </div>
+          )}
+
+          {showShipperForm && (
+            <form onSubmit={handleCreateShipper} className="bg-blue-50/50 rounded-xl p-5 mb-4 border border-blue-100">
+              <h3 className="font-semibold text-brown-900 mb-4">Tạo tài khoản shipper mới</h3>
+              <div className="grid sm:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-brown-700 mb-1">Tên</label>
+                  <input
+                    type="text"
+                    value={shipperForm.name}
+                    onChange={(e) => setShipperForm({ ...shipperForm, name: e.target.value })}
+                    placeholder="Nguyễn Văn A"
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-brown-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    value={shipperForm.email}
+                    onChange={(e) => setShipperForm({ ...shipperForm, email: e.target.value })}
+                    placeholder="shipper@email.com"
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-brown-700 mb-1">Mật khẩu</label>
+                  <input
+                    type="text"
+                    value={shipperForm.password}
+                    onChange={(e) => setShipperForm({ ...shipperForm, password: e.target.value })}
+                    placeholder="Mật khẩu cho shipper"
+                    className="input-field"
+                  />
+                </div>
+              </div>
+              {shipperError && (
+                <p className="text-red-600 text-sm mb-3 flex items-center gap-1">
+                  <AlertCircle className="w-4 h-4" />
+                  {shipperError}
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={isCreatingShipper}
+                className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 flex items-center gap-2"
+              >
+                {isCreatingShipper ? (
+                  <><RefreshCw className="w-4 h-4 animate-spin" /> Đang tạo...</>
+                ) : (
+                  <><UserPlus className="w-4 h-4" /> Tạo Tài Khoản</>
+                )}
+              </button>
+            </form>
+          )}
+
+          {shippers.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-brown-50">
+                  <tr>
+                    <th className="px-4 py-2.5 text-left text-sm font-semibold text-brown-700">ID</th>
+                    <th className="px-4 py-2.5 text-left text-sm font-semibold text-brown-700">Tên</th>
+                    <th className="px-4 py-2.5 text-left text-sm font-semibold text-brown-700">Email</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-brown-100">
+                  {shippers.map((s) => (
+                    <tr key={s.id} className="hover:bg-cream/50 transition-colors">
+                      <td className="px-4 py-2.5 text-sm text-brown-600">#{s.id}</td>
+                      <td className="px-4 py-2.5 text-sm font-medium text-brown-900">{s.name}</td>
+                      <td className="px-4 py-2.5 text-sm text-brown-600">{s.email}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-sm text-brown-400 text-center py-4">Chưa có tài khoản shipper nào</p>
+          )}
         </div>
 
         {isLoading ? (

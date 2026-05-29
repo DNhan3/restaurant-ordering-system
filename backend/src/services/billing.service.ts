@@ -50,7 +50,7 @@ export class BillingService {
     private readonly billStatusRepository: Repository<BillStatus>,
     @InjectRepository(BillDetail)
     private readonly billDetailRepository: Repository<BillDetail>,
-  ) {}
+  ) { }
 
   async checkout(body: unknown) {
     const checkout = body as CheckoutBody;
@@ -105,7 +105,7 @@ export class BillingService {
 
         return billStatusRepository.findOne({
           where: { id: billStatus.id },
-          relations: { user: true, billDetails: { food: true } },
+          relations: { user: true, shipper: true, billDetails: { food: true } },
         });
       },
     );
@@ -120,7 +120,7 @@ export class BillingService {
   async findUserInvoices(userId: number) {
     const bills = await this.billStatusRepository.find({
       where: { userId },
-      relations: { user: true, billDetails: { food: true } },
+      relations: { user: true, shipper: true, billDetails: { food: true } },
       order: { createdAt: 'DESC' },
     });
 
@@ -174,7 +174,7 @@ export class BillingService {
   private async findEntity(id: number): Promise<BillStatus> {
     const bill = await this.billStatusRepository.findOne({
       where: { id },
-      relations: { user: true, billDetails: { food: true } },
+      relations: { user: true, shipper: true, billDetails: { food: true } },
     });
 
     if (!bill) {
@@ -213,10 +213,10 @@ export class BillingService {
       user_id: bill.userId,
       customer: bill.user
         ? {
-            user_id: bill.user.id,
-            user_name: bill.user.name,
-            user_email: bill.user.email,
-          }
+          user_id: bill.user.id,
+          user_name: bill.user.name,
+          user_email: bill.user.email,
+        }
         : null,
       bill_status: bill.status,
       bill_status_label: STATUS_LABELS[bill.status] ?? bill.status,

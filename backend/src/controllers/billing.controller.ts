@@ -3,7 +3,7 @@ import { BillingService } from '../services/billing.service.js';
 
 @Controller('billing')
 export class BillingController {
-  constructor(private readonly billingService: BillingService) {}
+  constructor(private readonly billingService: BillingService) { }
 
   @Get('summary')
   getSummary() {

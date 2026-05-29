@@ -65,9 +65,8 @@ export default function CartPage() {
               {items.map((item, index) => (
                 <div
                   key={item.foodId}
-                  className={`p-4 md:p-6 ${
-                    index !== items.length - 1 ? 'border-b border-brown-100' : ''
-                  }`}
+                  className={`p-4 md:p-6 ${index !== items.length - 1 ? 'border-b border-brown-100' : ''
+                    }`}
                 >
                   <div className="flex gap-4 md:gap-6">
                     {/* Image */}

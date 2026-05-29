@@ -218,9 +218,9 @@ export default function BillingPage() {
                         onClick={(event) => event.stopPropagation()}
                         className="hidden sm:inline-flex items-center gap-1 text-sm text-primary hover:underline"
                       >
-                          <Receipt className="w-4 h-4" />
-                          Hóa Đơn
-                        </Link>
+                        <Receipt className="w-4 h-4" />
+                        Hóa Đơn
+                      </Link>
                       {isExpanded ? (
                         <ChevronUp className="w-5 h-5 text-brown-400" />
                       ) : (
@@ -237,13 +237,12 @@ export default function BillingPage() {
                           <div key={step.name} className="flex items-center">
                             <div className="flex flex-col items-center">
                               <div
-                                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                                  step.completed
-                                    ? 'bg-success text-white'
-                                    : step.current
+                                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${step.completed
+                                  ? 'bg-success text-white'
+                                  : step.current
                                     ? 'bg-primary text-white'
                                     : 'bg-brown-200 text-brown-500'
-                                }`}
+                                  }`}
                               >
                                 {step.completed ? '✓' : index + 1}
                               </div>
@@ -253,9 +252,8 @@ export default function BillingPage() {
                             </div>
                             {index < steps.length - 1 && (
                               <div
-                                className={`w-full h-1 mx-2 ${
-                                  step.completed ? 'bg-success' : 'bg-brown-200'
-                                }`}
+                                className={`w-full h-1 mx-2 ${step.completed ? 'bg-success' : 'bg-brown-200'
+                                  }`}
                                 style={{ minWidth: '20px', maxWidth: '60px' }}
                               />
                             )}
