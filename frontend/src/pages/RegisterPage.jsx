@@ -33,27 +33,27 @@ export default function RegisterPage() {
     const normalizedName = formData.name.trim().replace(/\s+/g, ' ');
 
     if (!normalizedName) {
-      newErrors.name = 'Name is required';
+      newErrors.name = 'Vui lòng nhập tên';
     } else if (!/^[A-Za-z]+(?:\s+[A-Za-z]+)*$/.test(normalizedName)) {
-      newErrors.name = 'Name can only contain letters';
+      newErrors.name = 'Tên chỉ được chứa chữ cái';
     }
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'Vui lòng nhập email';
     } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = 'Email không hợp lệ';
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'Vui lòng nhập mật khẩu';
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = 'Vui lòng xác nhận mật khẩu';
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = 'Mật khẩu không khớp';
     }
 
     setErrors(newErrors);
@@ -79,10 +79,10 @@ export default function RegisterPage() {
     } catch (error) {
       console.error('Registration failed:', error);
       if (error?.response?.status === 409) {
-        const message = error.response.data?.message || 'An account already exists';
+        const message = error.response.data?.message || 'Tài khoản đã tồn tại';
         setErrors(message.toLowerCase().includes('name') ? { name: message } : { email: message });
       } else {
-        setErrors({ submit: 'Registration failed. Please try again.' });
+        setErrors({ submit: 'Đăng ký thất bại. Vui lòng thử lại.' });
       }
     } finally {
       setIsLoading(false);
@@ -96,10 +96,10 @@ export default function RegisterPage() {
           <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-success" />
           </div>
-          <h2 className="text-2xl font-bold text-brown-900 mb-4">Registration Successful!</h2>
-          <p className="text-brown-600 mb-6">Redirecting you to home page...</p>
+          <h2 className="text-2xl font-bold text-brown-900 mb-4">Đăng ký thành công!</h2>
+          <p className="text-brown-600 mb-6">Đang chuyển về trang chủ...</p>
           <Link to="/" className="btn-primary">
-            Continue Shopping
+            Tiếp tục mua sắm
           </Link>
         </div>
       </div>
@@ -114,11 +114,11 @@ export default function RegisterPage() {
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <ChefHat className="w-10 h-10 text-primary" />
             <span className="text-3xl font-bold heading-display">
-              Q<span className="text-primary">Food</span>
+              36<span className="text-primary">Food</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-brown-900">Create Your Account</h1>
-          <p className="text-brown-500 mt-2">Join QFood and start ordering</p>
+          <h1 className="text-2xl font-bold text-brown-900">Tạo tài khoản mới</h1>
+          <p className="text-brown-500 mt-2">Tham gia QFood và bắt đầu đặt món</p>
         </div>
 
         {/* Form */}
@@ -127,7 +127,7 @@ export default function RegisterPage() {
             {/* Name */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                User Name
+                Tên người dùng
               </label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
@@ -136,7 +136,7 @@ export default function RegisterPage() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Nguyen Van A"
+                  placeholder="Nguyễn Văn A"
                   className={`input-field pl-12 ${errors.name ? 'border-error' : ''}`}
                 />
               </div>
@@ -146,7 +146,7 @@ export default function RegisterPage() {
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Email Address
+                Địa chỉ Email
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
@@ -165,7 +165,7 @@ export default function RegisterPage() {
             {/* Password */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Password
+                Mật khẩu
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
@@ -174,7 +174,7 @@ export default function RegisterPage() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Min 8 characters"
+                  placeholder="Tối thiểu 8 ký tự"
                   className={`input-field pl-12 pr-12 ${errors.password ? 'border-error' : ''}`}
                 />
                 <button
@@ -182,7 +182,7 @@ export default function RegisterPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-brown-400 hover:text-brown-600"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
                 </button>
               </div>
               {errors.password && <p className="text-error text-sm mt-1">{errors.password}</p>}
@@ -191,7 +191,7 @@ export default function RegisterPage() {
             {/* Confirm Password */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Confirm Password
+                Xác nhận mật khẩu
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
@@ -200,7 +200,7 @@ export default function RegisterPage() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="Re-enter password"
+                  placeholder="Nhập lại mật khẩu"
                   className={`input-field pl-12 pr-12 ${errors.confirmPassword ? 'border-error' : ''}`}
                 />
                 <button
@@ -208,19 +208,12 @@ export default function RegisterPage() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-brown-400 hover:text-brown-600"
                 >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showConfirmPassword ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
                 </button>
               </div>
               {errors.confirmPassword && <p className="text-error text-sm mt-1">{errors.confirmPassword}</p>}
             </div>
 
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="text-sm text-primary hover:underline"
-            >
-              {showPassword ? 'Hide' : 'Show'} passwords
-            </button>
 
             {errors.submit && (
               <div className="p-4 bg-error/10 text-error rounded-xl flex items-center gap-2">
@@ -237,25 +230,25 @@ export default function RegisterPage() {
               {isLoading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Creating Account...
+                  Đang tạo tài khoản...
                 </>
               ) : (
-                'Create Account'
+                'Tạo tài khoản'
               )}
             </button>
           </form>
 
           <p className="text-center text-brown-500 mt-6">
-            Already have an account?{' '}
+            Đã có tài khoản?{' '}
             <Link to="/login" className="text-primary font-medium hover:underline">
-              Sign in
+              Đăng nhập
             </Link>
           </p>
         </div>
 
         <div className="text-center mt-6">
           <Link to="/" className="text-brown-500 hover:text-primary text-sm">
-            &larr; Back to Home
+            &larr; Quay lại trang chủ
           </Link>
         </div>
       </div>
