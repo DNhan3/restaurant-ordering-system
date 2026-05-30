@@ -9,6 +9,7 @@ import {
   Post,
   Req,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -19,6 +20,9 @@ import { diskStorage } from 'multer';
 import { AdminService } from '../services/admin.service.js';
 import { CreateFoodDto } from '../dto/create.dto.js';
 import { UpdateFoodDto } from '../dto/update.dto.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/roles.guard.js';
+import { Roles } from '../auth/roles.decorator.js';
 
 const foodUploadsPath = join(process.cwd(), 'uploads', 'foods');
 
@@ -27,6 +31,8 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) { }
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   getDashboard() {
     return this.adminService.getDashboard();
   }
@@ -37,31 +43,43 @@ export class AdminController {
   }
 
   @Get('orders')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   getOrders() {
     return this.adminService.getOrders();
   }
 
   @Patch('orders/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   updateOrder(@Param('id') id: string, @Body() body: unknown) {
     return this.adminService.updateOrder(id, body);
   }
 
   @Get('foods')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   getFoods() {
     return this.adminService.getFoods();
   }
 
   @Post('foods')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   createFood(@Body() body: CreateFoodDto) {
     return this.adminService.createFood(body);
   }
 
   @Patch('foods/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   updateFood(@Param('id') id: string, @Body() body: UpdateFoodDto) {
     return this.adminService.updateFood(id, body);
   }
 
   @Post('foods/upload')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -107,16 +125,22 @@ export class AdminController {
   }
 
   @Post('shippers')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   createShipper(@Body() body: { email: string; name: string; password: string }) {
     return this.adminService.createShipper(body);
   }
 
   @Get('shippers')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   getShippers() {
     return this.adminService.getShippers();
   }
 
   @Delete('shippers/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   deleteShipper(@Param('id') id: string) {
     return this.adminService.deleteShipper(id);
   }

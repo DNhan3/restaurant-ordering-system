@@ -5,9 +5,10 @@ import { CheckoutController } from '../controllers/checkout.controller.js';
 import { BillDetail } from '../models/bill-detail.entity.js';
 import { BillStatus } from '../models/bill-status.entity.js';
 import { BillingService } from '../services/billing.service.js';
+import { AuthModule } from './auth.module.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BillStatus, BillDetail])],
+  imports: [TypeOrmModule.forFeature([BillStatus, BillDetail]), AuthModule],
   controllers: [BillingController, CheckoutController],
   providers: [BillingService],
   exports: [BillingService],

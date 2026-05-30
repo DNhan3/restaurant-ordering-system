@@ -8,6 +8,27 @@ const api = axios.create({
   },
 });
 
+const readToken = (storageKey) => {
+  try {
+    return JSON.parse(localStorage.getItem(storageKey) || 'null')?.accessToken;
+  } catch {
+    return null;
+  }
+};
+
+api.interceptors.request.use((config) => {
+  const token =
+    readToken('qfood_admin') ||
+    readToken('qfood_shipper') ||
+    readToken('qfood_user');
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {

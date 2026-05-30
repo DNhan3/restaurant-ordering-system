@@ -3,9 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BillStatus } from '../models/bill-status.entity.js';
 import { BillStatusService } from '../services/bill-status.service.js';
 import { BillStatusController } from '../controllers/bill-status.controller.js';
+import { AuthModule } from './auth.module.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BillStatus])],
+  imports: [TypeOrmModule.forFeature([BillStatus]), AuthModule],
   controllers: [BillStatusController],
   providers: [BillStatusService],
   exports: [BillStatusService],

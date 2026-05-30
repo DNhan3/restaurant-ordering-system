@@ -3,9 +3,10 @@ import { AdminController } from '../controllers/admin.controller.js';
 import { AdminService } from '../services/admin.service.js';
 import { FoodsModule } from './foods.module.js';
 import { UsersModule } from './users.module.js';
+import { AuthModule } from './auth.module.js';
 
 @Module({
-  imports: [FoodsModule, UsersModule],
+  imports: [FoodsModule, UsersModule, AuthModule],
   controllers: [AdminController],
   providers: [AdminService],
 })

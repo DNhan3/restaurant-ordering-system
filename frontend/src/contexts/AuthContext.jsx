@@ -9,7 +9,7 @@ const ADMIN_STORAGE_KEY = 'qfood_admin';
 const normalizeUser = (userData) => {
   if (!userData) return null;
 
-  const id = userData.id ?? userData.user_id;
+  const id = userData.id ?? userData.user_id ?? userData.sub;
   const name = userData.name ?? userData.user_name;
   const email = userData.email ?? userData.user_email;
   const phone = userData.phone ?? userData.user_phone ?? '';
@@ -77,8 +77,7 @@ export function AuthProvider({ children }) {
     if (!user) {
       throw new Error('Registration failed');
     }
-    setUser(normalizeUser(user));
-    await login(userData.email, userData.password);
+    setUser({ ...normalizeUser(user), accessToken: resp?.accessToken });
   };
 
   const login = async (email, password) => {
@@ -88,9 +87,9 @@ export function AuthProvider({ children }) {
     if (!user) {
       throw new Error('Incorrect email or password');
     }
-    const normalized = normalizeUser(user);
-    setUser(normalized);
-    return normalized;
+    const session = { ...normalizeUser(user), accessToken: resp?.accessToken };
+    setUser(session);
+    return session;
   };
 
   const logout = () => {
@@ -104,7 +103,7 @@ export function AuthProvider({ children }) {
     if (!admin) {
       throw new Error('Invalid admin credentials');
     }
-    setAdmin(admin);
+    setAdmin({ ...admin, accessToken: resp?.accessToken });
     return true;
   };
 

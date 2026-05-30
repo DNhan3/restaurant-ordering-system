@@ -157,11 +157,17 @@ export default function AboutPage() {
             {TEAM_PHOTOS.map((member, index) => (
               <div key={index} className="text-center group">
                 <div className="relative mb-4 overflow-hidden rounded-2xl">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                  {member.image ? (
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-full aspect-square bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+                      <Users className="w-16 h-16" aria-hidden="true" />
+                    </div>
+                  )}
                 </div>
                 <h3 className="font-semibold text-lg text-brown-900">{member.name}</h3>
                 <p className="text-primary font-medium">{member.role}</p>

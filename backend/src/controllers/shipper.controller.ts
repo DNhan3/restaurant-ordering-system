@@ -5,8 +5,15 @@ import {
     Param,
     Body,
     ParseIntPipe,
+    Req,
+    UseGuards,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { ShipperService } from '../services/shipper.service.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/roles.guard.js';
+import { Roles } from '../auth/roles.decorator.js';
+import type { AuthUser } from '../auth/auth.types.js';
 
 @Controller('shipper')
 export class ShipperController {
@@ -18,44 +25,56 @@ export class ShipperController {
     }
 
     @Get('available-orders')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('shipper')
     availableOrders() {
         return this.shipperService.availableOrders();
     }
 
     @Get('my-order/:shipperId')
-    myOrder(@Param('shipperId', ParseIntPipe) shipperId: number) {
-        return this.shipperService.myOrder(shipperId);
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('shipper')
+    myOrder(@Req() request: Request & { user: AuthUser }) {
+        return this.shipperService.myOrder(request.user.sub);
     }
 
     @Post('accept/:billId')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('shipper')
     accept(
         @Param('billId', ParseIntPipe) billId: number,
-        @Body('shipperId', ParseIntPipe) shipperId: number,
+        @Req() request: Request & { user: AuthUser },
     ) {
-        return this.shipperService.accept(billId, shipperId);
+        return this.shipperService.accept(billId, request.user.sub);
     }
 
     @Post('deny/:billId')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('shipper')
     deny(
         @Param('billId', ParseIntPipe) billId: number,
-        @Body('shipperId', ParseIntPipe) shipperId: number,
+        @Req() request: Request & { user: AuthUser },
     ) {
-        return this.shipperService.deny(billId, shipperId);
+        return this.shipperService.deny(billId, request.user.sub);
     }
 
     @Post('pickup/:billId')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('shipper')
     pickup(
         @Param('billId', ParseIntPipe) billId: number,
-        @Body('shipperId', ParseIntPipe) shipperId: number,
+        @Req() request: Request & { user: AuthUser },
     ) {
-        return this.shipperService.pickup(billId, shipperId);
+        return this.shipperService.pickup(billId, request.user.sub);
     }
 
     @Post('delivered/:billId')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('shipper')
     delivered(
         @Param('billId', ParseIntPipe) billId: number,
-        @Body('shipperId', ParseIntPipe) shipperId: number,
+        @Req() request: Request & { user: AuthUser },
     ) {
-        return this.shipperService.delivered(billId, shipperId);
+        return this.shipperService.delivered(billId, request.user.sub);
     }
 }

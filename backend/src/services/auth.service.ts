@@ -6,10 +6,15 @@ import {
 import { UsersService } from './users.service.js';
 import { CreateUserDto } from '../dto/create.dto.js';
 import * as bcrypt from 'bcryptjs';
+import { JwtTokenService } from '../auth/jwt-token.service.js';
+import type { AuthUser } from '../auth/auth.types.js';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtTokenService: JwtTokenService,
+  ) { }
 
   async login(body: unknown) {
     const { email, password } = body as Partial<CreateUserDto>;
@@ -27,8 +32,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const { password: _pw, ...rest } = user as any;
-    return { message: 'Login successful', user: rest };
+    return {
+      message: 'Login successful',
+      user: this.toAuthUser(user),
+      accessToken: this.jwtTokenService.sign(this.toAuthUser(user)),
+    };
   }
 
   async register(body: unknown) {
@@ -38,7 +46,22 @@ export class AuthService {
     }
     const createUserDto: CreateUserDto = { email, name, password };
     const user = await this.usersService.save(createUserDto);
-    const { password: _pw, ...rest } = user as any;
-    return { message: 'User registered', user: rest };
+    const authUser = this.toAuthUser(user);
+    return {
+      message: 'User registered',
+      user: authUser,
+      accessToken: this.jwtTokenService.sign(authUser),
+    };
+  }
+
+  private toAuthUser(user: { id: number; email: string; name: string; role: string }): AuthUser {
+    const role = user.role === 'shipper' ? 'shipper' : 'customer';
+    return {
+      sub: user.id,
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role,
+    };
   }
 }

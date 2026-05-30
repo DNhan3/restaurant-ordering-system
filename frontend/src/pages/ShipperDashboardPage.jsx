@@ -46,7 +46,7 @@ export default function ShipperDashboardPage() {
   // Redirect if not logged in
   useEffect(() => {
     if (!shipper) {
-      navigate('/shipper');
+      navigate('/login');
     }
   }, [shipper, navigate]);
 

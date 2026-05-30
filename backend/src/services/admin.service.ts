@@ -10,6 +10,7 @@ import { UsersService } from './users.service.js';
 import { CreateFoodDto } from '../dto/create.dto.js';
 import { UpdateFoodDto } from '../dto/update.dto.js';
 import { CreateUserDto } from '../dto/create.dto.js';
+import { JwtTokenService } from '../auth/jwt-token.service.js';
 
 @Injectable()
 export class AdminService {
@@ -17,6 +18,7 @@ export class AdminService {
     private readonly configService: ConfigService,
     private readonly foodsService: FoodsService,
     private readonly usersService: UsersService,
+    private readonly jwtTokenService: JwtTokenService,
   ) {}
 
   async login(body: unknown) {
@@ -39,12 +41,17 @@ export class AdminService {
       throw new UnauthorizedException('Invalid admin credentials');
     }
 
+    const admin = {
+      sub: 0,
+      email: 'admin@qfood.local',
+      name: 'Administrator',
+      role: 'admin' as const,
+    };
+
     return {
       message: 'Admin login successful',
-      admin: {
-        role: 'admin',
-        name: 'Administrator',
-      },
+      admin,
+      accessToken: this.jwtTokenService.sign(admin),
     };
   }
 

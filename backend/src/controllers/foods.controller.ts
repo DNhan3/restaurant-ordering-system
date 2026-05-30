@@ -7,10 +7,14 @@ import {
   Param,
   Body,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { FoodsService } from '../services/foods.service.js';
 import { CreateFoodDto } from '../dto/create.dto.js';
 import { UpdateFoodDto } from '../dto/update.dto.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/roles.guard.js';
+import { Roles } from '../auth/roles.decorator.js';
 
 @Controller('foods')
 export class FoodsController {
@@ -27,11 +31,15 @@ export class FoodsController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   create(@Body() createFoodDto: CreateFoodDto) {
     return this.foodsService.create(createFoodDto);
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFoodDto: UpdateFoodDto,
@@ -40,6 +48,8 @@ export class FoodsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.foodsService.remove(id);
   }
