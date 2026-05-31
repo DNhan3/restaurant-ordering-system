@@ -99,6 +99,11 @@ export class BillStatusService {
     return mapBillStatusResponse(await this.findEntity(saved.id));
   }
 
+  async remove(id: number): Promise<void> {
+    const billStatus = await this.findEntity(id);
+    await this.billStatusRepository.remove(billStatus);
+  }
+
   private async findEntity(id: number): Promise<BillStatus> {
     const billStatus = await this.billStatusRepository.findOne({
       where: { id },

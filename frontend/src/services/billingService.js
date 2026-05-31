@@ -45,4 +45,9 @@ export const billingService = {
     const response = await api.put(`/bill-status/cancel/${billId}`);
     return response.data;
   },
+
+  removeBill: async (billId) => {
+    const response = await api.delete(`/bill-status/${billId}`);
+    return response.data;
+  },
 };

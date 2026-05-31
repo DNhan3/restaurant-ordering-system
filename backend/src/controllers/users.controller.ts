@@ -1,10 +1,28 @@
-import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service.js';
 import { CreateUserDto } from '../dto/create.dto.js';
+import { UpdateUserDto } from '../dto/update.dto.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/roles.guard.js';
+import { Roles } from '../auth/roles.decorator.js';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
+
+  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  findAll() {
+    return this.usersService.findAll();
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findOne(id);
+  }
 
   @Post('find')
   findByEmail() {
@@ -21,5 +39,36 @@ export class UsersController {
     });
     const { password: _pw, ...rest } = user as any;
     return rest;
+  }
+
+  @Post('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  async createByAdmin(@Body() createUserDto: CreateUserDto) {
+    const user = await this.usersService.save({
+      email: createUserDto.email,
+      name: createUserDto.name,
+      password: createUserDto.password,
+      role: createUserDto.role ?? 'customer',
+    });
+    const { password: _pw, ...rest } = user as any;
+    return rest;
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.update(id, updateUserDto);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.remove(id);
   }
 }

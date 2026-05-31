@@ -1,11 +1,18 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Phone, Clock, Calendar, Users, CheckCircle, AlertCircle } from 'lucide-react';
 import { bookingService } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function TableBookingPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+  }, [user, navigate]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
@@ -102,7 +109,6 @@ export default function TableBookingPage() {
         note: '',
       });
     } catch (error) {
-      console.error('Booking failed:', error);
       setErrors({ submit: 'Failed to submit booking. Please try again.' });
     } finally {
       setIsSubmitting(false);
@@ -311,7 +317,7 @@ export default function TableBookingPage() {
             {/* Restaurant Info */}
             <div className="bg-white rounded-2xl shadow-md p-6">
               <h3 className="font-bold text-lg text-brown-900 mb-4">Thông Tin Nhà Hàng</h3>
-              
+
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />

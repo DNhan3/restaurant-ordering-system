@@ -15,6 +15,8 @@ import RegisterPage from './pages/RegisterPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminDishesPage from './pages/AdminDishesPage';
+import AdminUsersPage from './pages/AdminUsersPage';
+import AdminBookingsPage from './pages/AdminBookingsPage';
 import BillingPage from './pages/BillingPage';
 import ReceiptPage from './pages/ReceiptPage';
 import ShipperDashboardPage from './pages/ShipperDashboardPage';
@@ -47,6 +49,8 @@ function App() {
             <Route path="/admin" element={<AdminLoginPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
             <Route path="/admin/dishes" element={<AdminDishesPage />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/bookings" element={<AdminBookingsPage />} />
 
             {/* Shipper routes */}
             <Route path="/shipper/dashboard" element={<ShipperDashboardPage />} />

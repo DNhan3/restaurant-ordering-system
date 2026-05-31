@@ -26,6 +26,11 @@ export const foodService = {
     return response.data;
   },
 
+  remove: async (id) => {
+    const response = await api.delete(`/foods/${id}`);
+    return response.data;
+  },
+
   uploadImage: async (imageFile) => {
     const formData = new FormData();
     formData.append('image', imageFile);
