@@ -20,6 +20,7 @@ import AdminBookingsPage from './pages/AdminBookingsPage';
 import BillingPage from './pages/BillingPage';
 import ReceiptPage from './pages/ReceiptPage';
 import ShipperDashboardPage from './pages/ShipperDashboardPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
               <Route path="/orders/:billId/receipt" element={<ReceiptPage />} />
               <Route path="/billing" element={<BillingPage />} />
               <Route path="/billing/:billId" element={<ReceiptPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Route>

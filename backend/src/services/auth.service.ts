@@ -54,7 +54,7 @@ export class AuthService {
     };
   }
 
-  private toAuthUser(user: { id: number; email: string; name: string; role: string }): AuthUser {
+  private toAuthUser(user: { id: number; email: string; name: string; role: string; phone?: string }): AuthUser {
     const role = user.role === 'shipper' ? 'shipper' : 'customer';
     return {
       sub: user.id,
@@ -62,6 +62,7 @@ export class AuthService {
       email: user.email,
       name: user.name,
       role,
+      phone: user.phone,
     };
   }
 }

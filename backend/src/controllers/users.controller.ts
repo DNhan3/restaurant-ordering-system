@@ -41,6 +41,35 @@ export class UsersController {
     return rest;
   }
 
+  @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  async updateProfile(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: { name?: string; phone?: string },
+    @Req() request: Request & { user: AuthUser },
+  ) {
+    if (request.user.sub !== id) {
+      throw new UnauthorizedException('You can only update your own profile');
+    }
+    const updated = await this.usersService.updateProfile(id, {
+      name: body.name,
+      phone: body.phone,
+    });
+    return { user: updated };
+  }
+
+  @Put(':id/password')
+  @UseGuards(JwtAuthGuard)
+  async changePassword(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: { currentPassword: string; newPassword: string },
+    @Req() request: Request & { user: AuthUser },
+  ) {
+    if (request.user.sub !== id) {
+      throw new UnauthorizedException('You can only change your own password');
+    }
+    await this.usersService.changePassword(id, body.currentPassword, body.newPassword);
+    return { message: 'Password changed successfully' };
   @Post('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')

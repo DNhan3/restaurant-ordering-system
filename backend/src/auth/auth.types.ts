@@ -6,6 +6,7 @@ export type AuthUser = {
   email: string;
   name: string;
   role: UserRole;
+  phone?: string;
 };
 
 export type JwtPayload = AuthUser & {

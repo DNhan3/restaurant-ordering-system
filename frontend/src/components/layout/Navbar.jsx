@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, User, LogOut, ClipboardList, ChefHat } from 'lucide-react';
+import { ShoppingCart, Menu, X, User, LogOut, ClipboardList, ChefHat, UserCircle } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -127,6 +127,13 @@ export default function Navbar() {
                     >
                       <ClipboardList className="w-4 h-4" />
                       Billing
+                    </Link>
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
+                    >
+                      <UserCircle className="w-4 h-4" />
+                      Hồ Sơ
                     </Link>
                     <button
                       onClick={handleLogout}

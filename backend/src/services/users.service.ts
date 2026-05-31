@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../models/user.entity.js';
@@ -134,5 +134,39 @@ export class UsersService {
   private withoutPassword(user: User): Omit<User, 'password'> {
     const { password: _pw, ...rest } = user;
     return rest as Omit<User, 'password'>;
+  }
+
+  async findById(id: number): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    return user;
+  }
+
+  async updateProfile(id: number, data: { name?: string; phone?: string }): Promise<Omit<User, 'password'>> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    if (data.name !== undefined) user.name = data.name;
+    if (data.phone !== undefined) user.phone = data.phone;
+    const saved = await this.userRepository.save(user);
+    const { password: _pw, ...rest } = saved;
+    return rest as Omit<User, 'password'>;
+  }
+
+  async changePassword(id: number, currentPassword: string, newPassword: string): Promise<void> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+    const hashed = await bcrypt.hash(newPassword, 10);
+    user.password = hashed;
+    await this.userRepository.save(user);
   }
 }
