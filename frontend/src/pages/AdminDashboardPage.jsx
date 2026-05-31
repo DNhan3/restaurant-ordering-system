@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle, ArrowRight, Trash2 } from 'lucide-react';
+import { CalendarDays, LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle, ArrowRight, Trash2, Users } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { billingService } from '../services/api';
 import { BILL_STATUS_LABELS } from '../utils/constants';
@@ -180,6 +180,26 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleDeleteBill = async (bill) => {
+    const confirmed = window.confirm(`Delete bill #${bill.bill_id}?`);
+    if (!confirmed) return;
+
+    try {
+      setSavingBillId(bill.bill_id);
+      await billingService.removeBill(bill.bill_id);
+      setBills((prev) => prev.filter((item) => item.bill_id !== bill.bill_id));
+      if (selectedBill?.bill_id === bill.bill_id) {
+        setSelectedBill(null);
+        setBillDetails([]);
+      }
+      await loadBillingSummary();
+    } catch (error) {
+      console.error('Failed to delete bill:', error);
+    } finally {
+      setSavingBillId(null);
+    }
+  };
+
   const handleDeleteShipper = async (shipper) => {
     const confirmed = window.confirm(`Delete shipper account "${shipper.name}"?`);
 
@@ -234,7 +254,21 @@ export default function AdminDashboardPage() {
                 className="flex items-center gap-2 px-4 py-2 bg-brown-800 rounded-lg hover:bg-brown-700 transition-colors"
               >
                 <Plus className="w-4 h-4" />
-                Add Dish
+                Dishes
+              </Link>
+              <Link
+                to="/admin/users"
+                className="flex items-center gap-2 px-4 py-2 bg-brown-800 rounded-lg hover:bg-brown-700 transition-colors"
+              >
+                <Users className="w-4 h-4" />
+                Users
+              </Link>
+              <Link
+                to="/admin/bookings"
+                className="flex items-center gap-2 px-4 py-2 bg-brown-800 rounded-lg hover:bg-brown-700 transition-colors"
+              >
+                <CalendarDays className="w-4 h-4" />
+                Bookings
               </Link>
               <button
                 onClick={() => {
@@ -477,6 +511,15 @@ export default function AdminDashboardPage() {
                                   className="text-sm text-primary hover:underline"
                                 >
                                   View Details
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteBill(bill)}
+                                  disabled={savingBillId === bill.bill_id}
+                                  className="inline-flex items-center gap-1 text-sm text-red-600 hover:underline disabled:opacity-50"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                  Delete
                                 </button>
                               </div>
                             </td>

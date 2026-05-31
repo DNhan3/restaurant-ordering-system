@@ -43,10 +43,12 @@ export class AdminService {
 
     const admin = {
       sub: 0,
+      id: 0,
       email: 'admin@qfood.local',
       name: 'Administrator',
       role: 'admin' as const,
     };
+
 
     return {
       message: 'Admin login successful',

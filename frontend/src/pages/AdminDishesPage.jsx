@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ImagePlus, LogOut, Save } from 'lucide-react';
+import { ArrowLeft, Edit, ImagePlus, LogOut, Save, Trash2, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { foodService } from '../services/api';
 import { CATEGORIES } from '../utils/constants';
@@ -22,6 +22,7 @@ export default function AdminDishesPage() {
   const [foodImagePreview, setFoodImagePreview] = useState('');
   const [isSavingFood, setIsSavingFood] = useState(false);
   const [foodMessage, setFoodMessage] = useState('');
+  const [editingFoodId, setEditingFoodId] = useState(null);
 
   useEffect(() => {
     if (!admin) {
@@ -55,7 +56,7 @@ export default function AdminDishesPage() {
     setFoodImagePreview(file ? URL.createObjectURL(file) : '');
   };
 
-  const handleCreateFood = async (event) => {
+  const handleSubmitFood = async (event) => {
     event.preventDefault();
     setFoodMessage('');
 
@@ -68,24 +69,67 @@ export default function AdminDishesPage() {
         image = upload.imageUrl;
       }
 
-      await foodService.create({
+      const payload = {
         name: foodForm.name.trim(),
         price: Number(foodForm.price),
         description: foodForm.description.trim(),
         image,
         category: foodForm.category,
-      });
+      };
 
-      setFoodForm(initialFoodForm);
-      setFoodImageFile(null);
-      setFoodImagePreview('');
-      setFoodMessage('Dish created successfully.');
+      if (editingFoodId) {
+        await foodService.update(editingFoodId, payload);
+        setFoodMessage('Dish updated successfully.');
+      } else {
+        await foodService.create(payload);
+        setFoodMessage('Dish created successfully.');
+      }
+
+      resetFoodForm();
       await loadFoods();
     } catch (error) {
       console.error('Failed to create food:', error);
       setFoodMessage(error.response?.data?.message || 'Failed to create dish.');
     } finally {
       setIsSavingFood(false);
+    }
+  };
+
+  const resetFoodForm = () => {
+    setFoodForm(initialFoodForm);
+    setFoodImageFile(null);
+    setFoodImagePreview('');
+    setEditingFoodId(null);
+  };
+
+  const handleEditFood = (food) => {
+    setEditingFoodId(food.food_id);
+    setFoodForm({
+      name: food.food_name || '',
+      price: food.food_price || '',
+      description: food.food_desc || '',
+      image: food.food_image || '',
+      category: food.food_category || 'pho',
+    });
+    setFoodImageFile(null);
+    setFoodImagePreview('');
+    setFoodMessage('');
+  };
+
+  const handleDeleteFood = async (food) => {
+    const confirmed = window.confirm(`Delete dish "${food.food_name}"?`);
+    if (!confirmed) return;
+
+    try {
+      await foodService.remove(food.food_id);
+      if (editingFoodId === food.food_id) {
+        resetFoodForm();
+      }
+      setFoodMessage('Dish deleted successfully.');
+      await loadFoods();
+    } catch (error) {
+      console.error('Failed to delete food:', error);
+      setFoodMessage(error.response?.data?.message || 'Failed to delete dish.');
     }
   };
 
@@ -131,12 +175,24 @@ export default function AdminDishesPage() {
             <div className="lg:w-2/3">
               <div className="flex items-center justify-between gap-4 mb-5">
                 <div>
-                  <h2 className="text-xl font-bold text-brown-900">Create Dish</h2>
+                  <h2 className="text-xl font-bold text-brown-900">
+                    {editingFoodId ? 'Edit Dish' : 'Create Dish'}
+                  </h2>
                   <p className="text-sm text-brown-500 mt-1">Upload a thumbnail and save it with the menu item.</p>
                 </div>
+                {editingFoodId && (
+                  <button
+                    type="button"
+                    onClick={resetFoodForm}
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-brown-200 text-brown-600 hover:bg-brown-50"
+                  >
+                    <X className="w-4 h-4" />
+                    Cancel
+                  </button>
+                )}
               </div>
 
-              <form onSubmit={handleCreateFood} className="grid md:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmitFood} className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-brown-700 mb-1">Dish name</label>
                   <input
@@ -223,7 +279,7 @@ export default function AdminDishesPage() {
                     className="btn-primary inline-flex items-center gap-2 disabled:opacity-60"
                   >
                     <Save className="w-4 h-4" />
-                    {isSavingFood ? 'Saving...' : 'Save Dish'}
+                    {isSavingFood ? 'Saving...' : editingFoodId ? 'Update Dish' : 'Save Dish'}
                   </button>
                   {foodMessage && (
                     <span className="text-sm text-brown-600">{foodMessage}</span>
@@ -247,19 +303,35 @@ export default function AdminDishesPage() {
                 )}
               </div>
 
-              <h3 className="font-semibold text-brown-900 mb-3">Latest Dishes</h3>
+              <h3 className="font-semibold text-brown-900 mb-3">Dishes</h3>
               <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
-                {foods.slice(-8).reverse().map((food) => (
+                {foods.slice().reverse().map((food) => (
                   <div key={food.food_id} className="flex items-center gap-3">
                     <img
                       src={food.food_image || '/images/placeholder-food.png'}
                       alt={food.food_name}
                       className="w-12 h-12 rounded-lg object-cover bg-brown-100"
                     />
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className="font-medium text-sm text-brown-900 truncate">{food.food_name}</p>
                       <p className="text-xs text-brown-500">{food.food_category}</p>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => handleEditFood(food)}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-brown-200 text-brown-600 hover:bg-brown-50"
+                      title="Edit dish"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteFood(food)}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50"
+                      title="Delete dish"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </div>
                 ))}
               </div>

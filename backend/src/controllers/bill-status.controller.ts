@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Post,
   Put,
@@ -105,5 +106,12 @@ export class BillStatusController {
     @Body() updateBillStatusDto: UpdateBillStatusDto,
   ) {
     return this.billStatusService.update(id, updateBillStatusDto);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.billStatusService.remove(id);
   }
 }

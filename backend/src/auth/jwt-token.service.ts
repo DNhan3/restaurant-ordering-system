@@ -65,7 +65,7 @@ export class JwtTokenService {
       throw new UnauthorizedException('Invalid token');
     }
 
-    if (!payload.sub || !payload.role || !payload.exp) {
+    if (payload.sub === undefined || payload.sub === null || !payload.role || !payload.exp) {
       throw new UnauthorizedException('Invalid token');
     }
 
@@ -106,4 +106,3 @@ export class JwtTokenService {
       : 60 * 60 * 24;
   }
 }
-

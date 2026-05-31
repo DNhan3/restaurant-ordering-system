@@ -11,4 +11,14 @@ export const bookingService = {
     const response = await api.get('/bookings');
     return response.data;
   },
+
+  update: async (id, data) => {
+    const response = await api.patch(`/bookings/${id}`, data);
+    return response.data;
+  },
+
+  remove: async (id) => {
+    const response = await api.delete(`/bookings/${id}`);
+    return response.data;
+  },
 };
