@@ -182,7 +182,7 @@ export default function TableBookingPage() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="0123456789"
+                        placeholder="Nhập số điện thoại"
                         className={`input-field ${errors.phone ? 'border-error' : ''}`}
                       />
                       {errors.phone && (

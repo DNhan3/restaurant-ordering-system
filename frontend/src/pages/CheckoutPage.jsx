@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { CreditCard, Banknote, Check, AlertCircle, ArrowLeft, Lock } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
@@ -18,7 +18,7 @@ export default function CheckoutPage() {
 
   // Form state
   const [formData, setFormData] = useState({
-    phone: user?.user_phone || '',
+    phone: '',
     address: '',
     paymentMethod: 'cash',
     cardNumber: '',
@@ -26,6 +26,12 @@ export default function CheckoutPage() {
     cardExpiry: '',
     cardCvv: '',
   });
+
+  useEffect(() => {
+    if (user?.user_phone) {
+      setFormData((prev) => ({ ...prev, phone: user.user_phone }));
+    }
+  }, [user]);
 
   const subtotal = getSubtotal();
   const discount = getTotalDiscount();
@@ -35,7 +41,6 @@ export default function CheckoutPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user types
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
@@ -175,7 +180,7 @@ export default function CheckoutPage() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="84123456789"
+                    placeholder="Nhập số điện thoại"
                     className={`input-field ${errors.phone ? 'border-error focus:border-error' : ''}`}
                   />
                   {errors.phone && (

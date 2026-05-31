@@ -6,26 +6,26 @@ const AuthContext = createContext();
 const AUTH_STORAGE_KEY = 'qfood_user';
 const ADMIN_STORAGE_KEY = 'qfood_admin';
 
-const normalizeUser = (userData) => {
-  if (!userData) return null;
+  const normalizeUser = (userData) => {
+    if (!userData) return null;
 
-  const id = userData.id ?? userData.user_id ?? userData.sub;
-  const name = userData.name ?? userData.user_name;
-  const email = userData.email ?? userData.user_email;
-  const phone = userData.phone ?? userData.user_phone ?? '';
+    const id = userData.id ?? userData.user_id ?? userData.sub;
+    const name = userData.name ?? userData.user_name;
+    const email = userData.email ?? userData.user_email;
+    const phone = userData.phone ?? userData.user_phone ?? '';
 
-  return {
-    ...userData,
-    id,
-    name,
-    email,
-    phone,
-    user_id: id,
-    user_name: name,
-    user_email: email,
-    user_phone: phone,
+    return {
+      ...userData,
+      id,
+      name,
+      email,
+      phone,
+      user_id: id,
+      user_name: name,
+      user_email: email,
+      user_phone: phone,
+    };
   };
-};
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
@@ -111,6 +111,12 @@ export function AuthProvider({ children }) {
     setAdmin(null);
   };
 
+  const updateUser = (updates) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      return normalizeUser({ ...prev, ...updates });
+    });
+  };
 
   const isAuthenticated = !!user;
 
@@ -123,6 +129,7 @@ export function AuthProvider({ children }) {
     logout,
     loginAsAdmin,
     logoutAdmin,
+    updateUser,
     isAuthenticated
   };
 
