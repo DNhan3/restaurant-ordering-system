@@ -22,7 +22,6 @@ const TEAM_PHOTOS = [
 export default function AboutPage() {
   return (
     <div className="bg-cream">
-      {/* Hero Section */}
       <section className="relative bg-brown-900 text-white py-20 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
@@ -35,18 +34,17 @@ export default function AboutPage() {
           <div className="max-w-2xl">
             <span className="heading-accent text-2xl">Câu Chuyện Của Chúng Tôi</span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mt-4 mb-6">
-              Về 36<span className="text-primary">Food</span>
+              Về VN<span className="text-primary">Food</span>
             </h1>
             <p className="text-lg text-brown-300 leading-relaxed">
               Được thành lập từ năm 2016 bởi những người có niềm đam mê với ẩm thực Việt,
-              36Food đã phục vụ hàng nghìn khách hàng với những món ăn ngon chuẩn vị.
+              VNFood đã phục vụ hàng nghìn khách hàng với những món ăn ngon chuẩn vị.
               Từ một quán nhỏ ven đường, giờ đây chúng tôi mang đến hương vị Việt đến mọi nhà.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Mission Section */}
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -95,7 +93,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Values Section */}
       <section className="section-padding bg-cream">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -143,13 +140,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team Section */}
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <span className="heading-accent text-xl">Gặp Gỡ Đội Ngũ</span>
             <h2 className="text-3xl md:text-4xl font-bold heading-display mt-2">
-              Những Người Tạo Nên 36Food
+              Những Người Tạo Nên VNFood
             </h2>
           </div>
 
@@ -177,12 +173,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="section-padding bg-primary text-white">
         <div className="max-w-4xl mx-auto text-center">
           <Utensils className="w-16 h-16 mx-auto mb-6" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Sẵn Sàng Trải Nghiệm 36Food?
+            Sẵn Sàng Trải Nghiệm VNFood?
           </h2>
           <p className="text-white/80 text-lg mb-8">
             Hãy cùng chúng tôi khám phá hương vị ẩm thực Việt Nam đích thực
@@ -197,7 +192,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      <br></br>
     </div>
   );
 }

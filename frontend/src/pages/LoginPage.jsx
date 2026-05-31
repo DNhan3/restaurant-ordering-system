@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, ChefHat } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, logout, logoutAdmin } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -15,6 +15,11 @@ export default function LoginPage() {
     email: '',
     password: '',
   });
+
+  useEffect(() => {
+    logout();
+    logoutAdmin();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,7 +58,6 @@ export default function LoginPage() {
     try {
       const user = await login(formData.email, formData.password);
       if (user?.role === 'shipper') {
-        localStorage.setItem('qfood_shipper', JSON.stringify(user));
         navigate('/shipper/dashboard');
       } else {
         navigate('/');
@@ -77,7 +81,7 @@ export default function LoginPage() {
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <ChefHat className="w-10 h-10 text-primary" />
             <span className="text-3xl font-bold heading-display">
-              Q<span className="text-primary">Food</span>
+              VN<span className="text-primary">Food</span>
             </span>
           </Link>
           <h1 className="text-2xl font-bold text-brown-900">Welcome Back!</h1>

@@ -6,9 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, In, Repository } from 'typeorm';
 import { BillStatus, BillStatusEnum } from '../models/bill-status.entity.js';
-import { User } from '../models/user.entity.js';
 import { mapBillStatusResponse } from './response-mappers.js';
-import { JwtTokenService } from '../auth/jwt-token.service.js';
 
 const BILL_RELATIONS = {
   user: true,
@@ -36,9 +34,6 @@ export class ShipperService {
   constructor(
     @InjectRepository(BillStatus)
     private readonly billStatusRepository: Repository<BillStatus>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    private readonly jwtTokenService: JwtTokenService,
   ) { }
 
   /** Orders that have no shipper and are in an assignable status */
@@ -138,34 +133,6 @@ export class ShipperService {
     bill.status = BillStatusEnum.DELIVERED;
     const saved = await this.billStatusRepository.save(bill);
     return mapBillStatusResponse(await this.findEntity(saved.id));
-  }
-
-  /** Authenticate a shipper by email + password */
-  async login(email: string, password: string) {
-    const bcrypt = await import('bcryptjs');
-    const user = await this.userRepository.findOneBy({ email });
-    if (!user) {
-      throw new BadRequestException('Invalid credentials');
-    }
-    if (user.role !== 'shipper') {
-      throw new BadRequestException('This account is not a shipper account.');
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      throw new BadRequestException('Invalid credentials');
-    }
-    const authUser = {
-      sub: user.id,
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: 'shipper' as const,
-    };
-    return {
-      message: 'Shipper login successful',
-      user: authUser,
-      accessToken: this.jwtTokenService.sign(authUser),
-    };
   }
 
   private async findEntity(id: number): Promise<BillStatus> {

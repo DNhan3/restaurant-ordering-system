@@ -28,6 +28,10 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     if (user?.user_phone) {
       setFormData((prev) => ({ ...prev, phone: user.user_phone }));
     }

@@ -5,6 +5,16 @@ const AuthContext = createContext();
 
 const AUTH_STORAGE_KEY = 'qfood_user';
 const ADMIN_STORAGE_KEY = 'qfood_admin';
+const SHIPPER_STORAGE_KEY = 'qfood_shipper';
+
+const clearUserStorage = () => {
+  localStorage.removeItem(AUTH_STORAGE_KEY);
+  localStorage.removeItem(SHIPPER_STORAGE_KEY);
+};
+
+const clearAdminStorage = () => {
+  localStorage.removeItem(ADMIN_STORAGE_KEY);
+};
 
   const normalizeUser = (userData) => {
     if (!userData) return null;
@@ -29,17 +39,22 @@ const ADMIN_STORAGE_KEY = 'qfood_admin';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem(AUTH_STORAGE_KEY);
+    const saved = localStorage.getItem(AUTH_STORAGE_KEY) || localStorage.getItem(SHIPPER_STORAGE_KEY);
     if (!saved) return null;
 
     try {
       return normalizeUser(JSON.parse(saved));
     } catch {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
+      clearUserStorage();
       return null;
     }
   });
   const [admin, setAdmin] = useState(() => {
+    if (localStorage.getItem(AUTH_STORAGE_KEY) || localStorage.getItem(SHIPPER_STORAGE_KEY)) {
+      clearAdminStorage();
+      return null;
+    }
+
     const saved = localStorage.getItem(ADMIN_STORAGE_KEY);
     if (!saved) return null;
 
@@ -57,21 +72,29 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (user) {
+      clearAdminStorage();
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+      if (user.role === 'shipper') {
+        localStorage.setItem(SHIPPER_STORAGE_KEY, JSON.stringify(user));
+      } else {
+        localStorage.removeItem(SHIPPER_STORAGE_KEY);
+      }
     } else {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
+      clearUserStorage();
     }
   }, [user]);
 
   useEffect(() => {
     if (admin) {
+      clearUserStorage();
       localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(admin));
     } else {
-      localStorage.removeItem(ADMIN_STORAGE_KEY);
+      clearAdminStorage();
     }
   }, [admin]);
 
   const register = async (userData) => {
+    setAdmin(null);
     const resp = await authService.register(userData);
     const user = resp?.user ?? resp;
     if (!user) {
@@ -82,6 +105,8 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     setUser(null);
+    setAdmin(null);
+    clearAdminStorage();
     const resp = await authService.login(email, password);
     const user = resp?.user ?? resp;
     if (!user) {
@@ -94,10 +119,13 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     setUser(null);
+    clearUserStorage();
   };
 
   const loginAsAdmin = async (password) => {
     setAdmin(null);
+    setUser(null);
+    clearUserStorage();
     const resp = await authService.adminLogin(password);
     const admin = resp?.admin;
     if (!admin) {
@@ -109,6 +137,7 @@ export function AuthProvider({ children }) {
 
   const logoutAdmin = () => {
     setAdmin(null);
+    clearAdminStorage();
   };
 
   const updateUser = (updates) => {

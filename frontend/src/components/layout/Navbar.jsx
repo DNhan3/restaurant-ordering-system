@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, User, LogOut, ClipboardList, ChefHat, UserCircle } from 'lucide-react';
+import { ShoppingCart, Menu, X, LogOut, ClipboardList, ChefHat, UserCircle, Truck } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -12,6 +12,7 @@ export default function Navbar() {
   const { user, admin, logout, logoutAdmin } = useAuth();
   const location = useLocation();
   const cartCount = getTotalItems();
+  const isShipper = user?.role === 'shipper';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,13 +27,14 @@ export default function Navbar() {
     setIsUserMenuOpen(false);
   }, [location]);
 
-  const navLinks = [
-    { to: '/', label: 'Trang Chủ' },
-    { to: '/about', label: 'Giới Thiệu' },
-    { to: '/promotions', label: 'Khuyến Mãi' },
-    { to: '/menu', label: 'Thực Đơn' },
-    { to: '/table-booking', label: 'Đặt Bàn' },
-  ];
+  const navLinks = isShipper
+    ? [{ to: '/shipper/dashboard', label: 'Dashboard' }]
+    : [
+        { to: '/', label: 'Trang Chủ' },
+        { to: '/about', label: 'Giới Thiệu' },
+        { to: '/menu', label: 'Thực Đơn' },
+        { to: '/table-booking', label: 'Đặt Bàn' },
+      ];
 
   const handleLogout = () => {
     logout();
@@ -49,21 +51,19 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
           <Link
-            to="/"
+            to={isShipper ? '/shipper/dashboard' : '/'}
             className="flex items-center gap-2 group"
           >
             <ChefHat className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform" />
             <div className="flex flex-col leading-tight">
               <span className="text-2xl font-bold heading-display">
-                36<span className="text-primary">Food</span>
+                VN<span className="text-primary">Food</span>
               </span>
               <span className="text-[10px] text-brown-500 -mt-1">Chuẩn cơm mẹ nấu</span>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <NavLink
@@ -82,22 +82,21 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Right Actions */}
           <div className="flex items-center gap-2">
-            {/* Cart Button */}
-            <Link
-              to="/cart"
-              className="relative p-2 rounded-full hover:bg-brown-100 transition-colors group"
-            >
-              <ShoppingCart className="w-6 h-6 text-brown-700 group-hover:text-primary transition-colors" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center">
-                  {cartCount > 9 ? '9+' : cartCount}
-                </span>
-              )}
-            </Link>
+            {!isShipper && (
+              <Link
+                to="/cart"
+                className="relative p-2 rounded-full hover:bg-brown-100 transition-colors group"
+              >
+                <ShoppingCart className="w-6 h-6 text-brown-700 group-hover:text-primary transition-colors" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center">
+                    {cartCount > 9 ? '9+' : cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
-            {/* User Menu */}
             {user ? (
               <div className="relative">
                 <button
@@ -121,13 +120,23 @@ export default function Navbar() {
                         {user.user_email}
                       </p>
                     </div>
-                    <Link
-                      to="/billing"
-                      className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
-                    >
-                      <ClipboardList className="w-4 h-4" />
-                      Billing
-                    </Link>
+                    {isShipper ? (
+                      <Link
+                        to="/shipper/dashboard"
+                        className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
+                      >
+                        <Truck className="w-4 h-4" />
+                        Dashboard
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/billing"
+                        className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
+                      >
+                        <ClipboardList className="w-4 h-4" />
+                        Billing
+                      </Link>
+                    )}
                     <Link
                       to="/profile"
                       className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
@@ -162,7 +171,6 @@ export default function Navbar() {
               </div>
             )}
 
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="lg:hidden p-2 rounded-lg hover:bg-brown-100 transition-colors"
@@ -176,7 +184,6 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {isOpen && (
           <div className="lg:hidden py-4 border-t border-brown-100 animate-slide-up">
             <div className="flex flex-col gap-1">

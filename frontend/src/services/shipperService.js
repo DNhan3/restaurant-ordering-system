@@ -1,38 +1,33 @@
 import api from '../api/axios';
 
 export const shipperService = {
-  login: async (email, password) => {
-    const response = await api.post('/shipper/login', { email, password });
-    return response.data;
-  },
-
   getAvailableOrders: async () => {
     const response = await api.get('/shipper/available-orders');
     return response.data;
   },
 
-  getMyOrder: async (shipperId) => {
-    const response = await api.get(`/shipper/my-order/${shipperId}`);
+  getMyOrder: async () => {
+    const response = await api.get('/shipper/my-order');
     return response.data;
   },
 
-  acceptOrder: async (billId, shipperId) => {
-    const response = await api.post(`/shipper/accept/${billId}`, { shipperId });
+  acceptOrder: async (billId) => {
+    const response = await api.post(`/shipper/accept/${billId}`);
     return response.data;
   },
 
-  denyOrder: async (billId, shipperId) => {
-    const response = await api.post(`/shipper/deny/${billId}`, { shipperId });
+  denyOrder: async (billId) => {
+    const response = await api.post(`/shipper/deny/${billId}`);
     return response.data;
   },
 
-  pickupOrder: async (billId, shipperId) => {
-    const response = await api.post(`/shipper/pickup/${billId}`, { shipperId });
+  pickupOrder: async (billId) => {
+    const response = await api.post(`/shipper/pickup/${billId}`);
     return response.data;
   },
 
-  deliveredOrder: async (billId, shipperId) => {
-    const response = await api.post(`/shipper/delivered/${billId}`, { shipperId });
+  deliveredOrder: async (billId) => {
+    const response = await api.post(`/shipper/delivered/${billId}`);
     return response.data;
   },
 };

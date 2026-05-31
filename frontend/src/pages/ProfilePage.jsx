@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Lock, Eye, EyeOff, Save, AlertCircle, CheckCircle } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, Save, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { userService } from '../services/userService';
-
-const normalizePhoneForInput = (value) => {
-  if (!value) return '';
-  return String(value).trim();
-};
 
 export default function ProfilePage() {
   const { user, isAuthenticated, updateUser } = useAuth();
@@ -15,7 +10,6 @@ export default function ProfilePage() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileMessage, setProfileMessage] = useState(null);
@@ -37,22 +31,15 @@ export default function ProfilePage() {
     }
     setName(user.user_name || '');
     setEmail(user.user_email || '');
-    setPhone(normalizePhoneForInput(user.user_phone));
   }, [isAuthenticated, navigate, user]);
 
   const handleProfileSave = async (e) => {
     e.preventDefault();
 
-    const phoneTrimmed = phone.trim();
-    if (phoneTrimmed && phoneTrimmed.length !== 10) {
-      setProfileMessage({ type: 'error', text: 'Số điện thoại phải đủ 10 ký tự' });
-      return;
-    }
-
     setProfileLoading(true);
     setProfileMessage(null);
     try {
-      const resp = await userService.updateProfile(user.user_id, { name, phone: phoneTrimmed });
+      const resp = await userService.updateProfile(user.user_id, { name });
       const updatedUser = resp?.user ?? resp;
       updateUser(updatedUser);
       setProfileMessage({ type: 'success', text: 'Cập nhật thông tin thành công!' });
@@ -151,12 +138,6 @@ export default function ProfilePage() {
                   <Mail className="w-4 h-4 flex-shrink-0" />
                   <span className="truncate">{email}</span>
                 </div>
-                {phone && (
-                  <div className="flex items-center gap-3 text-sm text-brown-600">
-                    <Phone className="w-4 h-4 flex-shrink-0" />
-                    <span>{phone}</span>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -211,7 +192,6 @@ export default function ProfilePage() {
                       onClick={() => {
                         setIsEditingProfile(false);
                         setName(user.user_name || '');
-                        setPhone(normalizePhoneForInput(user.user_phone));
                       }}
                       className="px-5 py-2 border border-brown-200 rounded-lg text-brown-700 hover:bg-brown-50 transition-colors font-medium"
                     >
@@ -345,58 +325,6 @@ export default function ProfilePage() {
                     Đổi mật khẩu
                   </button>
                 </div>
-              </form>
-            </div>
-
-            {/* Section 3: Phone Number */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-brown-900 flex items-center gap-2">
-                  <Phone className="w-5 h-5 text-primary" />
-                  Số Điện Thoại
-                </h3>
-              </div>
-
-              <form onSubmit={handleProfileSave}>
-                <div>
-                  <label className="block text-sm font-medium text-brown-700 mb-1">Số điện thoại</label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    disabled={!isEditingProfile}
-                    className="w-full sm:w-80 px-4 py-2.5 border border-brown-200 rounded-lg bg-brown-50 focus:ring-2 focus:ring-primary focus:border-transparent disabled:text-brown-700 disabled:cursor-not-allowed transition-colors"
-                    placeholder={phone ? '' : 'Nhập số điện thoại'}
-                  />
-                </div>
-
-                {isEditingProfile && (
-                  <div className="flex gap-3 mt-5 justify-end">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsEditingProfile(false);
-                        setName(user.user_name || '');
-                        setPhone(normalizePhoneForInput(user.user_phone));
-                      }}
-                      className="px-5 py-2 border border-brown-200 rounded-lg text-brown-700 hover:bg-brown-50 transition-colors font-medium"
-                    >
-                      Hủy
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={profileLoading}
-                      className="px-5 py-2 bg-primary text-white rounded-lg hover:bg-orange-600 transition-colors font-medium flex items-center gap-2 disabled:opacity-60"
-                    >
-                      {profileLoading ? (
-                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <Save className="w-4 h-4" />
-                      )}
-                      Lưu
-                    </button>
-                  </div>
-                )}
               </form>
             </div>
           </div>

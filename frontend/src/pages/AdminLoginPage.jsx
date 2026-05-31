@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Lock, AlertCircle, ChefHat } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function AdminLoginPage() {
-  const { loginAsAdmin } = useAuth();
+  const { loginAsAdmin, logout, logoutAdmin } = useAuth();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    logout();
+    logoutAdmin();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +42,7 @@ export default function AdminLoginPage() {
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <ChefHat className="w-10 h-10 text-primary" />
             <span className="text-3xl font-bold heading-display">
-              Q<span className="text-primary">Food</span>
+              VN<span className="text-primary">Food</span>
             </span>
           </Link>
           <h1 className="text-2xl font-bold text-brown-900">Admin Access</h1>

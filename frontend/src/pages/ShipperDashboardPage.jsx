@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Truck, LogOut, Package, MapPin, Phone, Clock,
+  Truck, Package, MapPin, Phone, Clock,
   CheckCircle, XCircle, RefreshCw, AlertTriangle, ChefHat,
 } from 'lucide-react';
 import { shipperService } from '../services/api';
 import { ORDER_STATUS_LABELS } from '../utils/constants';
+import { useAuth } from '../contexts/AuthContext';
 
-const SHIPPER_STORAGE_KEY = 'qfood_shipper';
 const POLL_INTERVAL = 5000;
 
 const formatCurrency = (value) =>
@@ -28,13 +28,8 @@ const STATUS_COLORS = {
 
 export default function ShipperDashboardPage() {
   const navigate = useNavigate();
-  const [shipper, setShipper] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(SHIPPER_STORAGE_KEY));
-    } catch {
-      return null;
-    }
-  });
+  const { user } = useAuth();
+  const shipper = user?.role === 'shipper' ? user : null;
 
   const [availableOrders, setAvailableOrders] = useState([]);
   const [myOrder, setMyOrder] = useState(null);
@@ -56,7 +51,7 @@ export default function ShipperDashboardPage() {
     try {
       const [available, current] = await Promise.all([
         shipperService.getAvailableOrders(),
-        shipperService.getMyOrder(shipper.id),
+        shipperService.getMyOrder(),
       ]);
       setAvailableOrders(available);
       setMyOrder(current);
@@ -82,16 +77,11 @@ export default function ShipperDashboardPage() {
     }
   }, [successMsg]);
 
-  const handleLogout = () => {
-    localStorage.removeItem(SHIPPER_STORAGE_KEY);
-    setShipper(null);
-  };
-
   const handleAccept = async (billId) => {
     try {
       setActionLoading(true);
       setError('');
-      await shipperService.acceptOrder(billId, shipper.id);
+      await shipperService.acceptOrder(billId);
       setSuccessMsg('Đã nhận đơn hàng!');
       await fetchData();
     } catch (err) {
@@ -105,7 +95,7 @@ export default function ShipperDashboardPage() {
     try {
       setActionLoading(true);
       setError('');
-      await shipperService.denyOrder(billId, shipper.id);
+      await shipperService.denyOrder(billId);
       setSuccessMsg('Đã hủy nhận đơn');
       setMyOrder(null);
       await fetchData();
@@ -120,7 +110,7 @@ export default function ShipperDashboardPage() {
     try {
       setActionLoading(true);
       setError('');
-      await shipperService.pickupOrder(billId, shipper.id);
+      await shipperService.pickupOrder(billId);
       setSuccessMsg('Đã lấy hàng — đang giao!');
       await fetchData();
     } catch (err) {
@@ -134,7 +124,7 @@ export default function ShipperDashboardPage() {
     try {
       setActionLoading(true);
       setError('');
-      await shipperService.deliveredOrder(billId, shipper.id);
+      await shipperService.deliveredOrder(billId);
       setSuccessMsg('Giao hàng thành công!');
       setMyOrder(null);
       await fetchData();
@@ -151,30 +141,24 @@ export default function ShipperDashboardPage() {
   const isDelivering = myOrder?.bill_status === 4; // DELIVERING
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%)' }}>
-      {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Truck className="w-7 h-7 text-blue-600" />
-            <div>
-              <h1 className="text-lg font-bold text-gray-900">
-                36<span className="text-blue-600">Ship</span>
-              </h1>
-              <p className="text-xs text-gray-500">Xin chào, {shipper.name}</p>
-            </div>
+    <div className="min-h-screen bg-cream">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-brown-900 flex items-center gap-3">
+              <Truck className="w-8 h-8 text-primary" />
+              Shipper Dashboard
+            </h1>
+            <p className="text-brown-500 mt-2">Xin chào, {shipper.name}</p>
           </div>
           <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            onClick={fetchData}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 border border-brown-200 rounded-lg text-brown-700 hover:bg-white transition-colors font-medium"
           >
-            <LogOut className="w-4 h-4" />
-            Đăng xuất
+            <RefreshCw className="w-4 h-4" />
+            Làm mới
           </button>
         </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         {/* Status messages */}
         {error && (
           <div className="flex items-center gap-2 bg-red-50 text-red-700 px-4 py-3 rounded-xl text-sm">
@@ -411,7 +395,7 @@ export default function ShipperDashboardPage() {
             )}
           </section>
         )}
-      </main>
+      </div>
     </div>
   );
 }

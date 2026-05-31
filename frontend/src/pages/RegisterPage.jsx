@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, Phone, Calendar, Eye, EyeOff, AlertCircle, CheckCircle, ChefHat } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle, ChefHat } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { authService } from '../services/api';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -62,7 +61,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -109,22 +108,19 @@ export default function RegisterPage() {
   return (
     <div className="bg-cream min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="max-w-lg w-full">
-        {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <ChefHat className="w-10 h-10 text-primary" />
             <span className="text-3xl font-bold heading-display">
-              36<span className="text-primary">Food</span>
+              VN<span className="text-primary">Food</span>
             </span>
           </Link>
           <h1 className="text-2xl font-bold text-brown-900">Tạo tài khoản mới</h1>
-          <p className="text-brown-500 mt-2">Tham gia QFood và bắt đầu đặt món</p>
+          <p className="text-brown-500 mt-2">Tham gia VNFood và bắt đầu đặt món</p>
         </div>
 
-        {/* Form */}
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Name */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
                 Tên người dùng
@@ -143,7 +139,6 @@ export default function RegisterPage() {
               {errors.name && <p className="text-error text-sm mt-1">{errors.name}</p>}
             </div>
 
-            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
                 Địa chỉ Email
@@ -162,7 +157,6 @@ export default function RegisterPage() {
               {errors.email && <p className="text-error text-sm mt-1">{errors.email}</p>}
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
                 Mật khẩu
@@ -188,7 +182,6 @@ export default function RegisterPage() {
               {errors.password && <p className="text-error text-sm mt-1">{errors.password}</p>}
             </div>
 
-            {/* Confirm Password */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
                 Xác nhận mật khẩu
@@ -213,7 +206,6 @@ export default function RegisterPage() {
               </div>
               {errors.confirmPassword && <p className="text-error text-sm mt-1">{errors.confirmPassword}</p>}
             </div>
-
 
             {errors.submit && (
               <div className="p-4 bg-error/10 text-error rounded-xl flex items-center gap-2">

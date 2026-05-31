@@ -144,13 +144,12 @@ export class UsersService {
     return user;
   }
 
-  async updateProfile(id: number, data: { name?: string; phone?: string }): Promise<Omit<User, 'password'>> {
+  async updateProfile(id: number, data: { name?: string }): Promise<Omit<User, 'password'>> {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
     if (data.name !== undefined) user.name = data.name;
-    if (data.phone !== undefined) user.phone = data.phone;
     const saved = await this.userRepository.save(user);
     const { password: _pw, ...rest } = saved;
     return rest as Omit<User, 'password'>;

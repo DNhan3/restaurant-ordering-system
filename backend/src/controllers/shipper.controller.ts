@@ -3,7 +3,6 @@ import {
     Get,
     Post,
     Param,
-    Body,
     ParseIntPipe,
     Req,
     UseGuards,
@@ -19,11 +18,6 @@ import type { AuthUser } from '../auth/auth.types.js';
 export class ShipperController {
     constructor(private readonly shipperService: ShipperService) { }
 
-    @Post('login')
-    login(@Body() body: { email: string; password: string }) {
-        return this.shipperService.login(body.email, body.password);
-    }
-
     @Get('available-orders')
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles('shipper')
@@ -31,7 +25,7 @@ export class ShipperController {
         return this.shipperService.availableOrders();
     }
 
-    @Get('my-order/:shipperId')
+    @Get('my-order')
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles('shipper')
     myOrder(@Req() request: Request & { user: AuthUser }) {

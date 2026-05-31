@@ -4,7 +4,6 @@ import { AuthProvider } from './contexts/AuthContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
-import PromotionsPage from './pages/PromotionsPage';
 import MenuPage from './pages/MenuPage';
 import TableBookingPage from './pages/TableBookingPage';
 import CartPage from './pages/CartPage';
@@ -32,7 +31,6 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
-              <Route path="/promotions" element={<PromotionsPage />} />
               <Route path="/menu" element={<MenuPage />} />
               <Route path="/table-booking" element={<TableBookingPage />} />
               <Route path="/cart" element={<CartPage />} />
@@ -43,19 +41,18 @@ function App() {
               <Route path="/billing" element={<BillingPage />} />
               <Route path="/billing/:billId" element={<ReceiptPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/shipper/dashboard" element={<ShipperDashboardPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Route>
 
             {/* Admin routes */}
             <Route path="/admin" element={<AdminLoginPage />} />
+            <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
             <Route path="/admin/dishes" element={<AdminDishesPage />} />
             <Route path="/admin/users" element={<AdminUsersPage />} />
             <Route path="/admin/bookings" element={<AdminBookingsPage />} />
-
-            {/* Shipper routes */}
-            <Route path="/shipper/dashboard" element={<ShipperDashboardPage />} />
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

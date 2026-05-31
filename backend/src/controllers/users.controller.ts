@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service.js';
 import { CreateUserDto } from '../dto/create.dto.js';
 import { UpdateUserDto } from '../dto/update.dto.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/roles.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
+import { AuthUser } from '../auth/auth.types.js';
 
 @Controller('users')
 export class UsersController {
@@ -45,7 +46,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async updateProfile(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: { name?: string; phone?: string },
+    @Body() body: { name?: string },
     @Req() request: Request & { user: AuthUser },
   ) {
     if (request.user.sub !== id) {
@@ -53,7 +54,6 @@ export class UsersController {
     }
     const updated = await this.usersService.updateProfile(id, {
       name: body.name,
-      phone: body.phone,
     });
     return { user: updated };
   }
@@ -70,6 +70,8 @@ export class UsersController {
     }
     await this.usersService.changePassword(id, body.currentPassword, body.newPassword);
     return { message: 'Password changed successfully' };
+  }
+
   @Post('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
