@@ -29,13 +29,13 @@ export default function LoginPage() {
     const newErrors = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'Vui lòng nhập email';
     } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = 'Vui lòng nhập email hợp lệ';
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'Vui lòng nhập mật khẩu';
     }
 
     setErrors(newErrors);
@@ -60,9 +60,9 @@ export default function LoginPage() {
       }
     } catch (error) {
       if ([400, 401, 404].includes(error?.response?.status)) {
-        setGeneralError('Incorrect email or password');
+        setGeneralError('Sai email hoặc mật khẩu');
       } else {
-        setGeneralError('Login failed. Please try again.');
+        setGeneralError('Đăng nhập thất bại. Vui lòng thử lại.');
       }
     } finally {
       setIsLoading(false);
@@ -77,11 +77,11 @@ export default function LoginPage() {
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <ChefHat className="w-10 h-10 text-primary" />
             <span className="text-3xl font-bold heading-display">
-              Q<span className="text-primary">Food</span>
+              Vn<span className="text-primary">Food</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-brown-900">Welcome Back!</h1>
-          <p className="text-brown-500 mt-2">Sign in to your account</p>
+          <h1 className="text-2xl font-bold text-brown-900">Chào mừng quay lại!</h1>
+          <p className="text-brown-500 mt-2">Đăng nhập vào tài khoản của bạn</p>
         </div>
 
         {/* Form */}
@@ -97,7 +97,7 @@ export default function LoginPage() {
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Email Address
+                Địa chỉ Email
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
@@ -118,7 +118,7 @@ export default function LoginPage() {
             {/* Password */}
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Password
+                Mật khẩu
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
@@ -127,7 +127,7 @@ export default function LoginPage() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
+                  placeholder="Nhập mật khẩu"
                   className={`input-field pl-12 pr-12 ${errors.password ? 'border-error' : ''}`}
                 />
                 <button
@@ -152,19 +152,19 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in...
+                  Đang đăng nhập...
                 </>
               ) : (
-                'Sign In'
+                'Đăng nhập'
               )}
             </button>
           </form>
 
           {/* Register Link */}
           <p className="text-center text-brown-500 mt-6">
-            Don't have an account?{' '}
+            Chưa có tài khoản?{' '}
             <Link to="/register" className="text-primary font-medium hover:underline">
-              Create one
+              Tạo tài khoản
             </Link>
           </p>
         </div>
@@ -172,7 +172,7 @@ export default function LoginPage() {
         {/* Back to Home */}
         <div className="text-center mt-6">
           <Link to="/" className="text-brown-500 hover:text-primary text-sm">
-            &larr; Back to Home
+            &larr; Quay lại trang chủ
           </Link>
         </div>
       </div>

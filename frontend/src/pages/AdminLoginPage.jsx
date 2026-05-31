@@ -15,7 +15,7 @@ export default function AdminLoginPage() {
     setError('');
 
     if (!password) {
-      setError('Password is required');
+      setError('Vui lòng nhập mật khẩu');
       return;
     }
 
@@ -24,7 +24,7 @@ export default function AdminLoginPage() {
       await loginAsAdmin(password);
       navigate('/admin/dashboard');
     } catch (error) {
-      setError(error.response?.data?.message || 'Invalid admin password');
+      setError(error.response?.data?.message || 'Mật khẩu Admin không đúng');
     } finally {
       setIsSubmitting(false);
     }
@@ -37,18 +37,18 @@ export default function AdminLoginPage() {
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <ChefHat className="w-10 h-10 text-primary" />
             <span className="text-3xl font-bold heading-display">
-              Q<span className="text-primary">Food</span>
+              Vn<span className="text-primary">Food</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-brown-900">Admin Access</h1>
-          <p className="text-brown-500 mt-2">Enter admin password to continue</p>
+          <h1 className="text-2xl font-bold text-brown-900">Truy cập trang Admin</h1>
+          <p className="text-brown-500 mt-2">Nhập mật khẩu Admin để tiếp tục</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Admin Password
+                Mật khẩu Admin
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
@@ -56,7 +56,7 @@ export default function AdminLoginPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter admin password"
+                  placeholder="Nhập mật khẩu Admin"
                   className={`input-field pl-12 ${error ? 'border-error' : ''}`}
                 />
               </div>
@@ -73,14 +73,14 @@ export default function AdminLoginPage() {
               disabled={isSubmitting}
               className="w-full btn-primary py-4 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Checking...' : 'Access Admin Dashboard'}
+              {isSubmitting ? 'Đang kiểm tra...' : 'Vào trang Admin'}
             </button>
           </form>
         </div>
 
         <div className="text-center mt-6">
           <Link to="/" className="text-brown-500 hover:text-primary text-sm">
-            &larr; Back to Home
+            &larr; Quay lại trang chủ
           </Link>
         </div>
       </div>

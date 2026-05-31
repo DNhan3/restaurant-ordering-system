@@ -40,7 +40,7 @@ export default function Footer() {
               <Utensils className="w-8 h-8 text-primary" />
               <div className="flex flex-col leading-tight">
                 <span className="text-2xl font-bold heading-display text-white">
-                  36<span className="text-red-400">Food</span>
+                  Vn<span className="text-red-400">Food</span>
                 </span>
               </div>
             </Link>
@@ -116,8 +116,8 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="mailto:info@36food.vn" className="text-brown-300 hover:text-primary transition-colors text-sm">
-                  info@36food.vn
+                <a href="mailto:info@vnfood.vn" className="text-brown-300 hover:text-primary transition-colors text-sm">
+                  info@vnfood.vn
                 </a>
               </li>
               <li className="flex items-center gap-3">
@@ -136,7 +136,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-brown-400 text-sm">
-              &copy; {currentYear} 36Food. Chuẩn cơm mẹ nấu. Mọi quyền được bảo lưu.
+              &copy; {currentYear} Vnfood. Chuẩn cơm mẹ nấu. Mọi quyền được bảo lưu.
             </p>
             <div className="flex gap-6">
               <Link to="/privacy" className="text-brown-400 hover:text-primary transition-colors text-sm">

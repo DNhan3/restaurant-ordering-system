@@ -114,11 +114,11 @@ export default function RegisterPage() {
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <ChefHat className="w-10 h-10 text-primary" />
             <span className="text-3xl font-bold heading-display">
-              36<span className="text-primary">Food</span>
+              Vn<span className="text-primary">Food</span>
             </span>
           </Link>
           <h1 className="text-2xl font-bold text-brown-900">Tạo tài khoản mới</h1>
-          <p className="text-brown-500 mt-2">Tham gia QFood và bắt đầu đặt món</p>
+          <p className="text-brown-500 mt-2">Tham gia VnFood và bắt đầu đặt món</p>
         </div>
 
         {/* Form */}
