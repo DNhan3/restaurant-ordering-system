@@ -39,7 +39,7 @@ export default function AboutPage() {
             </h1>
             <p className="text-lg text-brown-300 leading-relaxed">
               Được thành lập từ năm 2016 bởi những người có niềm đam mê với ẩm thực Việt,
-              36Food đã phục vụ hàng nghìn khách hàng với những món ăn ngon chuẩn vị.
+              Vnfood đã phục vụ hàng nghìn khách hàng với những món ăn ngon chuẩn vị.
               Từ một quán nhỏ ven đường, giờ đây chúng tôi mang đến hương vị Việt đến mọi nhà.
             </p>
           </div>
@@ -149,7 +149,7 @@ export default function AboutPage() {
           <div className="text-center mb-12">
             <span className="heading-accent text-xl">Gặp Gỡ Đội Ngũ</span>
             <h2 className="text-3xl md:text-4xl font-bold heading-display mt-2">
-              Những Người Tạo Nên 36Food
+              Những Người Tạo Nên Vnfood
             </h2>
           </div>
 
@@ -182,7 +182,7 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto text-center">
           <Utensils className="w-16 h-16 mx-auto mb-6" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Sẵn Sàng Trải Nghiệm 36Food?
+            Sẵn Sàng Trải Nghiệm Vnfood?
           </h2>
           <p className="text-white/80 text-lg mb-8">
             Hãy cùng chúng tôi khám phá hương vị ẩm thực Việt Nam đích thực

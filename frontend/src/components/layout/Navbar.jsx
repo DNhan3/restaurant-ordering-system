@@ -57,7 +57,7 @@ export default function Navbar() {
             <ChefHat className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform" />
             <div className="flex flex-col leading-tight">
               <span className="text-2xl font-bold heading-display">
-                36<span className="text-primary">Food</span>
+                Vn<span className="text-primary">Food</span>
               </span>
               <span className="text-[10px] text-brown-500 -mt-1">Chuẩn cơm mẹ nấu</span>
             </div>
@@ -126,7 +126,7 @@ export default function Navbar() {
                       className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
                     >
                       <ClipboardList className="w-4 h-4" />
-                      Billing
+                      Hóa Đơn
                     </Link>
                     <Link
                       to="/profile"
