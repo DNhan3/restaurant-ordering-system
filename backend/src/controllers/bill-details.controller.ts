@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Param, Body, ParseIntPipe, Req, UseGuards, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  ParseIntPipe,
+  Req,
+  UseGuards,
+  NotFoundException,
+} from '@nestjs/common';
 import type { Request } from 'express';
 import { BillDetailsService } from '../services/bill-details.service.js';
 import { BillStatusService } from '../services/bill-status.service.js';
@@ -14,7 +24,7 @@ export class BillDetailsController {
   constructor(
     private readonly billDetailsService: BillDetailsService,
     private readonly billStatusService: BillStatusService,
-  ) { }
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -49,7 +59,9 @@ export class BillDetailsController {
     }
     const bill = await this.billStatusService.findByBill(detail.bill_status_id);
     if (!bill) {
-      throw new NotFoundException(`Bill with id ${detail.bill_status_id} not found`);
+      throw new NotFoundException(
+        `Bill with id ${detail.bill_status_id} not found`,
+      );
     }
     assertSelfOrAdmin(request.user, bill.user_id);
     return detail;

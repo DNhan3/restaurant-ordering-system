@@ -22,7 +22,7 @@ import type { AuthUser } from '../auth/auth.types.js';
 
 @Controller('bill-status')
 export class BillStatusController {
-  constructor(private readonly billStatusService: BillStatusService) { }
+  constructor(private readonly billStatusService: BillStatusService) {}
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)

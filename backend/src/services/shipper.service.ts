@@ -39,7 +39,7 @@ export class ShipperService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtTokenService: JwtTokenService,
-  ) { }
+  ) {}
 
   /** Orders that have no shipper and are in an assignable status */
   async availableOrders() {
@@ -82,10 +82,14 @@ export class ShipperService {
 
     const bill = await this.findEntity(billId);
     if (bill.shipperId) {
-      throw new BadRequestException('This order has already been taken by another shipper.');
+      throw new BadRequestException(
+        'This order has already been taken by another shipper.',
+      );
     }
     if (!AVAILABLE_STATUSES.includes(bill.status)) {
-      throw new BadRequestException('This order is no longer available for pickup.');
+      throw new BadRequestException(
+        'This order is no longer available for pickup.',
+      );
     }
 
     bill.shipperId = shipperId;
@@ -100,7 +104,9 @@ export class ShipperService {
       throw new BadRequestException('This order is not assigned to you.');
     }
     if (bill.status === BillStatusEnum.DELIVERING) {
-      throw new BadRequestException('Cannot deny an order that is already being delivered.');
+      throw new BadRequestException(
+        'Cannot deny an order that is already being delivered.',
+      );
     }
 
     bill.shipperId = null;

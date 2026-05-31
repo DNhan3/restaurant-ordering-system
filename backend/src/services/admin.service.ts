@@ -114,7 +114,10 @@ export class AdminService {
       throw new BadRequestException('valid shipper id is required');
     }
 
-    const shipper = await this.usersService.deleteByIdAndRole(shipperId, 'shipper');
+    const shipper = await this.usersService.deleteByIdAndRole(
+      shipperId,
+      'shipper',
+    );
     return { message: 'Shipper account deleted', shipper };
   }
 }

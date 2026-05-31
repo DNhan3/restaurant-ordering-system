@@ -14,7 +14,7 @@ const initialFoodForm = {
 };
 
 export default function AdminDishesPage() {
-  const { admin, logoutAdmin } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [foods, setFoods] = useState([]);
   const [foodForm, setFoodForm] = useState(initialFoodForm);
@@ -24,13 +24,8 @@ export default function AdminDishesPage() {
   const [foodMessage, setFoodMessage] = useState('');
 
   useEffect(() => {
-    if (!admin) {
-      navigate('/admin');
-      return;
-    }
-
     loadFoods();
-  }, [admin, navigate]);
+  }, []);
 
   const loadFoods = async () => {
     try {
@@ -90,11 +85,10 @@ export default function AdminDishesPage() {
   };
 
   const handleLogout = () => {
-    logoutAdmin();
-    navigate('/');
+    logout();
   };
 
-  if (!admin) {
+  if (!user || user.role !== 'admin') {
     return null;
   }
 

@@ -28,7 +28,7 @@ const foodUploadsPath = join(process.cwd(), 'uploads', 'foods');
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) { }
+  constructor(private readonly adminService: AdminService) {}
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -83,11 +83,19 @@ export class AdminController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: (_req: any, _file: any, callback: (arg0: null, arg1: string) => void) => {
+        destination: (
+          _req: any,
+          _file: any,
+          callback: (arg0: null, arg1: string) => void,
+        ) => {
           mkdirSync(foodUploadsPath, { recursive: true });
           callback(null, foodUploadsPath);
         },
-        filename: (_req: any, file: { originalname: string; }, callback: (arg0: null, arg1: string) => void) => {
+        filename: (
+          _req: any,
+          file: { originalname: string },
+          callback: (arg0: null, arg1: string) => void,
+        ) => {
           const safeName = file.originalname
             .replace(extname(file.originalname), '')
             .toLowerCase()
@@ -100,7 +108,10 @@ export class AdminController {
       }),
       fileFilter: (_req, file, callback) => {
         if (!file.mimetype.startsWith('image/')) {
-          callback(new BadRequestException('Only image uploads are allowed'), false);
+          callback(
+            new BadRequestException('Only image uploads are allowed'),
+            false,
+          );
           return;
         }
         callback(null, true);
@@ -127,7 +138,9 @@ export class AdminController {
   @Post('shippers')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  createShipper(@Body() body: { email: string; name: string; password: string }) {
+  createShipper(
+    @Body() body: { email: string; name: string; password: string },
+  ) {
     return this.adminService.createShipper(body);
   }
 

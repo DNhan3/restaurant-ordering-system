@@ -22,7 +22,7 @@ import type { AuthUser } from '../auth/auth.types.js';
 @Controller('cart-items')
 @UseGuards(JwtAuthGuard)
 export class CartItemsController {
-  constructor(private readonly cartItemsService: CartItemsService) { }
+  constructor(private readonly cartItemsService: CartItemsService) {}
 
   @Post()
   create(
@@ -75,7 +75,9 @@ export class CartItemsController {
     } else if (updateCartItemDto.id) {
       const item = await this.cartItemsService.findOne(updateCartItemDto.id);
       if (!item) {
-        throw new NotFoundException(`Cart item with id ${updateCartItemDto.id} not found`);
+        throw new NotFoundException(
+          `Cart item with id ${updateCartItemDto.id} not found`,
+        );
       }
       assertSelfOrAdmin(request.user, item.user_id);
     }

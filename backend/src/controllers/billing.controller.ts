@@ -1,4 +1,11 @@
-import { Controller, Get, Param, ParseIntPipe, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import type { Request } from 'express';
 import { BillingService } from '../services/billing.service.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
@@ -9,7 +16,7 @@ import type { AuthUser } from '../auth/auth.types.js';
 
 @Controller('billing')
 export class BillingController {
-  constructor(private readonly billingService: BillingService) { }
+  constructor(private readonly billingService: BillingService) {}
 
   @Get('summary')
   @UseGuards(JwtAuthGuard, RolesGuard)

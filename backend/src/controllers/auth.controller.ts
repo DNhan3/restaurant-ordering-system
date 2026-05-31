@@ -6,7 +6,7 @@ import type { AuthUser } from '../auth/auth.types.js';
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   login(@Body() body: unknown) {

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BillDetail } from '../models/bill-detail.entity.js';
@@ -50,7 +54,7 @@ export class BillingService {
     private readonly billStatusRepository: Repository<BillStatus>,
     @InjectRepository(BillDetail)
     private readonly billDetailRepository: Repository<BillDetail>,
-  ) { }
+  ) {}
 
   async checkout(body: unknown) {
     const checkout = body as CheckoutBody;
@@ -90,7 +94,9 @@ export class BillingService {
           const price = Number(item.price ?? 0);
 
           if (!foodId || quantity < 1) {
-            throw new BadRequestException('checkout items require foodId and quantity');
+            throw new BadRequestException(
+              'checkout items require foodId and quantity',
+            );
           }
 
           return billDetailRepository.create({
@@ -150,7 +156,8 @@ export class BillingService {
           summary.unpaidRevenue += total;
         }
 
-        summary.byStatus[bill.status] = (summary.byStatus[bill.status] ?? 0) + 1;
+        summary.byStatus[bill.status] =
+          (summary.byStatus[bill.status] ?? 0) + 1;
         return summary;
       },
       {
@@ -160,7 +167,7 @@ export class BillingService {
         totalRevenue: 0,
         paidRevenue: 0,
         unpaidRevenue: 0,
-        byStatus: {} as Record<string, number>,
+        byStatus: {},
       },
     );
 
@@ -200,10 +207,7 @@ export class BillingService {
         };
       }) ?? [];
 
-    const itemSubtotal = items.reduce(
-      (sum, item) => sum + item.line_total,
-      0,
-    );
+    const itemSubtotal = items.reduce((sum, item) => sum + item.line_total, 0);
     const discount = toNumber(bill.discount);
     const deliveryFee = toNumber(bill.deliveryFee);
     const total = toNumber(bill.total, itemSubtotal - discount + deliveryFee);
@@ -213,10 +217,10 @@ export class BillingService {
       user_id: bill.userId,
       customer: bill.user
         ? {
-          user_id: bill.user.id,
-          user_name: bill.user.name,
-          user_email: bill.user.email,
-        }
+            user_id: bill.user.id,
+            user_name: bill.user.name,
+            user_email: bill.user.email,
+          }
         : null,
       bill_status: bill.status,
       bill_status_label: STATUS_LABELS[bill.status] ?? bill.status,

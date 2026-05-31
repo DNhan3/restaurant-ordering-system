@@ -6,11 +6,14 @@ import type { AuthUser } from '../auth/auth.types.js';
 
 @Controller()
 export class CheckoutController {
-  constructor(private readonly billingService: BillingService) { }
+  constructor(private readonly billingService: BillingService) {}
 
   @Post('checkout')
   @UseGuards(JwtAuthGuard)
-  checkout(@Body() body: Record<string, unknown>, @Req() request: Request & { user: AuthUser }) {
+  checkout(
+    @Body() body: Record<string, unknown>,
+    @Req() request: Request & { user: AuthUser },
+  ) {
     const safeBody =
       request.user.role === 'admin'
         ? body

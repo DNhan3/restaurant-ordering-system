@@ -43,7 +43,13 @@ export class BillStatus {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   discount!: number;
 
-  @Column({ name: 'delivery_fee', type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({
+    name: 'delivery_fee',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0,
+  })
   deliveryFee!: number;
 
   @Column({ type: 'varchar', length: 20, default: '' })
@@ -52,7 +58,12 @@ export class BillStatus {
   @Column({ type: 'text', nullable: true })
   address!: string | null;
 
-  @Column({ name: 'payment_method', type: 'varchar', length: 20, default: 'cash' })
+  @Column({
+    name: 'payment_method',
+    type: 'varchar',
+    length: 20,
+    default: 'cash',
+  })
   paymentMethod!: string;
 
   @Column({ type: 'boolean', default: false })

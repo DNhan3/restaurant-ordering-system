@@ -9,7 +9,7 @@ export class BookingsService {
   constructor(
     @InjectRepository(Booking)
     private readonly bookingRepository: Repository<Booking>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<Booking[]> {
     return this.bookingRepository.find({

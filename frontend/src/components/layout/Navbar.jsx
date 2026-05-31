@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, User, LogOut, ClipboardList, ChefHat } from 'lucide-react';
+import { ShoppingCart, Menu, X, LogOut, ClipboardList, ChefHat } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -9,7 +9,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { getTotalItems } = useCart();
-  const { user, admin, logout, logoutAdmin } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const cartCount = getTotalItems();
 
@@ -36,7 +36,6 @@ export default function Navbar() {
 
   const handleLogout = () => {
     logout();
-    logoutAdmin();
   };
 
   return (

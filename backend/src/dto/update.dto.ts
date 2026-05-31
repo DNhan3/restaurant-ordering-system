@@ -1,4 +1,12 @@
-import { IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { BillStatusEnum } from '../models/bill-status.entity.js';
 
 export class UpdateBillStatusDto {

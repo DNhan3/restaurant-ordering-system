@@ -8,4 +8,3 @@ export const assertSelfOrAdmin = (user: AuthUser, resourceUserId: number) => {
 
   throw new ForbiddenException('You can only access your own resources');
 };
-

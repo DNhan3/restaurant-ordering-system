@@ -4,7 +4,7 @@ import { CreateBookingDto } from '../dto/create.dto.js';
 
 @Controller('bookings')
 export class BookingsController {
-  constructor(private readonly bookingsService: BookingsService) { }
+  constructor(private readonly bookingsService: BookingsService) {}
 
   @Get()
   findAll() {

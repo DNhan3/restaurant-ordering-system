@@ -20,7 +20,7 @@ export class BillStatusService {
   constructor(
     @InjectRepository(BillStatus)
     private readonly billStatusRepository: Repository<BillStatus>,
-  ) { }
+  ) {}
 
   async findAll() {
     const billStatuses = await this.billStatusRepository.find({
@@ -62,10 +62,7 @@ export class BillStatusService {
     return mapBillStatusResponse(await this.findEntity(saved.id));
   }
 
-  async update(
-    id: number,
-    updateBillStatusDto: UpdateBillStatusDto,
-  ) {
+  async update(id: number, updateBillStatusDto: UpdateBillStatusDto) {
     const billStatus = await this.findEntity(id);
 
     if (updateBillStatusDto && Object.keys(updateBillStatusDto).length > 0) {

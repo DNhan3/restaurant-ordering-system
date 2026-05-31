@@ -11,7 +11,7 @@ export class CartItemsService {
   constructor(
     @InjectRepository(CartItem)
     private readonly cartItemRepository: Repository<CartItem>,
-  ) { }
+  ) {}
 
   async create(createCartItemDto: CreateCartItemDto) {
     const cartItem = this.cartItemRepository.create(createCartItemDto);
@@ -20,7 +20,9 @@ export class CartItemsService {
   }
 
   async findByUserAndFood(userId: number, foodId: number) {
-    return mapCartItemResponse(await this.findEntityByUserAndFood(userId, foodId));
+    return mapCartItemResponse(
+      await this.findEntityByUserAndFood(userId, foodId),
+    );
   }
 
   async findByUser(userId: number) {

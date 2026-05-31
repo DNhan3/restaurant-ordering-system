@@ -47,4 +47,4 @@ import { ShipperModule } from './modules/shipper.module.js';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

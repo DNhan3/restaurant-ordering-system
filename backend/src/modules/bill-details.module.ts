@@ -7,7 +7,11 @@ import { AuthModule } from './auth.module.js';
 import { BillStatusModule } from './bill-status.module.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BillDetail]), AuthModule, BillStatusModule],
+  imports: [
+    TypeOrmModule.forFeature([BillDetail]),
+    AuthModule,
+    BillStatusModule,
+  ],
   controllers: [BillDetailsController],
   providers: [BillDetailsService],
   exports: [BillDetailsService],

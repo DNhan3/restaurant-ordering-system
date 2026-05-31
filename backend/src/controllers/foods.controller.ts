@@ -18,7 +18,7 @@ import { Roles } from '../auth/roles.decorator.js';
 
 @Controller('foods')
 export class FoodsController {
-  constructor(private readonly foodsService: FoodsService) { }
+  constructor(private readonly foodsService: FoodsService) {}
 
   @Get()
   findAll() {

@@ -11,7 +11,7 @@ export class FoodsService {
   constructor(
     @InjectRepository(Food)
     private readonly foodRepository: Repository<Food>,
-  ) { }
+  ) {}
 
   async findAll() {
     const foods = await this.foodRepository.find();

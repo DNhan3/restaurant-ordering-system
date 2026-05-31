@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, ChefHat } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { getDashboardPath } from '../utils/authHelpers';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -52,12 +53,8 @@ export default function LoginPage() {
 
     try {
       const user = await login(formData.email, formData.password);
-      if (user?.role === 'shipper') {
-        localStorage.setItem('qfood_shipper', JSON.stringify(user));
-        navigate('/shipper/dashboard');
-      } else {
-        navigate('/');
-      }
+      const destination = getDashboardPath(user?.role);
+      navigate(destination);
     } catch (error) {
       if ([400, 401, 404].includes(error?.response?.status)) {
         setGeneralError('Incorrect email or password');
@@ -96,13 +93,14 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-brown-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-brown-700 mb-2">
                 Email Address
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
                 <input
                   type="email"
+                  id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
@@ -117,13 +115,14 @@ export default function LoginPage() {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-brown-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-brown-700 mb-2">
                 Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brown-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  id="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
@@ -162,7 +161,7 @@ export default function LoginPage() {
 
           {/* Register Link */}
           <p className="text-center text-brown-500 mt-6">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link to="/register" className="text-primary font-medium hover:underline">
               Create one
             </Link>

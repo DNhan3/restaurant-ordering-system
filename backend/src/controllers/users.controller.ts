@@ -4,7 +4,7 @@ import { CreateUserDto } from '../dto/create.dto.js';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post('find')
   findByEmail() {

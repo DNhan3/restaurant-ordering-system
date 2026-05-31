@@ -10,11 +10,13 @@ export class BillDetailsService {
   constructor(
     @InjectRepository(BillDetail)
     private readonly billDetailRepository: Repository<BillDetail>,
-  ) { }
+  ) {}
 
   async create(createBillDetailDto: CreateBillDetailDto) {
     const billDetail = this.billDetailRepository.create(createBillDetailDto);
-    return mapBillDetailResponse(await this.billDetailRepository.save(billDetail));
+    return mapBillDetailResponse(
+      await this.billDetailRepository.save(billDetail),
+    );
   }
 
   async findByBillStatus(billStatusId: number) {

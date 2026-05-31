@@ -76,10 +76,10 @@ export const mapBillStatusResponse = (
     shipper_id: billStatus.shipperId ?? null,
     shipper: billStatus.shipper
       ? {
-        user_id: billStatus.shipper.id,
-        user_name: billStatus.shipper.name,
-        user_email: billStatus.shipper.email,
-      }
+          user_id: billStatus.shipper.id,
+          user_name: billStatus.shipper.name,
+          user_email: billStatus.shipper.email,
+        }
       : null,
   };
 };

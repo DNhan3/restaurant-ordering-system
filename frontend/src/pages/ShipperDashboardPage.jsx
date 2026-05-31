@@ -4,16 +4,16 @@ import {
   Truck, LogOut, Package, MapPin, Phone, Clock,
   CheckCircle, XCircle, RefreshCw, AlertTriangle, ChefHat,
 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 import { shipperService } from '../services/api';
 import { ORDER_STATUS_LABELS } from '../utils/constants';
+import { getDashboardPath } from '../utils/authHelpers';
 
-const SHIPPER_STORAGE_KEY = 'qfood_shipper';
 const POLL_INTERVAL = 5000;
 
 const formatCurrency = (value) =>
   `${Number(value || 0).toLocaleString('vi-VN')}đ`;
 
-/** Maps the numeric bill_status back to the Vietnamese label */
 const getStatusLabel = (status) => ORDER_STATUS_LABELS[status] ?? 'Không rõ';
 
 const STATUS_COLORS = {
@@ -28,13 +28,7 @@ const STATUS_COLORS = {
 
 export default function ShipperDashboardPage() {
   const navigate = useNavigate();
-  const [shipper, setShipper] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(SHIPPER_STORAGE_KEY));
-    } catch {
-      return null;
-    }
-  });
+  const { user, logout, isLoading: authLoading } = useAuth();
 
   const [availableOrders, setAvailableOrders] = useState([]);
   const [myOrder, setMyOrder] = useState(null);
@@ -43,20 +37,17 @@ export default function ShipperDashboardPage() {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Redirect if not logged in
   useEffect(() => {
-    if (!shipper) {
-      navigate('/login');
+    if (!authLoading && (!user || user.role !== 'shipper')) {
+      navigate(getDashboardPath(user?.role));
     }
-  }, [shipper, navigate]);
+  }, [user, authLoading, navigate]);
 
-  // Poll for data
   const fetchData = useCallback(async () => {
-    if (!shipper?.id) return;
     try {
       const [available, current] = await Promise.all([
         shipperService.getAvailableOrders(),
-        shipperService.getMyOrder(shipper.id),
+        shipperService.getMyOrder(),
       ]);
       setAvailableOrders(available);
       setMyOrder(current);
@@ -66,15 +57,15 @@ export default function ShipperDashboardPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [shipper?.id]);
+  }, []);
 
   useEffect(() => {
+    if (!user || user.role !== 'shipper') return;
     fetchData();
     const interval = setInterval(fetchData, POLL_INTERVAL);
     return () => clearInterval(interval);
-  }, [fetchData]);
+  }, [fetchData, user]);
 
-  // Clear success message after 3s
   useEffect(() => {
     if (successMsg) {
       const t = setTimeout(() => setSuccessMsg(''), 3000);
@@ -83,15 +74,14 @@ export default function ShipperDashboardPage() {
   }, [successMsg]);
 
   const handleLogout = () => {
-    localStorage.removeItem(SHIPPER_STORAGE_KEY);
-    setShipper(null);
+    logout();
   };
 
   const handleAccept = async (billId) => {
     try {
       setActionLoading(true);
       setError('');
-      await shipperService.acceptOrder(billId, shipper.id);
+      await shipperService.acceptOrder(billId);
       setSuccessMsg('Đã nhận đơn hàng!');
       await fetchData();
     } catch (err) {
@@ -105,7 +95,7 @@ export default function ShipperDashboardPage() {
     try {
       setActionLoading(true);
       setError('');
-      await shipperService.denyOrder(billId, shipper.id);
+      await shipperService.denyOrder(billId);
       setSuccessMsg('Đã hủy nhận đơn');
       setMyOrder(null);
       await fetchData();
@@ -120,7 +110,7 @@ export default function ShipperDashboardPage() {
     try {
       setActionLoading(true);
       setError('');
-      await shipperService.pickupOrder(billId, shipper.id);
+      await shipperService.pickupOrder(billId);
       setSuccessMsg('Đã lấy hàng — đang giao!');
       await fetchData();
     } catch (err) {
@@ -134,7 +124,7 @@ export default function ShipperDashboardPage() {
     try {
       setActionLoading(true);
       setError('');
-      await shipperService.deliveredOrder(billId, shipper.id);
+      await shipperService.deliveredOrder(billId);
       setSuccessMsg('Giao hàng thành công!');
       setMyOrder(null);
       await fetchData();
@@ -145,10 +135,10 @@ export default function ShipperDashboardPage() {
     }
   };
 
-  if (!shipper) return null;
+  if (!user || user.role !== 'shipper') return null;
 
-  const isReadyForPickup = myOrder?.bill_status === 3; // CHECKING
-  const isDelivering = myOrder?.bill_status === 4; // DELIVERING
+  const isReadyForPickup = myOrder?.bill_status === 3;
+  const isDelivering = myOrder?.bill_status === 4;
 
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%)' }}>
@@ -161,7 +151,7 @@ export default function ShipperDashboardPage() {
               <h1 className="text-lg font-bold text-gray-900">
                 36<span className="text-blue-600">Ship</span>
               </h1>
-              <p className="text-xs text-gray-500">Xin chào, {shipper.name}</p>
+              <p className="text-xs text-gray-500">Xin chào, {user?.name}</p>
             </div>
           </div>
           <button

@@ -12,4 +12,4 @@ import { AuthModule } from './auth.module.js';
   providers: [ShipperService],
   exports: [ShipperService],
 })
-export class ShipperModule { }
+export class ShipperModule {}

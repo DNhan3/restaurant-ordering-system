@@ -8,24 +8,15 @@ const api = axios.create({
   },
 });
 
-const readToken = (storageKey) => {
-  try {
-    return JSON.parse(localStorage.getItem(storageKey) || 'null')?.accessToken;
-  } catch {
-    return null;
-  }
-};
-
 api.interceptors.request.use((config) => {
-  const token =
-    readToken('qfood_admin') ||
-    readToken('qfood_shipper') ||
-    readToken('qfood_user');
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  try {
+    const session = JSON.parse(localStorage.getItem('qfood_session') || 'null');
+    if (session?.accessToken) {
+      config.headers.Authorization = `Bearer ${session.accessToken}`;
+    }
+  } catch {
+    // ignore
   }
-
   return config;
 });
 

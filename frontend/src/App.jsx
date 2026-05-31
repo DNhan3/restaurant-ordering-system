@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Component } from 'react';
 import { CartProvider } from './contexts/CartContext';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
@@ -12,20 +13,87 @@ import CheckoutPage from './pages/CheckoutPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminDishesPage from './pages/AdminDishesPage';
 import BillingPage from './pages/BillingPage';
 import ReceiptPage from './pages/ReceiptPage';
 import ShipperDashboardPage from './pages/ShipperDashboardPage';
+import { getDashboardPath } from './utils/authHelpers';
+
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, info) {
+    console.error('App ErrorBoundary caught:', error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-cream">
+          <div className="text-center p-8">
+            <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
+            <p className="text-brown-600 mb-4">{this.state.error?.message}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-primary"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function ProtectedRoute({ children, allowedRoles }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to={getDashboardPath(user.role)} replace />;
+  }
+
+  return children;
+}
+
+function PublicRoute({ children }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (user) {
+    return <Navigate to={getDashboardPath(user.role)} replace />;
+  }
+
+  return children;
+}
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <CartProvider>
-          <Routes>
-            {/* Public routes with layout */}
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <CartProvider>
+            <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
@@ -39,24 +107,47 @@ function App() {
               <Route path="/orders/:billId/receipt" element={<ReceiptPage />} />
               <Route path="/billing" element={<BillingPage />} />
               <Route path="/billing/:billId" element={<ReceiptPage />} />
-              <Route path="/login" element={<LoginPage />} />
+              <Route path="/login" element={
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              } />
               <Route path="/register" element={<RegisterPage />} />
             </Route>
 
-            {/* Admin routes */}
-            <Route path="/admin" element={<AdminLoginPage />} />
-            <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-            <Route path="/admin/dishes" element={<AdminDishesPage />} />
+            <Route path="/admin" element={<Navigate to="/login" replace />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/dishes"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDishesPage />
+                </ProtectedRoute>
+              }
+            />
 
-            {/* Shipper routes */}
-            <Route path="/shipper/dashboard" element={<ShipperDashboardPage />} />
+            <Route
+              path="/shipper/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['shipper']}>
+                  <ShipperDashboardPage />
+                </ProtectedRoute>
+              }
+            />
 
-            {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

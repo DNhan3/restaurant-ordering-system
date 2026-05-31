@@ -1,18 +1,25 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '../services/authService';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
+import api from '../api/axios';
 
 const AuthContext = createContext();
 
-const AUTH_STORAGE_KEY = 'qfood_user';
-const ADMIN_STORAGE_KEY = 'qfood_admin';
+const SESSION_KEY = 'qfood_session';
+const VALID_ROLES = ['customer', 'shipper', 'admin'];
 
 const normalizeUser = (userData) => {
   if (!userData) return null;
 
-  const id = userData.id ?? userData.user_id ?? userData.sub;
+  const id = userData.id ?? userData.user_id ?? userData.sub ?? 0;
   const name = userData.name ?? userData.user_name;
   const email = userData.email ?? userData.user_email;
   const phone = userData.phone ?? userData.user_phone ?? '';
+  const role = VALID_ROLES.includes(userData.role) ? userData.role : null;
 
   return {
     ...userData,
@@ -20,6 +27,8 @@ const normalizeUser = (userData) => {
     name,
     email,
     phone,
+    role,
+    sub: userData.sub ?? id,
     user_id: id,
     user_name: name,
     user_email: email,
@@ -29,101 +38,105 @@ const normalizeUser = (userData) => {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem(AUTH_STORAGE_KEY);
-    if (!saved) return null;
-
     try {
+      const saved = localStorage.getItem(SESSION_KEY);
+      if (!saved) return null;
       return normalizeUser(JSON.parse(saved));
     } catch {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
       return null;
     }
   });
-  const [admin, setAdmin] = useState(() => {
-    const saved = localStorage.getItem(ADMIN_STORAGE_KEY);
-    if (!saved) return null;
-
-    try {
-      return JSON.parse(saved);
-    } catch {
-      return { role: saved };
-    }
-  });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setIsLoading(false);
+    const savedSession = localStorage.getItem(SESSION_KEY);
+    if (!savedSession) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const session = JSON.parse(savedSession);
+      if (session?.accessToken) {
+        api.get('/me', {
+          headers: { Authorization: `Bearer ${session.accessToken}` },
+        })
+          .then(({ data }) => {
+            const normalized = normalizeUser(data?.user);
+            if (normalized && normalized.role) {
+              const newSession = { ...normalized, accessToken: session.accessToken };
+              localStorage.setItem(SESSION_KEY, JSON.stringify(newSession));
+              setUser(newSession);
+            } else {
+              localStorage.removeItem(SESSION_KEY);
+              setUser(null);
+            }
+          })
+          .catch(() => {
+            localStorage.removeItem(SESSION_KEY);
+            setUser(null);
+          })
+          .finally(() => setIsLoading(false));
+      } else {
+        localStorage.removeItem(SESSION_KEY);
+        setUser(null);
+        setIsLoading(false);
+      }
+    } catch {
+      localStorage.removeItem(SESSION_KEY);
+      setUser(null);
+      setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {
+    if (isLoading) return;
     if (user) {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
     } else {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
+      localStorage.removeItem(SESSION_KEY);
     }
-  }, [user]);
+  }, [user, isLoading]);
 
-  useEffect(() => {
-    if (admin) {
-      localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(admin));
-    } else {
-      localStorage.removeItem(ADMIN_STORAGE_KEY);
-    }
-  }, [admin]);
+  const login = useCallback(async (email, password) => {
+    const { data } = await api.post('/login', { email, password });
+    const userData = data?.user;
+    if (!userData) throw new Error('Login failed');
 
-  const register = async (userData) => {
-    const resp = await authService.register(userData);
-    const user = resp?.user ?? resp;
-    if (!user) {
-      throw new Error('Registration failed');
-    }
-    setUser({ ...normalizeUser(user), accessToken: resp?.accessToken });
-  };
+    const normalized = normalizeUser(userData);
+    if (!normalized.role) throw new Error('Invalid user role');
 
-  const login = async (email, password) => {
-    setUser(null);
-    const resp = await authService.login(email, password);
-    const user = resp?.user ?? resp;
-    if (!user) {
-      throw new Error('Incorrect email or password');
-    }
-    const session = { ...normalizeUser(user), accessToken: resp?.accessToken };
+    const session = { ...normalized, accessToken: data.accessToken };
     setUser(session);
     return session;
-  };
+  }, []);
 
-  const logout = () => {
+  const register = useCallback(async (userData) => {
+    const { data } = await api.post('/register', {
+      email: userData.email,
+      password: userData.password,
+      name: userData.name,
+    });
+    const user = data?.user;
+    if (!user) throw new Error('Registration failed');
+
+    const normalized = normalizeUser(user);
+    const session = { ...normalized, accessToken: data.accessToken };
+    setUser(session);
+    return session;
+  }, []);
+
+  const logout = useCallback(() => {
     setUser(null);
-  };
-
-  const loginAsAdmin = async (password) => {
-    setAdmin(null);
-    const resp = await authService.adminLogin(password);
-    const admin = resp?.admin;
-    if (!admin) {
-      throw new Error('Invalid admin credentials');
-    }
-    setAdmin({ ...admin, accessToken: resp?.accessToken });
-    return true;
-  };
-
-  const logoutAdmin = () => {
-    setAdmin(null);
-  };
-
-
-  const isAuthenticated = !!user;
+  }, []);
 
   const value = {
     user,
-    admin,
     isLoading,
-    register,
+    isAuthenticated: !!user,
     login,
+    register,
     logout,
-    loginAsAdmin,
-    logoutAdmin,
-    isAuthenticated
   };
 
   return (

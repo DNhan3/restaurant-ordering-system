@@ -12,7 +12,9 @@ export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwtTokenService: JwtTokenService) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<Request & { user?: unknown }>();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user?: unknown }>();
     const authHeader = request.header('authorization') ?? '';
     const [scheme, token] = authHeader.split(' ');
 
@@ -24,4 +26,3 @@ export class JwtAuthGuard implements CanActivate {
     return true;
   }
 }
-

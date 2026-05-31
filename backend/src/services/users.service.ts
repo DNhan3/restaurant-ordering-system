@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../models/user.entity.js';
@@ -10,7 +14,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ email });
@@ -57,10 +61,15 @@ export class UsersService {
 
   async findByRole(role: string): Promise<Omit<User, 'password'>[]> {
     const users = await this.userRepository.findBy({ role });
-    return users.map(({ password: _pw, ...rest }) => rest as Omit<User, 'password'>);
+    return users.map(
+      ({ password: _pw, ...rest }) => rest as Omit<User, 'password'>,
+    );
   }
 
-  async deleteByIdAndRole(id: number, role: string): Promise<Omit<User, 'password'>> {
+  async deleteByIdAndRole(
+    id: number,
+    role: string,
+  ): Promise<Omit<User, 'password'>> {
     const user = await this.userRepository.findOneBy({ id, role });
 
     if (!user) {
@@ -70,6 +79,6 @@ export class UsersService {
     await this.userRepository.remove(user);
     const { password: _pw, ...rest } = user;
 
-    return rest as Omit<User, 'password'>;
+    return rest;
   }
 }

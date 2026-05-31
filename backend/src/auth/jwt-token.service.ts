@@ -47,7 +47,9 @@ export class JwtTokenService {
       throw new UnauthorizedException('Invalid token');
     }
 
-    const expectedSignature = this.signData(`${encodedHeader}.${encodedPayload}`);
+    const expectedSignature = this.signData(
+      `${encodedHeader}.${encodedPayload}`,
+    );
     const expected = Buffer.from(expectedSignature);
     const actual = Buffer.from(signature);
 
@@ -100,10 +102,11 @@ export class JwtTokenService {
   }
 
   private getTokenTtlSeconds() {
-    const configured = Number(this.configService.get<string>('JWT_TTL_SECONDS'));
+    const configured = Number(
+      this.configService.get<string>('JWT_TTL_SECONDS'),
+    );
     return Number.isFinite(configured) && configured > 0
       ? configured
       : 60 * 60 * 24;
   }
 }
-

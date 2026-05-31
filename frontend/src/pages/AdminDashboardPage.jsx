@@ -22,7 +22,7 @@ const BILL_STATUS_OPTIONS = [
 const canAdvanceStatus = (status) => status > 0 && status < 6;
 
 export default function AdminDashboardPage() {
-  const { admin, logoutAdmin } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [bills, setBills] = useState([]);
   const [billingSummary, setBillingSummary] = useState(null);
@@ -40,14 +40,10 @@ export default function AdminDashboardPage() {
   const [deletingShipperId, setDeletingShipperId] = useState(null);
 
   useEffect(() => {
-    if (!admin) {
-      navigate('/admin');
-      return;
-    }
     loadBills();
     loadBillingSummary();
     loadShippers();
-  }, [admin, navigate]);
+  }, []);
 
   const loadBills = async () => {
     try {
@@ -141,8 +137,7 @@ export default function AdminDashboardPage() {
   };
 
   const handleLogout = () => {
-    logoutAdmin();
-    navigate('/');
+    logout();
   };
 
   const loadShippers = async () => {
@@ -214,7 +209,7 @@ export default function AdminDashboardPage() {
     return colors[status] || 'bg-gray-100 text-gray-700';
   };
 
-  if (!admin) {
+  if (!user || user.role !== 'admin') {
     return null;
   }
 

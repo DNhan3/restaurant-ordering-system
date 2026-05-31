@@ -10,4 +10,4 @@ import { AuthModule } from './auth.module.js';
   controllers: [AdminController],
   providers: [AdminService],
 })
-export class AdminModule { }
+export class AdminModule {}
