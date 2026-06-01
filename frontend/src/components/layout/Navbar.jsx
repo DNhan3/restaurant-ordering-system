@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, LogOut, ClipboardList, ChefHat, UserCircle, Truck } from 'lucide-react';
+import { ShoppingCart, Menu, X, LogOut, ClipboardList, ChefHat, UserCircle, Truck, CalendarDays } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -129,13 +129,22 @@ export default function Navbar() {
                         Dashboard
                       </Link>
                     ) : (
-                      <Link
-                        to="/billing"
-                        className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
-                      >
-                        <ClipboardList className="w-4 h-4" />
-                        Billing
-                      </Link>
+                      <>
+                        <Link
+                          to="/billing"
+                          className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
+                        >
+                          <ClipboardList className="w-4 h-4" />
+                          Billing
+                        </Link>
+                        <Link
+                          to="/my-bookings"
+                          className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
+                        >
+                          <CalendarDays className="w-4 h-4" />
+                          Bookings
+                        </Link>
+                      </>
                     )}
                     <Link
                       to="/profile"

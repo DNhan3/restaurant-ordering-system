@@ -6,12 +6,10 @@ import {
 } from 'lucide-react';
 import { shipperService } from '../services/api';
 import { ORDER_STATUS_LABELS } from '../utils/constants';
+import { formatPrice } from '../utils/formatters';
 import { useAuth } from '../contexts/AuthContext';
 
 const POLL_INTERVAL = 5000;
-
-const formatCurrency = (value) =>
-  `${Number(value || 0).toLocaleString('vi-VN')}đ`;
 
 /** Maps the numeric bill_status back to the Vietnamese label */
 const getStatusLabel = (status) => ORDER_STATUS_LABELS[status] ?? 'Không rõ';
@@ -247,7 +245,7 @@ export default function ShipperDashboardPage() {
                   )}
                   <div className="flex items-center justify-between text-sm pt-1">
                     <span className="text-gray-500">Tổng tiền:</span>
-                    <span className="font-bold text-gray-900 text-lg">{formatCurrency(myOrder.bill_total)}</span>
+                    <span className="font-bold text-gray-900 text-lg">{formatPrice(myOrder.bill_total)}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Thanh toán:</span>
@@ -265,7 +263,7 @@ export default function ShipperDashboardPage() {
                           <span className="text-gray-700">
                             {item.food?.food_name || `Món #${item.food_id}`} × {item.item_qty}
                           </span>
-                          <span className="text-gray-500">{formatCurrency(item.item_price * item.item_qty)}</span>
+                          <span className="text-gray-500">{formatPrice(item.item_price * item.item_qty)}</span>
                         </div>
                       ))}
                     </div>
@@ -358,7 +356,7 @@ export default function ShipperDashboardPage() {
                           {getStatusLabel(order.bill_status)}
                         </span>
                       </div>
-                      <span className="font-bold text-blue-600 text-lg">{formatCurrency(order.bill_total)}</span>
+                      <span className="font-bold text-blue-600 text-lg">{formatPrice(order.bill_total)}</span>
                     </div>
 
                     {order.bill_address && (

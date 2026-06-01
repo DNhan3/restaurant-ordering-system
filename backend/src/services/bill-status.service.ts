@@ -5,6 +5,12 @@ import { BillStatus, BillStatusEnum } from '../models/bill-status.entity.js';
 import { CreateBillStatusDto } from '../dto/create.dto.js';
 import { UpdateBillStatusDto } from '../dto/update.dto.js';
 import { mapBillStatusResponse } from './response-mappers.js';
+import {
+  buildPaginationMeta,
+  getPagination,
+  getSortOrder,
+  ListQueryOptions,
+} from './query-options.js';
 
 const ORDER_STATUS_FLOW = [
   BillStatusEnum.CONFIRMED,
@@ -28,6 +34,65 @@ export class BillStatusService {
       order: { createdAt: 'DESC' },
     });
     return billStatuses.map(mapBillStatusResponse);
+  }
+
+  async findPaginated(query: ListQueryOptions) {
+    const { page, pageSize, skip, take } = getPagination(query);
+    const sortColumns: Record<string, string> = {
+      id: 'billStatus.id',
+      total: 'billStatus.total',
+      status: 'billStatus.status',
+      paid: 'billStatus.paid',
+      createdAt: 'billStatus.createdAt',
+      updatedAt: 'billStatus.updatedAt',
+    };
+    const sortColumn = sortColumns[String(query.sortBy || 'createdAt')] ?? sortColumns.createdAt;
+
+    const qb = this.billStatusRepository
+      .createQueryBuilder('billStatus')
+      .leftJoinAndSelect('billStatus.user', 'user')
+      .leftJoinAndSelect('billStatus.shipper', 'shipper')
+      .leftJoinAndSelect('billStatus.billDetails', 'billDetails')
+      .leftJoinAndSelect('billDetails.food', 'food');
+
+    if (query.search) {
+      qb.andWhere(
+        '(CAST(billStatus.id AS CHAR) LIKE :rawSearch OR billStatus.phone LIKE :rawSearch OR LOWER(billStatus.address) LIKE :search OR LOWER(user.name) LIKE :search OR LOWER(user.email) LIKE :search)',
+        {
+          search: `%${String(query.search).toLowerCase()}%`,
+          rawSearch: `%${String(query.search)}%`,
+        },
+      );
+    }
+
+    if (query.paid !== undefined && query.paid !== 'all') {
+      qb.andWhere('billStatus.paid = :paid', {
+        paid: String(query.paid) === 'true',
+      });
+    }
+
+    if (query.fromDate) {
+      qb.andWhere('billStatus.createdAt >= :fromDate', {
+        fromDate: `${query.fromDate} 00:00:00`,
+      });
+    }
+
+    if (query.toDate) {
+      qb.andWhere('billStatus.createdAt <= :toDate', {
+        toDate: `${query.toDate} 23:59:59`,
+      });
+    }
+
+    const [billStatuses, total] = await qb
+      .orderBy(sortColumn, getSortOrder(query.sortOrder))
+      .skip(skip)
+      .take(take)
+      .getManyAndCount();
+
+    return {
+      items: billStatuses.map(mapBillStatusResponse),
+      meta: buildPaginationMeta(page, pageSize, total),
+    };
   }
 
   async getNextBillId(): Promise<number> {
@@ -101,7 +166,9 @@ export class BillStatusService {
 
   async remove(id: number): Promise<void> {
     const billStatus = await this.findEntity(id);
-    await this.billStatusRepository.remove(billStatus);
+    billStatus.isActive = false;
+    await this.billStatusRepository.save(billStatus);
+    await this.billStatusRepository.softRemove(billStatus);
   }
 
   private async findEntity(id: number): Promise<BillStatus> {

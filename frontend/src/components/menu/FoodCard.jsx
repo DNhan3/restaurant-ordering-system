@@ -16,6 +16,7 @@ export default function FoodCard({ food, onQuickView }) {
     food_vote: vote = 0,
     food_status: status = [],
     food_category: category,
+    food_available: available = true,
   } = food;
 
   const discountedPrice = parseFloat(price) - parseFloat(discount);
@@ -26,6 +27,7 @@ export default function FoodCard({ food, onQuickView }) {
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
+    if (!available) return;
     setIsAdding(true);
     addItem(food, 1);
     setTimeout(() => setIsAdding(false), 500);
@@ -46,6 +48,11 @@ export default function FoodCard({ food, onQuickView }) {
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
+          {!available && (
+            <span className="bg-gray-700 text-white text-xs font-bold px-2 py-1 rounded-full">
+              Unavailable
+            </span>
+          )}
           {isBestSeller && (
             <span className="bg-secondary text-white text-xs font-bold px-2 py-1 rounded-full">
               Best Seller
@@ -131,14 +138,18 @@ export default function FoodCard({ food, onQuickView }) {
 
           <button
             onClick={handleAddToCart}
-            disabled={isAdding}
+            disabled={isAdding || !available}
             className={`p-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 ${isAdding
                 ? 'bg-success text-white'
-                : 'bg-primary text-white hover:bg-primary-light hover:shadow-lg active:scale-95'
+                : !available
+                  ? 'bg-brown-200 text-brown-500 cursor-not-allowed'
+                  : 'bg-primary text-white hover:bg-primary-light hover:shadow-lg active:scale-95'
               }`}
           >
             <ShoppingCart className="w-5 h-5" />
-            <span className="hidden sm:inline">{isAdding ? 'Đã Thêm!' : 'Thêm'}</span>
+            <span className="hidden sm:inline">
+              {!available ? 'Unavailable' : isAdding ? 'Đã Thêm!' : 'Thêm'}
+            </span>
           </button>
         </div>
       </div>

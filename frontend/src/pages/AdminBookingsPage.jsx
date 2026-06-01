@@ -4,6 +4,13 @@ import { ArrowLeft, CalendarPlus, Edit, LogOut, Save, Trash2, X } from 'lucide-r
 import { useAuth } from '../contexts/AuthContext';
 import { bookingService } from '../services/api';
 
+const SEATS_PER_TABLE = 4;
+const calculateTables = (people) => {
+  const peopleCount = Number(people);
+  if (!Number.isInteger(peopleCount) || peopleCount < 1) return '1';
+  return String(Math.ceil(peopleCount / SEATS_PER_TABLE));
+};
+
 const initialForm = {
   book_name: '',
   book_phone: '',
@@ -26,6 +33,8 @@ export default function AdminBookingsPage() {
   const [editingBookingId, setEditingBookingId] = useState(null);
   const [message, setMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [availability, setAvailability] = useState(null);
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
 
   useEffect(() => {
     if (!admin) {
@@ -43,7 +52,16 @@ export default function AdminBookingsPage() {
   const resetForm = () => {
     setForm(initialForm);
     setEditingBookingId(null);
+    setAvailability(null);
   };
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      checkAvailability();
+    }, 250);
+
+    return () => clearTimeout(timeoutId);
+  }, [form.book_when, form.book_tables, editingBookingId]);
 
   const buildPayload = () => ({
     book_name: form.book_name.trim(),
@@ -61,6 +79,17 @@ export default function AdminBookingsPage() {
     setIsSaving(true);
 
     try {
+      const latestAvailability = await checkAvailability();
+      if (
+        latestAvailability &&
+        Number(form.book_tables) > latestAvailability.availableTables
+      ) {
+        setMessage(
+          `Only ${latestAvailability.availableTables} table(s) available for this time slot.`,
+        );
+        return;
+      }
+
       if (editingBookingId) {
         await bookingService.update(editingBookingId, buildPayload());
         setMessage('Booking updated.');
@@ -78,13 +107,43 @@ export default function AdminBookingsPage() {
     }
   };
 
+  const checkAvailability = async () => {
+    if (!form.book_when) {
+      setAvailability(null);
+      return null;
+    }
+
+    const [date, timeWithSeconds] = form.book_when.split('T');
+    const time = timeWithSeconds?.slice(0, 5);
+    if (!date || !time) {
+      setAvailability(null);
+      return null;
+    }
+
+    try {
+      setIsCheckingAvailability(true);
+      const data = await bookingService.getAvailability({
+        date,
+        time,
+        excludeId: editingBookingId,
+      });
+      setAvailability(data);
+      return data;
+    } catch (error) {
+      setAvailability(null);
+      return null;
+    } finally {
+      setIsCheckingAvailability(false);
+    }
+  };
+
   const handleEdit = (booking) => {
     setEditingBookingId(booking.id);
     setForm({
       book_name: booking.name || '',
       book_phone: booking.phone || '',
       book_people: booking.people || '',
-      book_tables: booking.tables || '1',
+      book_tables: calculateTables(booking.people),
       book_when: toDateTimeLocal(booking),
       book_note: booking.note || '',
     });
@@ -146,12 +205,32 @@ export default function AdminBookingsPage() {
             <input className="input-field" type="text" placeholder="Customer name" value={form.book_name} onChange={(e) => setForm({ ...form, book_name: e.target.value })} required />
             <input className="input-field" type="tel" placeholder="Phone" value={form.book_phone} onChange={(e) => setForm({ ...form, book_phone: e.target.value })} required />
             <div className="grid grid-cols-2 gap-3">
-              <input className="input-field" type="number" min="1" placeholder="People" value={form.book_people} onChange={(e) => setForm({ ...form, book_people: e.target.value })} required />
-              <input className="input-field" type="number" min="1" placeholder="Tables" value={form.book_tables} onChange={(e) => setForm({ ...form, book_tables: e.target.value })} required />
+              <input className="input-field" type="number" min="1" placeholder="People" value={form.book_people} onChange={(e) => setForm({ ...form, book_people: e.target.value, book_tables: calculateTables(e.target.value) })} required />
+              <input className="input-field bg-brown-50" type="number" min="1" placeholder="Tables" value={form.book_tables} readOnly required />
             </div>
+            <p className="-mt-2 text-xs text-brown-500">Tables are auto-calculated from people ({SEATS_PER_TABLE} seats per table).</p>
             <input className="input-field" type="datetime-local" value={form.book_when} onChange={(e) => setForm({ ...form, book_when: e.target.value })} required />
+            {form.book_when && (
+              <div className={`rounded-xl px-4 py-3 text-sm ${
+                availability && Number(form.book_tables) > availability.availableTables
+                  ? 'bg-red-50 text-red-700'
+                  : 'bg-green-50 text-green-700'
+              }`}>
+                {isCheckingAvailability
+                  ? 'Checking table availability...'
+                  : availability
+                    ? `${availability.availableTables} of ${availability.totalTables} table(s) available for this time slot.`
+                    : 'Availability could not be checked.'}
+              </div>
+            )}
             <textarea className="input-field min-h-[96px]" placeholder="Note" value={form.book_note} onChange={(e) => setForm({ ...form, book_note: e.target.value })} />
-            <button disabled={isSaving} className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-60">
+            <button
+              disabled={
+                isSaving ||
+                (availability && Number(form.book_tables) > availability.availableTables)
+              }
+              className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-60"
+            >
               {editingBookingId ? <Save className="w-4 h-4" /> : <CalendarPlus className="w-4 h-4" />}
               {isSaving ? 'Saving...' : editingBookingId ? 'Update Booking' : 'Create Booking'}
             </button>

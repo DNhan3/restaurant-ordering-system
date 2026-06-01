@@ -71,8 +71,9 @@ export class CreateBookingDto {
   @IsInt()
   book_people!: number;
 
+  @IsOptional()
   @IsInt()
-  book_tables!: number;
+  book_tables?: number;
 
   @IsInt()
   user_id!: number | null;
@@ -115,6 +116,10 @@ export class CreateFoodDto {
   @IsOptional()
   @IsString()
   category?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isAvailable?: boolean;
 }
 
 export class CreateUserDto {

@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CalendarDays, LogOut, RefreshCw, Check, X, DollarSign, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle, ArrowRight, Trash2, Users } from 'lucide-react';
+import { CalendarDays, LogOut, RefreshCw, Check, X, Wallet, Clock, Plus, Receipt, Truck, UserPlus, AlertCircle, ArrowRight, Trash2, Users } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { billingService } from '../services/api';
 import { BILL_STATUS_LABELS } from '../utils/constants';
+import { formatPrice } from '../utils/formatters';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-
-const formatCurrency = (value) =>
-  `${Number(value || 0).toLocaleString('vi-VN')}d`;
 
 const BILL_STATUS_OPTIONS = [
   { value: 0, label: BILL_STATUS_LABELS[0], apiStatus: 'cancelled' },
@@ -300,20 +298,20 @@ export default function AdminDashboardPage() {
             value={billingSummary?.totalBills ?? bills.length}
           />
           <BillingMetric
-            icon={DollarSign}
+            icon={Wallet}
             label="Total Revenue"
-            value={formatCurrency(billingSummary?.totalRevenue)}
+            value={formatPrice(billingSummary?.totalRevenue)}
           />
           <BillingMetric
             icon={Check}
             label="Paid Revenue"
-            value={formatCurrency(billingSummary?.paidRevenue)}
+            value={formatPrice(billingSummary?.paidRevenue)}
             tone="success"
           />
           <BillingMetric
             icon={Clock}
             label="Amount Due"
-            value={formatCurrency(billingSummary?.unpaidRevenue)}
+            value={formatPrice(billingSummary?.unpaidRevenue)}
             tone="warning"
           />
         </div>
@@ -474,7 +472,7 @@ export default function AdminDashboardPage() {
                               <p className="font-medium text-brown-900">{bill.bill_phone}</p>
                               <p className="text-sm text-brown-500 truncate max-w-[150px]">{bill.bill_address}</p>
                             </td>
-                            <td className="px-4 py-3 font-semibold text-primary">${bill.bill_total}</td>
+                            <td className="px-4 py-3 font-semibold text-primary">{formatPrice(bill.bill_total)}</td>
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.bill_status)}`}>
@@ -499,7 +497,7 @@ export default function AdminDashboardPage() {
                               </div>
                               {bill.bill_paid === 'true' && (
                                 <span className="ml-2 inline-flex items-center gap-1 text-xs text-success">
-                                  <DollarSign className="w-3 h-3" />
+                                  <Check className="w-3 h-3" />
                                   Paid
                                 </span>
                               )}
@@ -628,19 +626,19 @@ export default function AdminDashboardPage() {
                     <div className="border-t border-brown-100 pt-4 mt-4 space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-brown-500">Subtotal</span>
-                        <span className="text-brown-900">${selectedBill.bill_total - selectedBill.bill_delivery}</span>
+                        <span className="text-brown-900">{formatPrice(selectedBill.bill_total - selectedBill.bill_delivery)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-brown-500">Discount</span>
-                        <span className="text-success">-${selectedBill.bill_discount}</span>
+                        <span className="text-success">-{formatPrice(selectedBill.bill_discount)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-brown-500">Delivery</span>
-                        <span className="text-brown-900">${selectedBill.bill_delivery}</span>
+                        <span className="text-brown-900">{formatPrice(selectedBill.bill_delivery)}</span>
                       </div>
                       <div className="flex justify-between font-bold text-lg pt-2 border-t border-brown-100">
                         <span>Total</span>
-                        <span className="text-primary">${selectedBill.bill_total}</span>
+                        <span className="text-primary">{formatPrice(selectedBill.bill_total)}</span>
                       </div>
                     </div>
                   </>

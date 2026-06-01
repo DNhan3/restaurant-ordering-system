@@ -1,5 +1,11 @@
 import api from '../api/axios';
 
+const buildParams = (params = {}) => ({
+  params: Object.fromEntries(
+    Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ''),
+  ),
+});
+
 export const userService = {
     getUserByEmail: async (email) => {
         const response = await api.post(`/users/find`, { email });
@@ -15,8 +21,8 @@ export const userService = {
         const response = await api.put(`/users/${id}/password`, { currentPassword, newPassword });
         return response.data;
     },
-    getAll: async () => {
-      const response = await api.get('/users');
+    getAll: async (params) => {
+      const response = await api.get('/users', buildParams(params));
       return response.data;
     },
 

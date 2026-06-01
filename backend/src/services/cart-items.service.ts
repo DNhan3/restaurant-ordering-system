@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CartItem } from '../models/cart-item.entity.js';
+import { Food } from '../models/food.entity.js';
 import { CreateCartItemDto } from '../dto/create.dto.js';
 import { UpdateCartItemDto } from '../dto/update.dto.js';
 import { mapCartItemResponse } from './response-mappers.js';
@@ -11,9 +12,12 @@ export class CartItemsService {
   constructor(
     @InjectRepository(CartItem)
     private readonly cartItemRepository: Repository<CartItem>,
+    @InjectRepository(Food)
+    private readonly foodRepository: Repository<Food>,
   ) { }
 
   async create(createCartItemDto: CreateCartItemDto) {
+    await this.assertFoodAvailable(createCartItemDto.foodId);
     const cartItem = this.cartItemRepository.create(createCartItemDto);
     const saved = await this.cartItemRepository.save(cartItem);
     return mapCartItemResponse(await this.findEntity(saved.id));
@@ -42,6 +46,7 @@ export class CartItemsService {
     if (id) {
       cartItem = await this.findEntity(id);
     } else if (userId && foodId) {
+      await this.assertFoodAvailable(foodId);
       cartItem = await this.findEntityByUserAndFood(userId, foodId);
     } else {
       throw new NotFoundException(
@@ -93,5 +98,12 @@ export class CartItemsService {
       throw new NotFoundException(`Cart item with id ${id} not found`);
     }
     return cartItem;
+  }
+
+  private async assertFoodAvailable(foodId: number) {
+    const food = await this.foodRepository.findOneBy({ id: foodId });
+    if (!food || !food.isActive || !food.isAvailable) {
+      throw new BadRequestException('This dish is not available');
+    }
   }
 }

@@ -78,6 +78,10 @@ export class UpdateFoodDto {
   @IsOptional()
   @IsString()
   category?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isAvailable?: boolean;
 }
 
 export class UpdateBookingDto {
@@ -128,4 +132,8 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   role?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }

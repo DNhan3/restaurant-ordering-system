@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 import { BillStatus } from './bill-status.entity.js';
 import { Food } from './food.entity.js';
 
@@ -18,6 +27,18 @@ export class BillDetail {
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price!: number;
+
+  @Column({ name: 'is_active', type: 'boolean', default: true })
+  isActive!: boolean;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt!: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt!: Date | null;
 
   @ManyToOne(() => BillStatus, (billStatus) => billStatus.billDetails, {
     onDelete: 'CASCADE',

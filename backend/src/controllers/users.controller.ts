@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Query, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service.js';
 import { CreateUserDto } from '../dto/create.dto.js';
 import { UpdateUserDto } from '../dto/update.dto.js';
@@ -6,6 +6,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/roles.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
 import { AuthUser } from '../auth/auth.types.js';
+import { hasListQuery, ListQueryOptions } from '../services/query-options.js';
 
 @Controller('users')
 export class UsersController {
@@ -14,8 +15,10 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: ListQueryOptions) {
+    return hasListQuery(query)
+      ? this.usersService.findPaginated(query)
+      : this.usersService.findAll();
   }
 
   @Get(':id')

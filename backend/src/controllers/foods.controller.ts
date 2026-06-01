@@ -8,6 +8,7 @@ import {
   Body,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { FoodsService } from '../services/foods.service.js';
 import { CreateFoodDto } from '../dto/create.dto.js';
@@ -15,14 +16,17 @@ import { UpdateFoodDto } from '../dto/update.dto.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/roles.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
+import { hasListQuery, ListQueryOptions } from '../services/query-options.js';
 
 @Controller('foods')
 export class FoodsController {
   constructor(private readonly foodsService: FoodsService) { }
 
   @Get()
-  findAll() {
-    return this.foodsService.findAll();
+  findAll(@Query() query: ListQueryOptions) {
+    return hasListQuery(query)
+      ? this.foodsService.findPaginated(query)
+      : this.foodsService.findAll();
   }
 
   @Get(':id')

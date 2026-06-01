@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BillDetail } from '../models/bill-detail.entity.js';
 import { BillStatus, BillStatusEnum } from '../models/bill-status.entity.js';
+import { Food } from '../models/food.entity.js';
 import { mapBillStatusResponse, mapFoodResponse } from './response-mappers.js';
 
 type CheckoutItem = {
@@ -43,6 +44,29 @@ const toNumber = (value: unknown, fallback = 0) => {
   return Number.isFinite(number) ? number : fallback;
 };
 
+const normalizeCheckoutItems = (items: CheckoutItem[]) => {
+  const byFoodId = new Map<number, { foodId: number; quantity: number; price: number }>();
+
+  items.forEach((item) => {
+    const foodId = Number(item.foodId ?? item.food_id);
+    const quantity = Number(item.quantity ?? item.item_qty ?? 1);
+    const price = Number(item.price ?? 0);
+
+    if (!foodId || quantity < 1) {
+      throw new BadRequestException('checkout items require foodId and quantity');
+    }
+
+    const existing = byFoodId.get(foodId);
+    byFoodId.set(foodId, {
+      foodId,
+      quantity: (existing?.quantity ?? 0) + quantity,
+      price: existing?.price ?? price,
+    });
+  });
+
+  return [...byFoodId.values()];
+};
+
 @Injectable()
 export class BillingService {
   constructor(
@@ -69,6 +93,19 @@ export class BillingService {
       async (manager) => {
         const billStatusRepository = manager.getRepository(BillStatus);
         const billDetailRepository = manager.getRepository(BillDetail);
+        const foodRepository = manager.getRepository(Food);
+        const normalizedItems = normalizeCheckoutItems(items);
+
+        for (const item of normalizedItems) {
+          const food = await foodRepository.findOne({
+            where: { id: item.foodId },
+            lock: { mode: 'pessimistic_write' },
+          });
+
+          if (!food || !food.isActive || !food.isAvailable) {
+            throw new BadRequestException(`Food ${item.foodId} is not available for ordering`);
+          }
+        }
 
         const billStatus = await billStatusRepository.save(
           billStatusRepository.create({
@@ -84,20 +121,12 @@ export class BillingService {
           }),
         );
 
-        const billDetails = items.map((item) => {
-          const foodId = Number(item.foodId ?? item.food_id);
-          const quantity = Number(item.quantity ?? item.item_qty ?? 1);
-          const price = Number(item.price ?? 0);
-
-          if (!foodId || quantity < 1) {
-            throw new BadRequestException('checkout items require foodId and quantity');
-          }
-
+        const billDetails = normalizedItems.map((item) => {
           return billDetailRepository.create({
             billStatusId: billStatus.id,
-            foodId,
-            quantity,
-            price,
+            foodId: item.foodId,
+            quantity: item.quantity,
+            price: item.price,
           });
         });
 

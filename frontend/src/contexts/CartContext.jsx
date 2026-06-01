@@ -16,6 +16,9 @@ export function CartProvider({ children }) {
   }, [items]);
 
   const addItem = (food, quantity = 1) => {
+    if (food.food_available === false) {
+      return false;
+    }
     setItems(prev => {
       const existing = prev.find(item => item.foodId === food.food_id);
       if (existing) {
@@ -34,6 +37,7 @@ export function CartProvider({ children }) {
         quantity
       }];
     });
+    return true;
   };
 
   const updateQuantity = (foodId, quantity) => {

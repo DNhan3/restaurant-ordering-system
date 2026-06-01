@@ -10,10 +10,10 @@ import { CATEGORIES, FOOD_STATUS } from '../utils/constants';
 
 const PRICE_RANGES = [
   { id: 'all', label: 'All Prices', min: 0, max: Infinity },
-  { id: 'under5', label: 'Under $5', min: 0, max: 5 },
-  { id: '5to10', label: '$5 - $10', min: 5, max: 10 },
-  { id: '10to15', label: '$10 - $15', min: 10, max: 15 },
-  { id: 'over15', label: 'Over $15', min: 15, max: Infinity },
+  { id: 'under50k', label: 'Under 50,000 VND', min: 0, max: 50000 },
+  { id: '50kto100k', label: '50,000 - 100,000 VND', min: 50000, max: 100000 },
+  { id: '100kto150k', label: '100,000 - 150,000 VND', min: 100000, max: 150000 },
+  { id: 'over150k', label: 'Over 150,000 VND', min: 150000, max: Infinity },
 ];
 
 const STATUS_OPTIONS = [
@@ -21,12 +21,6 @@ const STATUS_OPTIONS = [
   { id: 'new', label: 'New Dishes', value: FOOD_STATUS.NEW_DISHES },
   { id: 'online_only', label: 'Online Only', value: FOOD_STATUS.ONLINE_ONLY },
   { id: 'seasonal', label: 'Seasonal', value: FOOD_STATUS.SEASONAL_DISHES },
-];
-
-const TYPE_OPTIONS = [
-  { id: 'all', label: 'All Types' },
-  { id: 'meat', label: 'Meat' },
-  { id: 'vegan', label: 'Vegan' },
 ];
 
 const ITEMS_PER_PAGE = 12;
@@ -78,7 +72,6 @@ export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPriceRange, setSelectedPriceRange] = useState('all');
   const [selectedStatuses, setSelectedStatuses] = useState([]);
-  const [selectedType, setSelectedType] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
 
   // Pagination
@@ -96,7 +89,6 @@ export default function MenuPage() {
     setSearchQuery(searchParams.get('search') || '');
     setSelectedPriceRange(getSearchParamOption(searchParams, 'price', PRICE_RANGES));
     setSelectedStatuses(getStatusValuesFromSearchParams(searchParams));
-    setSelectedType(getSearchParamOption(searchParams, 'type', TYPE_OPTIONS));
     setCurrentPage(getPageFromSearchParams(searchParams));
   }, [searchParams]);
 
@@ -142,14 +134,9 @@ export default function MenuPage() {
         if (!hasAllStatuses) return false;
       }
 
-      // Type
-      if (selectedType !== 'all' && food.food_type?.toLowerCase() !== selectedType) {
-        return false;
-      }
-
       return true;
     });
-  }, [foods, searchQuery, selectedCategory, selectedPriceRange, selectedStatuses, selectedType]);
+  }, [foods, searchQuery, selectedCategory, selectedPriceRange, selectedStatuses]);
 
   // Pagination
   const totalPages = Math.ceil(filteredFoods.length / ITEMS_PER_PAGE);
@@ -202,7 +189,6 @@ export default function MenuPage() {
     setSearchParams({});
     setSelectedPriceRange('all');
     setSelectedStatuses([]);
-    setSelectedType('all');
   };
 
   const handleCategoryChange = (categoryId) => {
@@ -220,11 +206,6 @@ export default function MenuPage() {
     updateSearchParams({ price: priceRangeId });
   };
 
-  const handleTypeChange = (typeId) => {
-    setSelectedType(typeId);
-    updateSearchParams({ type: typeId });
-  };
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
     updateSearchParams({ page: page === 1 ? null : page }, false);
@@ -235,8 +216,7 @@ export default function MenuPage() {
     searchQuery ||
     selectedCategory !== 'all' ||
     selectedPriceRange !== 'all' ||
-    selectedStatuses.length > 0 ||
-    selectedType !== 'all';
+    selectedStatuses.length > 0;
 
   const handleQuickView = (food) => {
     setSelectedFood(food);
@@ -308,7 +288,7 @@ export default function MenuPage() {
               <span className="hidden sm:inline">Bộ Lọc</span>
               {hasActiveFilters && (
                 <span className="w-5 h-5 bg-white text-primary text-xs font-bold rounded-full flex items-center justify-center">
-                  {selectedStatuses.length + (selectedCategory !== 'all' ? 1 : 0) + (selectedPriceRange !== 'all' ? 1 : 0) + (selectedType !== 'all' ? 1 : 0)}
+                  {selectedStatuses.length + (selectedCategory !== 'all' ? 1 : 0) + (selectedPriceRange !== 'all' ? 1 : 0)}
                 </span>
               )}
             </button>
@@ -345,7 +325,7 @@ export default function MenuPage() {
               )}
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Categories */}
               <div>
                 <label className="block text-sm font-medium text-brown-700 mb-3">
@@ -388,46 +368,6 @@ export default function MenuPage() {
                 </div>
               </div>
 
-              {/* Status */}
-              <div>
-                <label className="block text-sm font-medium text-brown-700 mb-3">
-                  Ưu Đãi Đặc Biệt
-                </label>
-                <div className="space-y-2">
-                  {STATUS_OPTIONS.map((status) => (
-                    <label key={status.id} className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectedStatuses.includes(status.value)}
-                        onChange={() => toggleStatus(status.value)}
-                        className="w-4 h-4 text-primary focus:ring-primary rounded"
-                      />
-                      <span className="text-sm text-brown-700">{status.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Type */}
-              <div>
-                <label className="block text-sm font-medium text-brown-700 mb-3">
-                  Loại Món
-                </label>
-                <div className="space-y-2">
-                  {TYPE_OPTIONS.map((type) => (
-                    <label key={type.id} className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="type"
-                        checked={selectedType === type.id}
-                        onChange={() => handleTypeChange(type.id)}
-                        className="w-4 h-4 text-primary focus:ring-primary"
-                      />
-                      <span className="text-sm text-brown-700">{type.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         )}

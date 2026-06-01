@@ -5,6 +5,12 @@ import { User } from '../models/user.entity.js';
 import { CreateUserDto } from '../dto/create.dto.js';
 import { UpdateUserDto } from '../dto/update.dto.js';
 import * as bcrypt from 'bcryptjs';
+import {
+  buildPaginationMeta,
+  getPagination,
+  getSortOrder,
+  ListQueryOptions,
+} from './query-options.js';
 
 @Injectable()
 export class UsersService {
@@ -63,6 +69,49 @@ export class UsersService {
     return users.map((user) => this.withoutPassword(user));
   }
 
+  async findPaginated(query: ListQueryOptions) {
+    const { page, pageSize, skip, take } = getPagination(query);
+    const sortColumns: Record<string, string> = {
+      id: 'user.id',
+      name: 'user.name',
+      email: 'user.email',
+      role: 'user.role',
+      createdAt: 'user.createdAt',
+      updatedAt: 'user.updatedAt',
+    };
+    const sortColumn = sortColumns[String(query.sortBy || 'id')] ?? sortColumns.id;
+
+    const qb = this.userRepository.createQueryBuilder('user');
+
+    if (query.search) {
+      qb.andWhere(
+        '(LOWER(user.name) LIKE :search OR LOWER(user.email) LIKE :search)',
+        { search: `%${String(query.search).toLowerCase()}%` },
+      );
+    }
+
+    if (query.role && query.role !== 'all') {
+      qb.andWhere('user.role = :role', { role: query.role });
+    }
+
+    if (query.active !== undefined && query.active !== 'all') {
+      qb.andWhere('user.isActive = :active', {
+        active: String(query.active) === 'true',
+      });
+    }
+
+    const [users, total] = await qb
+      .orderBy(sortColumn, getSortOrder(query.sortOrder))
+      .skip(skip)
+      .take(take)
+      .getManyAndCount();
+
+    return {
+      items: users.map((user) => this.withoutPassword(user)),
+      meta: buildPaginationMeta(page, pageSize, total),
+    };
+  }
+
   async findOne(id: number): Promise<Omit<User, 'password'>> {
     return this.withoutPassword(await this.findEntity(id));
   }
@@ -98,12 +147,18 @@ export class UsersService {
       user.role = updateUserDto.role;
     }
 
+    if (updateUserDto.isActive !== undefined) {
+      user.isActive = updateUserDto.isActive;
+    }
+
     return this.withoutPassword(await this.userRepository.save(user));
   }
 
   async remove(id: number): Promise<Omit<User, 'password'>> {
     const user = await this.findEntity(id);
-    await this.userRepository.remove(user);
+    user.isActive = false;
+    await this.userRepository.save(user);
+    await this.userRepository.softRemove(user);
     return this.withoutPassword(user);
   }
 
@@ -119,7 +174,9 @@ export class UsersService {
       throw new NotFoundException(`${role} with id ${id} not found`);
     }
 
-    await this.userRepository.remove(user);
+    user.isActive = false;
+    await this.userRepository.save(user);
+    await this.userRepository.softRemove(user);
     return this.withoutPassword(user);
   }
 

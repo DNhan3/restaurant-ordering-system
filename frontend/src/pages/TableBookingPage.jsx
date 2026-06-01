@@ -4,6 +4,13 @@ import { MapPin, Phone, Clock, Calendar, Users, CheckCircle, AlertCircle } from 
 import { bookingService } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
+const SEATS_PER_TABLE = 4;
+const calculateTables = (people) => {
+  const peopleCount = Number(people);
+  if (!Number.isInteger(peopleCount) || peopleCount < 1) return '1';
+  return String(Math.ceil(peopleCount / SEATS_PER_TABLE));
+};
+
 export default function TableBookingPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -16,6 +23,8 @@ export default function TableBookingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+  const [availability, setAvailability] = useState(null);
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
 
   const [formData, setFormData] = useState({
     name: user?.user_name || '',
@@ -28,9 +37,48 @@ export default function TableBookingPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === 'people' ? { tables: calculateTables(value) } : {}),
+    }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      checkAvailability();
+    }, 250);
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.when, formData.tables]);
+
+  const checkAvailability = async () => {
+    if (!formData.when) {
+      setAvailability(null);
+      return null;
+    }
+
+    const [date, timeWithSeconds] = formData.when.split('T');
+    const time = timeWithSeconds?.slice(0, 5);
+
+    if (!date || !time) {
+      setAvailability(null);
+      return null;
+    }
+
+    try {
+      setIsCheckingAvailability(true);
+      const data = await bookingService.getAvailability({ date, time });
+      setAvailability(data);
+      return data;
+    } catch {
+      setAvailability(null);
+      return null;
+    } finally {
+      setIsCheckingAvailability(false);
     }
   };
 
@@ -88,6 +136,17 @@ export default function TableBookingPage() {
     setIsSubmitting(true);
 
     try {
+      const latestAvailability = await checkAvailability();
+      if (
+        latestAvailability &&
+        parseInt(formData.tables) > latestAvailability.availableTables
+      ) {
+        setErrors({
+          submit: `Only ${latestAvailability.availableTables} table(s) available for this time.`,
+        });
+        return;
+      }
+
       const bookingData = {
         book_name: formData.name,
         book_phone: parseInt(formData.phone),
@@ -109,7 +168,9 @@ export default function TableBookingPage() {
         note: '',
       });
     } catch (error) {
-      setErrors({ submit: 'Failed to submit booking. Please try again.' });
+      setErrors({
+        submit: error.response?.data?.message || 'Failed to submit booking. Please try again.',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -233,12 +294,13 @@ export default function TableBookingPage() {
                         type="number"
                         name="tables"
                         value={formData.tables}
-                        onChange={handleChange}
+                        readOnly
                         min="1"
                         max="50"
                         placeholder="1"
-                        className={`input-field ${errors.tables ? 'border-error' : ''}`}
+                        className={`input-field bg-brown-50 ${errors.tables ? 'border-error' : ''}`}
                       />
+                      <p className="mt-1 text-xs text-brown-500">Auto-calculated from people ({SEATS_PER_TABLE} seats per table).</p>
                       {errors.tables && (
                         <p className="text-error text-sm mt-1 flex items-center gap-1">
                           <AlertCircle className="w-4 h-4" />
@@ -266,6 +328,19 @@ export default function TableBookingPage() {
                         {errors.when}
                       </p>
                     )}
+                    {formData.when && (
+                      <div className={`mt-3 rounded-xl px-4 py-3 text-sm ${
+                        availability && parseInt(formData.tables || '0') > availability.availableTables
+                          ? 'bg-error/10 text-error'
+                          : 'bg-success/10 text-success'
+                      }`}>
+                        {isCheckingAvailability
+                          ? 'Checking table availability...'
+                          : availability
+                            ? `${availability.availableTables} of ${availability.totalTables} table(s) available for this time.`
+                            : 'Availability could not be checked.'}
+                      </div>
+                    )}
                   </div>
 
                   {/* Special Requests */}
@@ -292,7 +367,10 @@ export default function TableBookingPage() {
 
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={
+                      isSubmitting ||
+                      (availability && parseInt(formData.tables || '0') > availability.availableTables)
+                    }
                     className="w-full btn-primary py-4 flex items-center justify-center gap-2 disabled:opacity-70"
                   >
                     {isSubmitting ? (

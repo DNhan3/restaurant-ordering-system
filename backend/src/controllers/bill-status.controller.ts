@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   ParseIntPipe,
+  Query,
   Req,
   UseGuards,
   NotFoundException,
@@ -20,6 +21,7 @@ import { RolesGuard } from '../auth/roles.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
 import { assertSelfOrAdmin } from '../auth/request-user.js';
 import type { AuthUser } from '../auth/auth.types.js';
+import { hasListQuery, ListQueryOptions } from '../services/query-options.js';
 
 @Controller('bill-status')
 export class BillStatusController {
@@ -28,8 +30,10 @@ export class BillStatusController {
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  findAll() {
-    return this.billStatusService.findAll();
+  findAll(@Query() query: ListQueryOptions) {
+    return hasListQuery(query)
+      ? this.billStatusService.findPaginated(query)
+      : this.billStatusService.findAll();
   }
 
   @Get('new')

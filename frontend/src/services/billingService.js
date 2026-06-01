@@ -1,5 +1,11 @@
 import api from '../api/axios';
 
+const buildParams = (params = {}) => ({
+  params: Object.fromEntries(
+    Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ''),
+  ),
+});
+
 export const billingService = {
   checkout: async (data) => {
     const response = await api.post('/checkout', data);
@@ -26,8 +32,8 @@ export const billingService = {
     return response.data;
   },
 
-  getAllBills: async () => {
-    const response = await api.get('/bill-status');
+  getAllBills: async (params) => {
+    const response = await api.get('/bill-status', buildParams(params));
     return response.data;
   },
 

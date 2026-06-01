@@ -33,12 +33,14 @@ export default function QuickViewModal({ food, isOpen, onClose }) {
     food_image: image,
     food_vote: vote = 0,
     food_status: status = [],
+    food_available: available = true,
   } = food;
 
   const discountedPrice = parseFloat(price) - parseFloat(discount);
   const hasDiscount = parseFloat(discount) > 0;
 
   const handleAddToCart = () => {
+    if (!available) return;
     if (!user) {
       onClose();
       return;
@@ -134,6 +136,11 @@ export default function QuickViewModal({ food, isOpen, onClose }) {
             </div>
 
             {/* Quantity Selector */}
+            {!available && (
+              <div className="mb-6 rounded-xl bg-brown-100 px-4 py-3 text-center font-medium text-brown-600">
+                This dish is currently unavailable.
+              </div>
+            )}
             <div className="flex items-center gap-4 mb-6">
               <span className="text-brown-700 font-medium">Số lượng:</span>
               <div className="flex items-center gap-2">
@@ -159,14 +166,16 @@ export default function QuickViewModal({ food, isOpen, onClose }) {
             {user ? (
               <button
                 onClick={handleAddToCart}
-                disabled={isAdding}
+                disabled={isAdding || !available}
                 className={`w-full py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${isAdding
                     ? 'bg-success text-white'
-                    : 'bg-primary text-white hover:bg-primary-light active:scale-[0.98]'
+                    : !available
+                      ? 'bg-brown-200 text-brown-500 cursor-not-allowed'
+                      : 'bg-primary text-white hover:bg-primary-light active:scale-[0.98]'
                   }`}
               >
                 <ShoppingCart className="w-5 h-5" />
-                {isAdding ? 'Đã Thêm!' : 'Thêm Vào Giỏ'}
+                {!available ? 'Unavailable' : isAdding ? 'Đã Thêm!' : 'Thêm Vào Giỏ'}
               </button>
             ) : (
               <div className="space-y-3">

@@ -34,6 +34,7 @@ export const mapFoodResponse = (food: Food | null | undefined) => {
     food_vote: 0,
     food_status: [],
     food_type: '',
+    food_available: food.isAvailable,
   };
 };
 

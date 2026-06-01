@@ -1,3 +1,7 @@
 export const formatPrice = (amount) => {
-  return `${parseFloat(amount || 0).toLocaleString('vi-VN')}đ`;
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0));
 };

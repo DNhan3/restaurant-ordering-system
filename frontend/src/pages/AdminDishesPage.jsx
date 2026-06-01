@@ -11,6 +11,7 @@ const initialFoodForm = {
   description: '',
   image: '',
   category: 'pho',
+  isAvailable: true,
 };
 
 export default function AdminDishesPage() {
@@ -75,6 +76,7 @@ export default function AdminDishesPage() {
         description: foodForm.description.trim(),
         image,
         category: foodForm.category,
+        isAvailable: foodForm.isAvailable,
       };
 
       if (editingFoodId) {
@@ -110,6 +112,7 @@ export default function AdminDishesPage() {
       description: food.food_desc || '',
       image: food.food_image || '',
       category: food.food_category || 'pho',
+      isAvailable: food.food_available ?? true,
     });
     setFoodImageFile(null);
     setFoodImagePreview('');
@@ -235,6 +238,21 @@ export default function AdminDishesPage() {
                   </select>
                 </div>
 
+                <label className="flex items-center gap-3 rounded-lg border border-brown-200 px-4 py-3 text-brown-700">
+                  <input
+                    type="checkbox"
+                    checked={foodForm.isAvailable}
+                    onChange={(event) =>
+                      setFoodForm((current) => ({
+                        ...current,
+                        isAvailable: event.target.checked,
+                      }))
+                    }
+                    className="h-4 w-4 text-primary"
+                  />
+                  Available to customers
+                </label>
+
                 <div>
                   <label className="block text-sm font-medium text-brown-700 mb-1">Thumbnail</label>
                   <label className="flex items-center justify-center gap-2 h-12 px-4 border-2 border-dashed border-brown-200 rounded-lg text-brown-600 hover:border-primary hover:text-primary cursor-pointer transition-colors">
@@ -314,7 +332,9 @@ export default function AdminDishesPage() {
                     />
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-sm text-brown-900 truncate">{food.food_name}</p>
-                      <p className="text-xs text-brown-500">{food.food_category}</p>
+                      <p className="text-xs text-brown-500">
+                        {food.food_category} - {food.food_available ?? true ? 'Available' : 'Unavailable'}
+                      </p>
                     </div>
                     <button
                       type="button"
