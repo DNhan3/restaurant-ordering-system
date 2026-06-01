@@ -6,13 +6,10 @@ VNFood is a full-stack restaurant ordering system for Vietnamese food. Customers
 
 ## 2. Team Members and Roles
 
-The application presents the following team members on the About page:
-
-| Team member | Role |
-| --- | --- |
-| Chef. Đức Nhân | Bếp Trưởng |
-| Chef. Nguyên Trung | Chuyên Gia Phở |
-| Chef. Triều Hưng | Nghệ Nhân Bánh Mì |
+Team member 
+Đức Nhân
+Nguyên Trung
+Triều Hưng
 
 > Before submission, update this table if your course requires software-development responsibilities such as frontend, backend, database, testing, or documentation.
 
@@ -48,7 +45,7 @@ Java and PostgreSQL are not required for this project.
 1. Clone the repository and enter the project folder:
 
    ```bash
-   git clone <repository-url>
+   git clone [<repository-url>](https://github.com/DNhan3/restaurant-ordering-system.git)
    cd restaurant-ordering-system
    ```
 
@@ -59,59 +56,15 @@ Java and PostgreSQL are not required for this project.
    npm install
    ```
 
-3. Create the backend environment file:
-
-   ```powershell
-   Copy-Item .env.example .env
-   ```
-
-4. Generate a bcrypt hash for the admin password and paste the output into `ADMIN_PASSWORD_HASH` in `backend/.env`:
-
-   ```bash
-   node -e "console.log(require('bcryptjs').hashSync('ChangeMe123!', 10))"
-   ```
-
-5. Create the MySQL database and tables. From Command Prompt, run:
-
-   ```bat
-   mysql -u root -p < sql\schema.sql
-   mysql -u root -p wad_restaurant < sql\add-more-dishes.sql
-   ```
-
-   The second command is optional, but recommended because it adds sample dishes. You can also run both SQL files from MySQL Workbench.
-
-6. Install frontend dependencies and create its optional environment file:
+3. Install frontend dependencies and create its optional environment file:
 
    ```powershell
    cd ..\frontend
    npm install
-   Copy-Item .env.example .env
    ```
 
-## 6. Environment Variables
 
-### Backend: `backend/.env`
-
-| Variable | Required | Default | Purpose |
-| --- | --- | --- | --- |
-| `DB_HOST` | No | `localhost` | MySQL host |
-| `DB_PORT` | No | `3306` | MySQL port |
-| `DB_USERNAME` | No | `root` | MySQL user |
-| `DB_PASSWORD` | Yes for secured MySQL | Empty | MySQL password |
-| `DB_NAME` | No | `wad_restaurant` | MySQL database |
-| `PORT` | No | `3000` | Backend HTTP port |
-| `JWT_SECRET` | Required in production | Development fallback | JWT signing secret |
-| `JWT_TTL_SECONDS` | No | `86400` | JWT lifetime in seconds |
-| `ADMIN_PASSWORD_HASH` | Yes for admin login | None | bcrypt hash of the admin password |
-| `NODE_ENV` | No | Development mode | Set to `production` when deploying |
-
-### Frontend: `frontend/.env`
-
-| Variable | Required | Default | Purpose |
-| --- | --- | --- | --- |
-| `VITE_API_BASE_URL` | No | `http://localhost:3000` | Backend API base URL |
-
-## 7. Run Locally
+## 6. Run Locally
 
 On Windows, start both applications from the project root:
 
@@ -135,9 +88,9 @@ Open:
 
 - Frontend: [http://localhost:5173](http://localhost:5173)
 - Backend API: [http://localhost:3000](http://localhost:3000)
-- Admin login: [http://localhost:5173/admin/login](http://localhost:5173/admin/login)
+- Admin login: [http://localhost:5173/admin/login](http://localhost:5173/admin)
 
-## 8. Run Tests
+## 7. Run Tests
 
 Backend unit tests:
 
@@ -162,48 +115,17 @@ npm run build
 npm run lint
 ```
 
-Current verification status:
+## 8. Live Demo URL
 
-- `backend`: `npm test -- --runInBand` passes with 3 tests.
-- `backend`: `npm run build` passes.
-- `frontend`: `npm run build` passes.
-- `backend`: `npm run test:e2e -- --runInBand` currently fails because its starter assertion still expects `Hello World!`.
-- `frontend`: `npm run lint` currently reports existing hook-rule and unused-variable issues.
+[https://successful-reverence-production-939c.up.railway.app/]
 
-## 9. Known Issues and Limitations
-
-- Checkout still accepts item prices and totals submitted by the client. A production version should recalculate them from database values on the server.
-- JWT access tokens are stored in `localStorage`. Refresh tokens and HTTP-only authentication cookies are not implemented.
-- TypeORM `synchronize: true` is enabled for development convenience and should be replaced with migrations before production deployment.
-- Backend CORS currently allows only `http://localhost:5173`.
-- The e2e starter assertion and frontend lint errors described above still need cleanup.
-
-## 10. Live Demo URL
-
-No public deployment URL is currently stored in this repository.
-
-**Submission placeholder:** `<add-live-demo-url-here>`
-
-## 11. Test Account Credentials
+## 9. Test Account Credentials
 
 Shared plaintext passwords are intentionally not committed. Prepare demo-only accounts before submission and record their credentials here:
 
-| Account type | Login | Password | Setup |
+| Account type | Login | Password |
 | --- | --- | --- | --- |
-| Customer | `<demo-customer-email>` | `<demo-customer-password>` | Register from `/register` |
-| Admin | Password-only login | `<demo-admin-password>` | Must match `ADMIN_PASSWORD_HASH` |
-| Shipper | `<demo-shipper-email>` | `<demo-shipper-password>` | Create from the admin dashboard |
+| Customer | `<test@gmail.com>` | `<test1234>` |
+| Admin | Password-only login | `<password123>` |
+| Shipper | `<shipper1@gmail.com>` | `<123456>` |
 
-## 12. Screenshots
-
-### Homepage
-
-![VNFood homepage](docs/screenshots/home.png)
-
-### Customer Login
-
-![VNFood customer login](docs/screenshots/login.png)
-
-### Admin Login
-
-![VNFood admin login](docs/screenshots/admin-login.png)
