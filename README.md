@@ -124,7 +124,7 @@ npm run lint
 Shared plaintext passwords are intentionally not committed. Prepare demo-only accounts before submission and record their credentials here:
 
 | Account type | Login | Password |
-| --- | --- | --- | --- |
+| --- | --- | --- | 
 | Customer | `<test@gmail.com>` | `<test1234>` |
 | Admin | Password-only login | `<password123>` |
 | Shipper | `<shipper1@gmail.com>` | `<123456>` |
