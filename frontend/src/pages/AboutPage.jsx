@@ -5,17 +5,17 @@ const TEAM_PHOTOS = [
   {
     name: 'Chef. Đức Nhân',
     role: 'Bếp Trưởng',
-    image: '',
+    image: 'public/DNhan.jpg',
   },
   {
     name: 'Chef. Nguyên Trung',
     role: 'Chuyên Gia Phở',
-    image: '',
+    image: 'public/NTrung.png',
   },
   {
     name: 'Chef. Triều Hưng',
     role: 'Nghệ Nhân Bánh Mì',
-    image: '',
+    image: 'public/THung.jpg',
   },
 ];
 

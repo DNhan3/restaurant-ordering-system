@@ -7,9 +7,10 @@ import { AuthModule } from './auth.module.js';
 import { JwtTokenService } from '../auth/jwt-token.service.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/roles.guard.js';
+import { AuditLogsModule } from './audit-logs.module.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => AuthModule)],
+  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => AuthModule), AuditLogsModule],
   controllers: [UsersController],
   providers: [UsersService, JwtTokenService, JwtAuthGuard, RolesGuard],
   exports: [UsersService],

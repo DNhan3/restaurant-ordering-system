@@ -72,7 +72,7 @@ export class BillStatus {
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive!: boolean;
 
-  @Column({ name: 'shipper_id', nullable: true })
+  @Column({ name: 'shipper_id', type: 'int', nullable: true })
   shipperId!: number | null;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })

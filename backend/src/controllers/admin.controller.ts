@@ -23,12 +23,17 @@ import { UpdateFoodDto } from '../dto/update.dto.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/roles.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
+import { AuditLogsService } from '../services/audit-logs.service.js';
+import type { AuthUser } from '../auth/auth.types.js';
 
 const foodUploadsPath = join(process.cwd(), 'uploads', 'foods');
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) { }
+  constructor(
+    private readonly adminService: AdminService,
+    private readonly auditLogsService: AuditLogsService,
+  ) { }
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -52,8 +57,20 @@ export class AdminController {
   @Patch('orders/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  updateOrder(@Param('id') id: string, @Body() body: unknown) {
-    return this.adminService.updateOrder(id, body);
+  async updateOrder(
+    @Param('id') id: string,
+    @Body() body: unknown,
+    @Req() request: Request & { user: AuthUser },
+  ) {
+    const order = await this.adminService.updateOrder(id, body);
+    await this.auditLogsService.record({
+      actor: request.user,
+      action: 'update',
+      entityType: 'order',
+      entityId: id,
+      metadata: { body },
+    });
+    return order;
   }
 
   @Get('foods')
@@ -66,15 +83,40 @@ export class AdminController {
   @Post('foods')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  createFood(@Body() body: CreateFoodDto) {
-    return this.adminService.createFood(body);
+  createFood(
+    @Body() body: CreateFoodDto,
+    @Req() request: Request & { user: AuthUser },
+  ) {
+    return this.adminService.createFood(body).then(async (food) => {
+      await this.auditLogsService.record({
+        actor: request.user,
+        action: 'create',
+        entityType: 'food',
+        entityId: food?.food_id,
+        metadata: { name: food?.food_name, category: food?.food_category },
+      });
+      return food;
+    });
   }
 
   @Patch('foods/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  updateFood(@Param('id') id: string, @Body() body: UpdateFoodDto) {
-    return this.adminService.updateFood(id, body);
+  updateFood(
+    @Param('id') id: string,
+    @Body() body: UpdateFoodDto,
+    @Req() request: Request & { user: AuthUser },
+  ) {
+    return this.adminService.updateFood(id, body).then(async (food) => {
+      await this.auditLogsService.record({
+        actor: request.user,
+        action: 'update',
+        entityType: 'food',
+        entityId: id,
+        metadata: { changedFields: Object.keys(body), name: food?.food_name },
+      });
+      return food;
+    });
   }
 
   @Post('foods/upload')
@@ -127,8 +169,20 @@ export class AdminController {
   @Post('shippers')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  createShipper(@Body() body: { email: string; name: string; password: string }) {
-    return this.adminService.createShipper(body);
+  createShipper(
+    @Body() body: { email: string; name: string; password: string },
+    @Req() request: Request & { user: AuthUser },
+  ) {
+    return this.adminService.createShipper(body).then(async (result) => {
+      await this.auditLogsService.record({
+        actor: request.user,
+        action: 'create',
+        entityType: 'user',
+        entityId: result.shipper?.id,
+        metadata: { email: result.shipper?.email, role: 'shipper' },
+      });
+      return result;
+    });
   }
 
   @Get('shippers')
@@ -141,7 +195,19 @@ export class AdminController {
   @Delete('shippers/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  deleteShipper(@Param('id') id: string) {
-    return this.adminService.deleteShipper(id);
+  deleteShipper(
+    @Param('id') id: string,
+    @Req() request: Request & { user: AuthUser },
+  ) {
+    return this.adminService.deleteShipper(id).then(async (shipper) => {
+      await this.auditLogsService.record({
+        actor: request.user,
+        action: 'delete',
+        entityType: 'user',
+        entityId: id,
+        metadata: { role: 'shipper' },
+      });
+      return shipper;
+    });
   }
 }

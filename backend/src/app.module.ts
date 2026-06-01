@@ -14,6 +14,7 @@ import { AuthModule } from './modules/auth.module.js';
 import { CartModule } from './modules/cart.module.js';
 import { BillingModule } from './modules/billing.module.js';
 import { ShipperModule } from './modules/shipper.module.js';
+import { AuditLogsModule } from './modules/audit-logs.module.js';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { ShipperModule } from './modules/shipper.module.js';
     CartModule,
     BillingModule,
     ShipperModule,
+    AuditLogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

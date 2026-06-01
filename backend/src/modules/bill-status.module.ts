@@ -4,9 +4,10 @@ import { BillStatus } from '../models/bill-status.entity.js';
 import { BillStatusService } from '../services/bill-status.service.js';
 import { BillStatusController } from '../controllers/bill-status.controller.js';
 import { AuthModule } from './auth.module.js';
+import { AuditLogsModule } from './audit-logs.module.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BillStatus]), AuthModule],
+  imports: [TypeOrmModule.forFeature([BillStatus]), AuthModule, AuditLogsModule],
   controllers: [BillStatusController],
   providers: [BillStatusService],
   exports: [BillStatusService],
