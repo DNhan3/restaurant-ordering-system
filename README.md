@@ -4,16 +4,7 @@
 
 VNFood is a full-stack restaurant ordering system for Vietnamese food. Customers can browse dishes, manage a cart, place delivery orders, view receipts, update their profiles, and book tables. The system also includes an admin area for managing dishes, users, bookings, orders, and shipper accounts, plus a shipper dashboard for delivery processing.
 
-## 2. Team Members and Roles
-
-Team member 
-Đức Nhân
-Nguyên Trung
-Triều Hưng
-
-> Before submission, update this table if your course requires software-development responsibilities such as frontend, backend, database, testing, or documentation.
-
-## 3. Technology Stack
+## 2. Technology Stack
 
 Versions below are the installed versions from the current lockfiles.
 
@@ -31,7 +22,7 @@ Versions below are the installed versions from the current lockfiles.
 | Database | MySQL | 8.x recommended |
 | Testing | Jest | 30.4.2 |
 
-## 4. Prerequisites
+## 3. Prerequisites
 
 - Node.js `^20.19.0` or `>=22.12.0`
 - npm `10+`
@@ -40,7 +31,7 @@ Versions below are the installed versions from the current lockfiles.
 
 Java and PostgreSQL are not required for this project.
 
-## 5. Step-by-Step Setup
+## 4. Step-by-Step Setup
 
 1. Clone the repository and enter the project folder:
 
@@ -64,7 +55,7 @@ Java and PostgreSQL are not required for this project.
    ```
 
 
-## 6. Run Locally
+## 5. Run Locally
 
 On Windows, start both applications from the project root:
 
@@ -90,7 +81,7 @@ Open:
 - Backend API: [http://localhost:3000](http://localhost:3000)
 - Admin login: [http://localhost:5173/admin/login](http://localhost:5173/admin)
 
-## 7. Run Tests
+## 6. Run Tests
 
 Backend unit tests:
 
@@ -115,11 +106,11 @@ npm run build
 npm run lint
 ```
 
-## 8. Live Demo URL
+## 7. Live Demo URL
 
 [https://successful-reverence-production-939c.up.railway.app/]
 
-## 9. Test Account Credentials
+## 8. Test Account Credentials
 
 Shared plaintext passwords are intentionally not committed. Prepare demo-only accounts before submission and record their credentials here:
 
