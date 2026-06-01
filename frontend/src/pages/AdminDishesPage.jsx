@@ -81,17 +81,17 @@ export default function AdminDishesPage() {
 
       if (editingFoodId) {
         await foodService.update(editingFoodId, payload);
-        setFoodMessage('Dish updated successfully.');
+        setFoodMessage('Món ăn cập nhật thành công.');
       } else {
         await foodService.create(payload);
-        setFoodMessage('Dish created successfully.');
+        setFoodMessage('Món ăn tạo thành công.');
       }
 
       resetFoodForm();
       await loadFoods();
     } catch (error) {
       console.error('Failed to create food:', error);
-      setFoodMessage(error.response?.data?.message || 'Failed to create dish.');
+      setFoodMessage(error.response?.data?.message || 'Không thể tạo món ăn.');
     } finally {
       setIsSavingFood(false);
     }
@@ -120,7 +120,7 @@ export default function AdminDishesPage() {
   };
 
   const handleDeleteFood = async (food) => {
-    const confirmed = window.confirm(`Delete dish "${food.food_name}"?`);
+    const confirmed = window.confirm(`Xóa món ăn "${food.food_name}"?`);
     if (!confirmed) return;
 
     try {
@@ -128,11 +128,11 @@ export default function AdminDishesPage() {
       if (editingFoodId === food.food_id) {
         resetFoodForm();
       }
-      setFoodMessage('Dish deleted successfully.');
+      setFoodMessage('Món ăn đã bị xóa.');
       await loadFoods();
     } catch (error) {
       console.error('Failed to delete food:', error);
-      setFoodMessage(error.response?.data?.message || 'Failed to delete dish.');
+      setFoodMessage(error.response?.data?.message || 'Không thể xóa món ăn.');
     }
   };
 
@@ -156,10 +156,10 @@ export default function AdminDishesPage() {
                 className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-3"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Manage Bills & Orders
+                Quản Lý Hóa Đơn & Đơn Hàng
               </Link>
-              <h1 className="text-2xl font-bold">Add Custom Dish</h1>
-              <p className="text-brown-300 mt-1">Create menu items with image uploads and dish details.</p>
+              <h1 className="text-2xl font-bold">Thêm Món Án Tùy Chỉnh</h1>
+              <p className="text-brown-300 mt-1">Tạo các món trong thực đơn với tải hình ánh và chi tiết món ăn.</p>
             </div>
             <button
               onClick={handleLogout}
@@ -179,9 +179,9 @@ export default function AdminDishesPage() {
               <div className="flex items-center justify-between gap-4 mb-5">
                 <div>
                   <h2 className="text-xl font-bold text-brown-900">
-                    {editingFoodId ? 'Edit Dish' : 'Create Dish'}
+                    {editingFoodId ? 'Chỉnh Sửa Món Án' : 'Tạo Món Án'}
                   </h2>
-                  <p className="text-sm text-brown-500 mt-1">Upload a thumbnail and save it with the menu item.</p>
+                  <p className="text-sm text-brown-500 mt-1">Tải lên hình thu nhỏ và lưu nó cùng với món trong menu.</p>
                 </div>
                 {editingFoodId && (
                   <button
@@ -190,14 +190,14 @@ export default function AdminDishesPage() {
                     className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-brown-200 text-brown-600 hover:bg-brown-50"
                   >
                     <X className="w-4 h-4" />
-                    Cancel
+                    Hủy
                   </button>
                 )}
               </div>
 
               <form onSubmit={handleSubmitFood} className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-brown-700 mb-1">Dish name</label>
+                  <label className="block text-sm font-medium text-brown-700 mb-1">Tên Món Án</label>
                   <input
                     type="text"
                     name="name"

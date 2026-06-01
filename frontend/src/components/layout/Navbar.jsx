@@ -126,7 +126,7 @@ export default function Navbar() {
                         className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
                       >
                         <Truck className="w-4 h-4" />
-                        Dashboard
+                        Bảng Quản Lý
                       </Link>
                     ) : (
                       <>
@@ -135,14 +135,14 @@ export default function Navbar() {
                           className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
                         >
                           <ClipboardList className="w-4 h-4" />
-                          Billing
+                          Hóa Đơn
                         </Link>
                         <Link
                           to="/my-bookings"
                           className="flex items-center gap-2 px-4 py-2 text-brown-700 hover:bg-primary/5 hover:text-primary transition-colors"
                         >
                           <CalendarDays className="w-4 h-4" />
-                          Bookings
+                          Đặt Bàn
                         </Link>
                       </>
                     )}

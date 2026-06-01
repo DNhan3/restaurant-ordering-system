@@ -56,16 +56,16 @@ export default function AdminUsersPage() {
 
       if (editingUserId) {
         await userService.update(editingUserId, payload);
-        setMessage('User updated.');
+        setMessage('Người dùng cập nhật.');
       } else {
         await userService.create({ ...payload, password: form.password });
-        setMessage('User created.');
+        setMessage('Người dùng tạo.');
       }
 
       resetForm();
       await loadUsers();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Unable to save user.');
+      setMessage(error.response?.data?.message || 'Không thể lưu người dùng.');
     } finally {
       setIsSaving(false);
     }
@@ -83,16 +83,16 @@ export default function AdminUsersPage() {
   };
 
   const handleDelete = async (user) => {
-    const confirmed = window.confirm(`Delete user "${user.email}"?`);
+    const confirmed = window.confirm(`Xóa người dùng "${user.email}"?`);
     if (!confirmed) return;
 
     try {
       await userService.remove(user.id);
       if (editingUserId === user.id) resetForm();
-      setMessage('User deleted.');
+      setMessage('Người dùng bị xóa.');
       await loadUsers();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Unable to delete user.');
+      setMessage(error.response?.data?.message || 'Không thể xóa người dùng.');
     }
   };
 

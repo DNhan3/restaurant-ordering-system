@@ -9,18 +9,18 @@ import { foodService } from '../services/api';
 import { CATEGORIES, FOOD_STATUS } from '../utils/constants';
 
 const PRICE_RANGES = [
-  { id: 'all', label: 'All Prices', min: 0, max: Infinity },
-  { id: 'under50k', label: 'Under 50,000 VND', min: 0, max: 50000 },
-  { id: '50kto100k', label: '50,000 - 100,000 VND', min: 50000, max: 100000 },
-  { id: '100kto150k', label: '100,000 - 150,000 VND', min: 100000, max: 150000 },
-  { id: 'over150k', label: 'Over 150,000 VND', min: 150000, max: Infinity },
+  { id: 'all', label: 'Tất Cả Giá', min: 0, max: Infinity },
+  { id: 'under50k', label: 'Dưới 50.000 VND', min: 0, max: 50000 },
+  { id: '50kto100k', label: '50.000 - 100.000 VND', min: 50000, max: 100000 },
+  { id: '100kto150k', label: '100.000 - 150.000 VND', min: 100000, max: 150000 },
+  { id: 'over150k', label: 'Trên 150.000 VND', min: 150000, max: Infinity },
 ];
 
 const STATUS_OPTIONS = [
-  { id: 'best_seller', label: 'Best Seller', value: FOOD_STATUS.BEST_SELLER },
-  { id: 'new', label: 'New Dishes', value: FOOD_STATUS.NEW_DISHES },
-  { id: 'online_only', label: 'Online Only', value: FOOD_STATUS.ONLINE_ONLY },
-  { id: 'seasonal', label: 'Seasonal', value: FOOD_STATUS.SEASONAL_DISHES },
+  { id: 'best_seller', label: 'Bán Chạy Nhất', value: FOOD_STATUS.BEST_SELLER },
+  { id: 'new', label: 'Món Mới', value: FOOD_STATUS.NEW_DISHES },
+  { id: 'online_only', label: 'Chỉ Online', value: FOOD_STATUS.ONLINE_ONLY },
+  { id: 'seasonal', label: 'Theo Mùa', value: FOOD_STATUS.SEASONAL_DISHES },
 ];
 
 const ITEMS_PER_PAGE = 12;
@@ -100,7 +100,7 @@ export default function MenuPage() {
       setError(null);
     } catch (err) {
       console.error('Failed to load foods:', err);
-      setError('Failed to load menu. Please try again later.');
+      setError('Tải thực đơn thất bại. Vui lòng thử lại.');
     } finally {
       setIsLoading(false);
     }

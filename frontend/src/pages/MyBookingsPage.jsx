@@ -33,7 +33,7 @@ export default function MyBookingsPage() {
   }, [user]);
 
   const handleCancel = async (booking) => {
-    const confirmed = window.confirm(`Cancel booking #${booking.id}?`);
+    const confirmed = window.confirm(`Hủy đặt bàn #${booking.id}?`);
     if (!confirmed) return;
 
     try {
@@ -41,9 +41,9 @@ export default function MyBookingsPage() {
       setCancelingId(booking.id);
       await bookingService.cancel(booking.id);
       setBookings((current) => current.filter((item) => item.id !== booking.id));
-      setMessage('Booking canceled.');
+      setMessage('Đặt bàn đã bị hủy.');
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Unable to cancel booking.');
+      setMessage(error.response?.data?.message || 'Không thể hủy đặt bàn.');
     } finally {
       setCancelingId(null);
     }

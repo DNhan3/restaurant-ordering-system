@@ -85,23 +85,23 @@ export default function AdminBookingsPage() {
         Number(form.book_tables) > latestAvailability.availableTables
       ) {
         setMessage(
-          `Only ${latestAvailability.availableTables} table(s) available for this time slot.`,
+          `Chỉ có ${latestAvailability.availableTables} bàn(à) tăng sẵn cho khoảng thời gian này.`,
         );
         return;
       }
 
       if (editingBookingId) {
         await bookingService.update(editingBookingId, buildPayload());
-        setMessage('Booking updated.');
+        setMessage('Đặt bàn đã cập nhật.');
       } else {
         await bookingService.create(buildPayload());
-        setMessage('Booking created.');
+        setMessage('Đặt bàn đã tạo.');
       }
 
       resetForm();
       await loadBookings();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Unable to save booking.');
+      setMessage(error.response?.data?.message || 'Không thể lưu đặt bàn.');
     } finally {
       setIsSaving(false);
     }
@@ -151,16 +151,16 @@ export default function AdminBookingsPage() {
   };
 
   const handleDelete = async (booking) => {
-    const confirmed = window.confirm(`Delete booking for "${booking.name}"?`);
+    const confirmed = window.confirm(`Xóa đặt bàn cho "${booking.name}"?`);
     if (!confirmed) return;
 
     try {
       await bookingService.remove(booking.id);
       if (editingBookingId === booking.id) resetForm();
-      setMessage('Booking deleted.');
+      setMessage('Đặt bàn đã bị xóa.');
       await loadBookings();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Unable to delete booking.');
+      setMessage(error.response?.data?.message || 'Không thể xóa đặt bàn.');
     }
   };
 
@@ -178,14 +178,14 @@ export default function AdminBookingsPage() {
           <div>
             <Link to="/admin/dashboard" className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-3">
               <ArrowLeft className="w-5 h-5" />
-              Dashboard
+              Bảng Quản Lý
             </Link>
-            <h1 className="text-2xl font-bold">Booking Management</h1>
-            <p className="text-brown-300 mt-1">Create, edit, and delete table bookings.</p>
+            <h1 className="text-2xl font-bold">Quản Lý Đặt Bàn</h1>
+            <p className="text-brown-300 mt-1">Tạo, chỉnh sửa và xóa đặt bàn.</p>
           </div>
           <button onClick={handleLogout} className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary rounded-lg hover:bg-primary-light">
             <LogOut className="w-4 h-4" />
-            Logout
+            Đăng Xuất
           </button>
         </div>
       </div>
@@ -193,7 +193,7 @@ export default function AdminBookingsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid lg:grid-cols-3 gap-8">
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md p-6 lg:col-span-1">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-bold text-brown-900">{editingBookingId ? 'Edit Booking' : 'Create Booking'}</h2>
+            <h2 className="text-xl font-bold text-brown-900">{editingBookingId ? 'Chỉnh Sửa Đặt Bàn' : 'Tạo Đặt Bàn'}</h2>
             {editingBookingId && (
               <button type="button" onClick={resetForm} className="p-2 rounded-lg hover:bg-brown-50">
                 <X className="w-4 h-4" />

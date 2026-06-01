@@ -55,36 +55,36 @@ export default function CheckoutPage() {
 
     // Phone validation
     if (!formData.phone) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = 'Vui lòng nhập số điện thoại';
     } else if (!formData.phone.startsWith('0') || formData.phone.length !== 10) {
-      newErrors.phone = 'Phone must start with 0 and be 10 digits';
+      newErrors.phone = 'Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số';
     }
 
     // Address validation
     if (!formData.address) {
-      newErrors.address = 'Delivery address is required';
+      newErrors.address = 'Vui lòng nhập địa chỉ giao hàng';
     }
 
     // Card validation (if card payment)
     if (formData.paymentMethod === 'card') {
       if (!formData.cardNumber) {
-        newErrors.cardNumber = 'Card number is required';
+        newErrors.cardNumber = 'Vui lòng nhập số thẻ';
       } else if (!formData.cardNumber.startsWith('4') || formData.cardNumber.length !== 16) {
-        newErrors.cardNumber = 'Card must start with 4 and be 16 digits';
+        newErrors.cardNumber = 'Thẻ phải bắt đầu bằng 4 và có 16 chữ số';
       }
 
       if (!formData.cardName) {
-        newErrors.cardName = 'Cardholder name is required';
+        newErrors.cardName = 'Vui lòng nhập tên chủ thẻ';
       }
 
       if (!formData.cardExpiry) {
-        newErrors.cardExpiry = 'Expiry date is required';
+        newErrors.cardExpiry = 'Vui lòng nhập ngày hết hạn';
       }
 
       if (!formData.cardCvv) {
-        newErrors.cardCvv = 'CVV is required';
+        newErrors.cardCvv = 'Vui lòng nhập CVV';
       } else if (formData.cardCvv.length !== 3) {
-        newErrors.cardCvv = 'CVV must be 3 digits';
+        newErrors.cardCvv = 'CVV phải có 3 chữ số';
       }
     }
 
@@ -128,7 +128,7 @@ export default function CheckoutPage() {
       navigate('/order-success', { state: { orderId: order?.bill_id } });
     } catch (error) {
       console.error('Checkout failed:', error);
-      setErrors({ submit: 'Failed to process order. Please try again.' });
+      setErrors({ submit: 'Xử lý đơn hàng thất bại. Vui lòng thử lại.' });
     } finally {
       setIsSubmitting(false);
     }

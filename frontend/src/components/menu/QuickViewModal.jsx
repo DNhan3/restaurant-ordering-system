@@ -94,7 +94,7 @@ export default function QuickViewModal({ food, isOpen, onClose }) {
           <div className="md:w-1/2 p-6 md:p-8 flex flex-col">
             {/* Category */}
             <span className="text-sm font-medium text-primary uppercase tracking-wider mb-2">
-              {food.food_category || 'Main Course'}
+              {food.food_category || 'Món Chín'}
             </span>
 
             {/* Name */}
@@ -138,7 +138,7 @@ export default function QuickViewModal({ food, isOpen, onClose }) {
             {/* Quantity Selector */}
             {!available && (
               <div className="mb-6 rounded-xl bg-brown-100 px-4 py-3 text-center font-medium text-brown-600">
-                This dish is currently unavailable.
+                Món ăn này hiện tại không có sẵn.
               </div>
             )}
             <div className="flex items-center gap-4 mb-6">

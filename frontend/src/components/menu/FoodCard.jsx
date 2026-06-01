@@ -50,22 +50,22 @@ export default function FoodCard({ food, onQuickView }) {
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {!available && (
             <span className="bg-gray-700 text-white text-xs font-bold px-2 py-1 rounded-full">
-              Unavailable
+              Không Có Sẵn
             </span>
           )}
           {isBestSeller && (
             <span className="bg-secondary text-white text-xs font-bold px-2 py-1 rounded-full">
-              Best Seller
+              Bán Chạy Nhất
             </span>
           )}
           {isNew && (
             <span className="bg-success text-white text-xs font-bold px-2 py-1 rounded-full">
-              New
+              Mới
             </span>
           )}
           {isOnlineOnly && (
             <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-              Online Only
+              Chỉ Online
             </span>
           )}
         </div>
@@ -94,7 +94,7 @@ export default function FoodCard({ food, onQuickView }) {
       <div className="flex-1 flex flex-col p-4">
         {/* Category */}
         <span className="text-xs font-medium text-primary uppercase tracking-wider mb-1">
-          {category || 'Main Course'}
+          {category || 'Món Chín'}
         </span>
 
         {/* Name */}

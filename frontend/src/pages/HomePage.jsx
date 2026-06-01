@@ -6,53 +6,29 @@ const FEATURED_CATEGORIES = [
     id: 'pho',
     name: 'Phở & Bún',
     description: 'Phở bò, phở gà, bún bò huế',
-    image: 'https://images.unsplash.com/photo-1583224964978-2257b1c8f725?w=400&h=400&fit=crop',
+    image: '/imgs/pho-category.jpg',
     count: 8,
   },
   {
     id: 'com',
     name: 'Cơm',
     description: 'Cơm tấm, cơm gà, cơm rang',
-    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=400&fit=crop',
+    image: '/imgs/com-category.jpg',
     count: 6,
   },
   {
     id: 'banhmi',
     name: 'Bánh Mì',
     description: 'Bánh mì thịt nướng, bánh mì pate',
-    image: 'https://images.unsplash.com/photo-1600688640154-9619e002df30?w=400&h=400&fit=crop',
+    image: '/imgs/banhmi-category.jpg',
     count: 5,
   },
   {
     id: 'cuon',
     name: 'Cuốn & Khai Vị',
     description: 'Gỏi cuốn, chả giò, nem nướng',
-    image: 'https://images.unsplash.com/photo-1562967916-eb82221dfb44?w=400&h=400&fit=crop',
+    image: '/imgs/cuon-category.jpg',
     count: 7,
-  },
-];
-
-const FEATURED_ITEMS = [
-  {
-    name: 'Phở Bò Tái Nạm',
-    description: 'Thịt bò tươi, xương hầm đậm đà, bánh phở mềm dai',
-    price: '75.000đ',
-    image: 'https://images.unsplash.com/photo-1583224964978-2257b1c8f725?w=400&h=400&fit=crop',
-    rating: 4.9,
-  },
-  {
-    name: 'Bún Bò Huế',
-    description: 'Sườn bò, giò heo, chả cua thơm ngon',
-    price: '65.000đ',
-    image: 'https://images.unsplash.com/photo-1574901685823-e9c1e3f4c3d4?w=400&h=400&fit=crop',
-    rating: 4.8,
-  },
-  {
-    name: 'Bánh Mì Thịt Nướng',
-    description: 'Thịt nướng thơm lừng, đồ chua giòn tan',
-    price: '35.000đ',
-    image: 'https://images.unsplash.com/photo-1600688640154-9619e002df30?w=400&h=400&fit=crop',
-    rating: 4.7,
   },
 ];
 
@@ -210,119 +186,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Items Section */}
-      <section className="section-padding bg-cream">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <span className="heading-accent text-xl">Món Ăn Nổi Bật</span>
-              <h2 className="text-3xl md:text-4xl font-bold heading-display mt-2">
-                Món Được Yêu Thích
-              </h2>
-            </div>
-            <Link
-              to="/menu"
-              className="hidden sm:flex items-center gap-2 text-primary font-medium hover:text-primary-light transition-colors"
-            >
-              Xem Tất Cả
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {FEATURED_ITEMS.map((item, index) => (
-              <div key={index} className="card overflow-hidden group">
-                <div className="relative aspect-video overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                    <span className="text-sm font-medium text-brown-900 flex items-center gap-1">
-                      <span className="text-secondary">★</span> {item.rating}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-5">
-                  <h3 className="font-semibold text-lg text-brown-900 group-hover:text-primary transition-colors">
-                    {item.name}
-                  </h3>
-                  <p className="text-sm text-brown-500 mt-1 line-clamp-2">
-                    {item.description}
-                  </p>
-                  <div className="flex items-center justify-between mt-4">
-                    <span className="text-xl font-bold text-primary">
-                      {item.price}
-                    </span>
-                    <Link
-                      to="/menu"
-                      className="px-4 py-2 bg-primary/10 text-primary font-medium rounded-lg hover:bg-primary hover:text-white transition-colors"
-                    >
-                      Order
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 text-center sm:hidden">
-            <Link
-              to="/menu"
-              className="inline-flex items-center gap-2 text-primary font-medium"
-            >
-              View All Menu
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Promo Banner Section */}
-      <section className="section-padding">
-        <div className="max-w-7xl mx-auto">
-          <div className="relative bg-gradient-to-r from-primary to-primary-light rounded-3xl overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute inset-0" style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
-              }} />
-            </div>
-
-            <div className="relative grid md:grid-cols-2 gap-8 items-center p-8 md:p-12 lg:p-16">
-              <div className="text-white">
-                <span className="inline-block px-4 py-1 bg-white/20 rounded-full text-sm font-medium mb-4">
-                  Ưu Đãi Đặc Biệt
-                </span>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-                  Giảm 20% Cho Đơn Hàng Đầu Tiên!
-                </h2>
-                <p className="text-white/80 text-lg mb-6">
-                  Sử dụng mã <span className="font-bold">CHAO20</span> khi thanh toán. 
-                  Chỉ áp dụng cho khách hàng mới.
-                </p>
-                <Link
-                  to="/menu"
-                  className="inline-flex items-center gap-2 bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-cream transition-colors"
-                >
-                  Nhận Ưu Đãi
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </div>
-
-              <div className="hidden md:block">
-                <img
-                  src="https://images.unsplash.com/photo-1574901685823-e9c1e3f4c3d4?w=600&h=600&fit=crop"
-                  alt="Món Ăn Việt Nam Đặc Sắc"
-                  className="w-full max-w-sm mx-auto rounded-2xl shadow-2xl"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Why Choose Us Section */}
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
@@ -357,7 +220,7 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="section-padding bg-brown-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold heading-display mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold heading-display mb-4 text-white">
             Sẵn Sàng Thưởng Thức Ẩm Thực Việt?
           </h2>
           <p className="text-brown-300 text-lg mb-8">
@@ -373,6 +236,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      <br />
+      <br />
     </div>
   );
 }

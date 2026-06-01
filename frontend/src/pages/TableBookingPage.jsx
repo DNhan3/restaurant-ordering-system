@@ -86,31 +86,31 @@ export default function TableBookingPage() {
     const newErrors = {};
 
     if (!formData.name) {
-      newErrors.name = 'Name is required';
+      newErrors.name = 'Vui lòng nhập tên';
     } else if (!/^[A-Za-z\s]+$/.test(formData.name.replace(/\s/g, ''))) {
-      newErrors.name = 'Name can only contain letters';
+      newErrors.name = 'Tên chỉ được chứa chữ cái';
     }
 
     if (!formData.phone) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = 'Vui lòng nhập số điện thoại';
     } else if (!formData.phone.startsWith('0') || formData.phone.length !== 10) {
-      newErrors.phone = 'Phone must start with 0 and be 10 digits';
+      newErrors.phone = 'Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số';
     }
 
     if (!formData.people) {
-      newErrors.people = 'Number of people is required';
+      newErrors.people = 'Vui lòng nhập số lượng người';
     } else if (parseInt(formData.people) < 1 || parseInt(formData.people) > 100) {
-      newErrors.people = 'Number of people must be between 1 and 100';
+      newErrors.people = 'Số lượng người phải từ 1 đến 100';
     }
 
     if (!formData.tables) {
-      newErrors.tables = 'Number of tables is required';
+      newErrors.tables = 'Vui lòng nhập số lượng bàn';
     } else if (parseInt(formData.tables) < 1 || parseInt(formData.tables) > 50) {
-      newErrors.tables = 'Number of tables must be between 1 and 50';
+      newErrors.tables = 'Số lượng bàn phải từ 1 đến 50';
     }
 
     if (!formData.when) {
-      newErrors.when = 'Date and time is required';
+      newErrors.when = 'Vui lòng chọn ngày và giờ';
     } else {
       const selectedDate = new Date(formData.when);
       const now = new Date();
@@ -118,9 +118,9 @@ export default function TableBookingPage() {
       maxDate.setMonth(maxDate.getMonth() + 3);
 
       if (selectedDate < now) {
-        newErrors.when = 'Cannot book in the past';
+        newErrors.when = 'Không thể đặt bàn trong quá khứ';
       } else if (selectedDate > maxDate) {
-        newErrors.when = 'Can only book up to 3 months in advance';
+        newErrors.when = 'Chỉ có thể đặt trước 3 tháng';
       }
     }
 
@@ -169,7 +169,7 @@ export default function TableBookingPage() {
       });
     } catch (error) {
       setErrors({
-        submit: error.response?.data?.message || 'Failed to submit booking. Please try again.',
+        submit: error.response?.data?.message || 'Gửi đặt bàn thất bại. Vui lòng thử lại.',
       });
     } finally {
       setIsSubmitting(false);
