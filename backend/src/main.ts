@@ -7,7 +7,8 @@ import { join } from 'node:path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
   });
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
