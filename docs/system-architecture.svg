@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">VNFood Restaurant Ordering System Architecture</title>
+  <desc id="desc">System architecture diagram for the React, NestJS, Socket.IO, TypeORM, and MySQL restaurant ordering application.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f3a45"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#2f3a45" flood-opacity="0.16"/>
+    </filter>
+    <style>
+      .page { fill: #f6f8fb; }
+      .title { font: 700 42px Arial, Helvetica, sans-serif; fill: #17202a; }
+      .subtitle { font: 400 20px Arial, Helvetica, sans-serif; fill: #4e5b66; }
+      .section-title { font: 700 22px Arial, Helvetica, sans-serif; fill: #1f2a35; letter-spacing: 0; }
+      .card-title { font: 700 18px Arial, Helvetica, sans-serif; fill: #18222d; }
+      .card-text { font: 400 15px Arial, Helvetica, sans-serif; fill: #35424e; }
+      .small-text { font: 400 13px Arial, Helvetica, sans-serif; fill: #52616f; }
+      .label { font: 700 13px Arial, Helvetica, sans-serif; fill: #26313b; }
+      .pill { font: 700 13px Arial, Helvetica, sans-serif; fill: #ffffff; }
+      .panel { fill: #ffffff; stroke: #d7dee8; stroke-width: 1.5; rx: 18; filter: url(#shadow); }
+      .role { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; rx: 14; }
+      .frontend { fill: #e7f5ff; stroke: #7cc8f8; stroke-width: 1.5; rx: 14; }
+      .backend { fill: #ecfdf3; stroke: #72d69a; stroke-width: 1.5; rx: 14; }
+      .security { fill: #fff4e6; stroke: #ffb866; stroke-width: 1.5; rx: 14; }
+      .data { fill: #f5efff; stroke: #b99cff; stroke-width: 1.5; rx: 14; }
+      .storage { fill: #fff0f3; stroke: #ff9bb1; stroke-width: 1.5; rx: 14; }
+      .line { stroke: #2f3a45; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .soft-line { stroke: #708090; stroke-width: 2; stroke-dasharray: 8 7; fill: none; marker-end: url(#arrow); }
+      .realtime-line { stroke: #0f766e; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .db-line { stroke: #6d28d9; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="page" width="1600" height="1000"/>
+  <text class="title" x="80" y="74">VNFood Restaurant Ordering System Architecture</text>
+  <text class="subtitle" x="80" y="108">React/Vite client, NestJS API, Socket.IO realtime events, TypeORM services, MySQL persistence, and local food image uploads.</text>
+
+  <rect class="panel" x="70" y="150" width="250" height="700"/>
+  <text class="section-title" x="105" y="190">Users</text>
+
+  <rect class="role" x="105" y="220" width="180" height="110"/>
+  <circle cx="138" cy="254" r="17" fill="#2563eb"/>
+  <path d="M130 257 q8 13 16 0 M126 284 q12 -22 24 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  <text class="card-title" x="166" y="260">Customer</text>
+  <text class="card-text" x="126" y="292">Menu, cart, checkout</text>
+  <text class="card-text" x="126" y="314">receipts, bookings</text>
+
+  <rect class="role" x="105" y="385" width="180" height="110"/>
+  <circle cx="138" cy="419" r="17" fill="#dc2626"/>
+  <path d="M128 419 h20 M138 409 v20" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  <text class="card-title" x="166" y="425">Admin</text>
+  <text class="card-text" x="126" y="457">Dishes, users, orders</text>
+  <text class="card-text" x="126" y="479">bookings, shippers</text>
+
+  <rect class="role" x="105" y="550" width="180" height="110"/>
+  <circle cx="138" cy="584" r="17" fill="#059669"/>
+  <path d="M126 585 h24 l-4 -10 h-11 z M130 594 h18" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="card-title" x="166" y="590">Shipper</text>
+  <text class="card-text" x="126" y="622">Assigned deliveries</text>
+  <text class="card-text" x="126" y="644">status updates</text>
+
+  <rect class="panel" x="390" y="150" width="320" height="700"/>
+  <text class="section-title" x="425" y="190">Frontend</text>
+  <text class="small-text" x="425" y="216">React 19 + Vite + React Router</text>
+
+  <rect class="frontend" x="430" y="250" width="240" height="100"/>
+  <text class="card-title" x="455" y="285">Pages and Layout</text>
+  <text class="card-text" x="455" y="313">Home, menu, cart, checkout</text>
+  <text class="card-text" x="455" y="335">admin and shipper dashboards</text>
+
+  <rect class="frontend" x="430" y="390" width="240" height="100"/>
+  <text class="card-title" x="455" y="425">State Contexts</text>
+  <text class="card-text" x="455" y="453">AuthContext</text>
+  <text class="card-text" x="455" y="475">CartContext</text>
+
+  <rect class="frontend" x="430" y="530" width="240" height="120"/>
+  <text class="card-title" x="455" y="565">API Services</text>
+  <text class="card-text" x="455" y="593">Axios REST client</text>
+  <text class="card-text" x="455" y="615">JWT in localStorage</text>
+  <text class="card-text" x="455" y="637">Socket.IO client</text>
+
+  <rect class="panel" x="780" y="150" width="410" height="700"/>
+  <text class="section-title" x="815" y="190">Backend API</text>
+  <text class="small-text" x="815" y="216">NestJS 11 on port 3000 with CORS, validation pipes, static uploads</text>
+
+  <rect class="backend" x="820" y="250" width="330" height="120"/>
+  <text class="card-title" x="845" y="284">REST Controllers</text>
+  <text class="card-text" x="845" y="313">/login, /register, /me, /foods</text>
+  <text class="card-text" x="845" y="335">/bookings, /billing, /admin</text>
+  <text class="card-text" x="845" y="357">/shipper, /users, /checkout</text>
+
+  <rect class="security" x="820" y="405" width="330" height="120"/>
+  <text class="card-title" x="845" y="439">Auth and Access Control</text>
+  <text class="card-text" x="845" y="468">JWT auth guard</text>
+  <text class="card-text" x="845" y="490">Role guard: admin, shipper, user</text>
+  <text class="card-text" x="845" y="512">Self-or-admin checks</text>
+
+  <rect class="backend" x="820" y="560" width="330" height="130"/>
+  <text class="card-title" x="845" y="594">Domain Services and Modules</text>
+  <text class="card-text" x="845" y="623">Foods, users, bookings, billing</text>
+  <text class="card-text" x="845" y="645">bill details/status, admin, shipper</text>
+  <text class="card-text" x="845" y="667">audit logs, response mappers</text>
+
+  <rect class="backend" x="820" y="725" width="330" height="75"/>
+  <text class="card-title" x="845" y="758">Realtime Gateway</text>
+  <text class="card-text" x="845" y="786">Socket.IO order:changed events</text>
+
+  <rect class="panel" x="1260" y="150" width="270" height="700"/>
+  <text class="section-title" x="1295" y="190">Data and Files</text>
+
+  <rect class="data" x="1295" y="250" width="200" height="175"/>
+  <ellipse cx="1395" cy="278" rx="72" ry="20" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <path d="M1323 278 v95 c0 11 32 20 72 20 s72 -9 72 -20 v-95" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <ellipse cx="1395" cy="373" rx="72" ry="20" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text class="card-title" x="1345" y="317">MySQL</text>
+  <text class="card-text" x="1330" y="345">wad_restaurant</text>
+  <text class="card-text" x="1330" y="408">TypeORM entities</text>
+
+  <rect class="data" x="1295" y="465" width="200" height="140"/>
+  <text class="card-title" x="1320" y="500">Tables</text>
+  <text class="card-text" x="1320" y="529">users, foods, bookings</text>
+  <text class="card-text" x="1320" y="551">bill_status, bill_detail</text>
+  <text class="card-text" x="1320" y="573">audit_logs</text>
+
+  <rect class="storage" x="1295" y="645" width="200" height="120"/>
+  <path d="M1325 690 h140 v46 h-140 z M1325 690 l20 -25 h46 l16 25" fill="#ffe4e9" stroke="#e11d48" stroke-width="2" stroke-linejoin="round"/>
+  <text class="card-title" x="1348" y="700">Uploads</text>
+  <text class="card-text" x="1320" y="733">/uploads/foods</text>
+  <text class="card-text" x="1320" y="755">served as static files</text>
+
+  <path class="line" d="M285 275 C335 275 365 275 430 300"/>
+  <path class="line" d="M285 440 C335 440 365 440 430 440"/>
+  <path class="line" d="M285 605 C335 605 365 605 430 590"/>
+
+  <path class="line" d="M670 590 C720 560 755 470 820 315"/>
+  <text class="label" x="694" y="515">HTTPS REST</text>
+  <rect x="695" y="535" width="112" height="28" rx="14" fill="#334155"/>
+  <text class="pill" x="716" y="554">Bearer JWT</text>
+
+  <path class="realtime-line" d="M670 630 C730 720 760 760 820 762"/>
+  <text class="label" x="688" y="705">Socket.IO</text>
+
+  <path class="soft-line" d="M985 370 L985 405"/>
+  <path class="soft-line" d="M985 525 L985 560"/>
+  <path class="realtime-line" d="M985 725 C985 705 985 705 985 690"/>
+
+  <path class="db-line" d="M1150 625 C1210 560 1240 370 1295 335"/>
+  <text class="label" x="1190" y="514">TypeORM</text>
+
+  <path class="line" d="M1150 315 C1215 300 1235 685 1295 705"/>
+  <text class="label" x="1190" y="682">image upload</text>
+
+  <path class="realtime-line" d="M1150 762 C1215 790 1260 795 1295 582"/>
+  <text class="label" x="1192" y="796">order events</text>
+
+  <rect x="80" y="895" width="1440" height="54" rx="16" fill="#ffffff" stroke="#d7dee8" stroke-width="1.5"/>
+  <circle cx="112" cy="922" r="8" fill="#2563eb"/>
+  <text class="small-text" x="130" y="927">Frontend uses Axios services and Socket.IO client.</text>
+  <circle cx="438" cy="922" r="8" fill="#f59e0b"/>
+  <text class="small-text" x="456" y="927">Backend protects sensitive endpoints with JWT and role guards.</text>
+  <circle cx="828" cy="922" r="8" fill="#7c3aed"/>
+  <text class="small-text" x="846" y="927">NestJS services persist data through TypeORM into MySQL.</text>
+  <circle cx="1212" cy="922" r="8" fill="#0f766e"/>
+  <text class="small-text" x="1230" y="927">Order changes are broadcast to admin, shipper, and customer rooms.</text>
+</svg>

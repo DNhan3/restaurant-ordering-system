@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, In, Repository } from 'typeorm';
 import { BillStatus, BillStatusEnum } from '../models/bill-status.entity.js';
 import { mapBillStatusResponse } from './response-mappers.js';
+import { RealtimeEventsService } from '../realtime/realtime-events.service.js';
 
 const BILL_RELATIONS = {
   user: true,
@@ -34,6 +35,7 @@ export class ShipperService {
   constructor(
     @InjectRepository(BillStatus)
     private readonly billStatusRepository: Repository<BillStatus>,
+    private readonly realtimeEvents: RealtimeEventsService,
   ) { }
 
   /** Orders that have no shipper and are in an assignable status */
@@ -85,7 +87,9 @@ export class ShipperService {
 
     bill.shipperId = shipperId;
     const saved = await this.billStatusRepository.save(bill);
-    return mapBillStatusResponse(await this.findEntity(saved.id));
+    const updated = mapBillStatusResponse(await this.findEntity(saved.id));
+    this.realtimeEvents.emitOrderChanged({ type: 'updated', order: updated });
+    return updated;
   }
 
   /** Deny / release an accepted order back to the pool */
@@ -100,7 +104,9 @@ export class ShipperService {
 
     bill.shipperId = null;
     const saved = await this.billStatusRepository.save(bill);
-    return mapBillStatusResponse(await this.findEntity(saved.id));
+    const updated = mapBillStatusResponse(await this.findEntity(saved.id));
+    this.realtimeEvents.emitOrderChanged({ type: 'updated', order: updated });
+    return updated;
   }
 
   /** Pick up the order — sets status to DELIVERING */
@@ -117,7 +123,9 @@ export class ShipperService {
 
     bill.status = BillStatusEnum.DELIVERING;
     const saved = await this.billStatusRepository.save(bill);
-    return mapBillStatusResponse(await this.findEntity(saved.id));
+    const updated = mapBillStatusResponse(await this.findEntity(saved.id));
+    this.realtimeEvents.emitOrderChanged({ type: 'updated', order: updated });
+    return updated;
   }
 
   /** Mark order as delivered */
@@ -132,7 +140,9 @@ export class ShipperService {
 
     bill.status = BillStatusEnum.DELIVERED;
     const saved = await this.billStatusRepository.save(bill);
-    return mapBillStatusResponse(await this.findEntity(saved.id));
+    const updated = mapBillStatusResponse(await this.findEntity(saved.id));
+    this.realtimeEvents.emitOrderChanged({ type: 'updated', order: updated });
+    return updated;
   }
 
   private async findEntity(id: number): Promise<BillStatus> {

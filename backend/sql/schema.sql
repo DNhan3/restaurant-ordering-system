@@ -25,26 +25,6 @@ CREATE TABLE foods (
 );
 
 -- ============================================================
--- Cart Items
--- ============================================================
-CREATE TABLE cart_items (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  food_id INT NOT NULL,
-  quantity INT NOT NULL DEFAULT 1,
-
-  CONSTRAINT fk_cart_items_user
-    FOREIGN KEY (user_id)
-    REFERENCES users(id)
-    ON DELETE CASCADE,
-
-  CONSTRAINT fk_cart_items_food
-    FOREIGN KEY (food_id)
-    REFERENCES foods(id)
-    ON DELETE CASCADE
-);
-
--- ============================================================
 -- Bookings
 -- ============================================================
 CREATE TABLE bookings (

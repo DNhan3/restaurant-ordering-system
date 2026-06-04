@@ -11,6 +11,7 @@ import {
   getSortOrder,
   ListQueryOptions,
 } from './query-options.js';
+import { RealtimeEventsService } from '../realtime/realtime-events.service.js';
 
 const ORDER_STATUS_FLOW = [
   BillStatusEnum.CONFIRMED,
@@ -26,6 +27,7 @@ export class BillStatusService {
   constructor(
     @InjectRepository(BillStatus)
     private readonly billStatusRepository: Repository<BillStatus>,
+    private readonly realtimeEvents: RealtimeEventsService,
   ) { }
 
   async findAll() {
@@ -124,7 +126,9 @@ export class BillStatusService {
       paid: createBillStatusDto.paid ?? false,
     });
     const saved = await this.billStatusRepository.save(billStatus);
-    return mapBillStatusResponse(await this.findEntity(saved.id));
+    const created = mapBillStatusResponse(await this.findEntity(saved.id));
+    this.realtimeEvents.emitOrderChanged({ type: 'created', order: created });
+    return created;
   }
 
   async update(
@@ -136,12 +140,16 @@ export class BillStatusService {
     if (updateBillStatusDto && Object.keys(updateBillStatusDto).length > 0) {
       Object.assign(billStatus, updateBillStatusDto);
       const saved = await this.billStatusRepository.save(billStatus);
-      return mapBillStatusResponse(await this.findEntity(saved.id));
+      const updated = mapBillStatusResponse(await this.findEntity(saved.id));
+      this.realtimeEvents.emitOrderChanged({ type: 'updated', order: updated });
+      return updated;
     }
 
     billStatus.status = this.getNextStatus(billStatus.status);
     const saved = await this.billStatusRepository.save(billStatus);
-    return mapBillStatusResponse(await this.findEntity(saved.id));
+    const updated = mapBillStatusResponse(await this.findEntity(saved.id));
+    this.realtimeEvents.emitOrderChanged({ type: 'updated', order: updated });
+    return updated;
   }
 
   async markPaid(id: number) {
@@ -154,21 +162,27 @@ export class BillStatusService {
       billStatus.status = BillStatusEnum.CONFIRMED;
     }
     const saved = await this.billStatusRepository.save(billStatus);
-    return mapBillStatusResponse(await this.findEntity(saved.id));
+    const updated = mapBillStatusResponse(await this.findEntity(saved.id));
+    this.realtimeEvents.emitOrderChanged({ type: 'updated', order: updated });
+    return updated;
   }
 
   async markCancelled(id: number) {
     const billStatus = await this.findEntity(id);
     billStatus.status = BillStatusEnum.CANCELLED;
     const saved = await this.billStatusRepository.save(billStatus);
-    return mapBillStatusResponse(await this.findEntity(saved.id));
+    const updated = mapBillStatusResponse(await this.findEntity(saved.id));
+    this.realtimeEvents.emitOrderChanged({ type: 'updated', order: updated });
+    return updated;
   }
 
   async remove(id: number): Promise<void> {
     const billStatus = await this.findEntity(id);
+    const deleted = mapBillStatusResponse(billStatus);
     billStatus.isActive = false;
     await this.billStatusRepository.save(billStatus);
     await this.billStatusRepository.softRemove(billStatus);
+    this.realtimeEvents.emitOrderChanged({ type: 'deleted', order: deleted });
   }
 
   private async findEntity(id: number): Promise<BillStatus> {

@@ -1,6 +1,5 @@
 import { BillDetail } from '../models/bill-detail.entity.js';
 import { BillStatus, BillStatusEnum } from '../models/bill-status.entity.js';
-import { CartItem } from '../models/cart-item.entity.js';
 import { Food } from '../models/food.entity.js';
 
 const STATUS_TO_NUMBER: Record<string, number> = {
@@ -85,14 +84,3 @@ export const mapBillStatusResponse = (
   };
 };
 
-export const mapCartItemResponse = (cartItem: CartItem | null | undefined) => {
-  if (!cartItem) return null;
-
-  return {
-    cart_item_id: cartItem.id,
-    user_id: cartItem.userId,
-    food_id: cartItem.foodId,
-    item_qty: cartItem.quantity,
-    food: mapFoodResponse(cartItem.food),
-  };
-};

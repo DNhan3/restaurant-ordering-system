@@ -7,6 +7,7 @@ import { ORDER_STATUS_LABELS } from '../utils/constants';
 import { formatPrice } from '../utils/formatters';
 import EmptyState from '../components/common/EmptyState';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { subscribeToOrderEvents } from '../services/realtimeService';
 
 export default function BillingPage() {
   const { user } = useAuth();
@@ -22,6 +23,29 @@ export default function BillingPage() {
     } else {
       setIsLoading(false);
     }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return undefined;
+
+    return subscribeToOrderEvents({
+      session: user,
+      userId: user.user_id,
+      onOrderChanged: ({ type, order }) => {
+        if (type === 'deleted') {
+          setBills((prev) => prev.filter((bill) => bill.bill_id !== order.bill_id));
+          return;
+        }
+
+        setBills((prev) => {
+          const exists = prev.some((bill) => bill.bill_id === order.bill_id);
+          if (exists) {
+            return prev.map((bill) => (bill.bill_id === order.bill_id ? order : bill));
+          }
+          return [order, ...prev];
+        });
+      },
+    });
   }, [user]);
 
   const loadBills = async () => {

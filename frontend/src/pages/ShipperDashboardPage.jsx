@@ -8,8 +8,7 @@ import { shipperService } from '../services/api';
 import { ORDER_STATUS_LABELS } from '../utils/constants';
 import { formatPrice } from '../utils/formatters';
 import { useAuth } from '../contexts/AuthContext';
-
-const POLL_INTERVAL = 5000;
+import { subscribeToOrderEvents } from '../services/realtimeService';
 
 /** Maps the numeric bill_status back to the Vietnamese label */
 const getStatusLabel = (status) => ORDER_STATUS_LABELS[status] ?? 'Không rõ';
@@ -43,7 +42,6 @@ export default function ShipperDashboardPage() {
     }
   }, [shipper, navigate]);
 
-  // Poll for data
   const fetchData = useCallback(async () => {
     if (!shipper?.id) return;
     try {
@@ -63,9 +61,18 @@ export default function ShipperDashboardPage() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, POLL_INTERVAL);
-    return () => clearInterval(interval);
   }, [fetchData]);
+
+  useEffect(() => {
+    if (!shipper) return undefined;
+
+    return subscribeToOrderEvents({
+      session: shipper,
+      onOrderChanged: () => {
+        fetchData();
+      },
+    });
+  }, [shipper, fetchData]);
 
   // Clear success message after 3s
   useEffect(() => {
@@ -339,7 +346,7 @@ export default function ShipperDashboardPage() {
                 <p className="text-gray-400 mt-1 text-sm">Đơn hàng sẽ tự động hiển thị khi có</p>
                 <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-400">
                   <RefreshCw className="w-3 h-3 animate-spin" />
-                  Đang cập nhật mỗi 5 giây
+                  Đang cập nhật theo thời gian thực
                 </div>
               </div>
             ) : (

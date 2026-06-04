@@ -39,25 +39,6 @@ export class UpdateBillStatusDto {
   shipperId?: number | null;
 }
 
-export class UpdateCartItemDto {
-  @IsOptional()
-  @IsInt()
-  id?: number;
-
-  @IsOptional()
-  @IsInt()
-  userId?: number;
-
-  @IsOptional()
-  @IsInt()
-  foodId?: number;
-
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  quantity?: number;
-}
-
 export class UpdateFoodDto {
   @IsOptional()
   @IsString()

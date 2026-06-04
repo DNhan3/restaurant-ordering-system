@@ -6,9 +6,10 @@ import { BillDetail } from '../models/bill-detail.entity.js';
 import { BillStatus } from '../models/bill-status.entity.js';
 import { BillingService } from '../services/billing.service.js';
 import { AuthModule } from './auth.module.js';
+import { RealtimeModule } from './realtime.module.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BillStatus, BillDetail]), AuthModule],
+  imports: [TypeOrmModule.forFeature([BillStatus, BillDetail]), AuthModule, RealtimeModule],
   controllers: [BillingController, CheckoutController],
   providers: [BillingService],
   exports: [BillingService],

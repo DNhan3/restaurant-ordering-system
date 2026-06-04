@@ -4,7 +4,6 @@ import {
   IsOptional,
   IsString,
   IsEmail,
-  Min,
   IsBoolean,
   IsEnum,
 } from 'class-validator';
@@ -83,19 +82,6 @@ export class CreateBookingDto {
 
   @IsString()
   book_note!: string;
-}
-
-export class CreateCartItemDto {
-  @IsInt()
-  userId!: number;
-
-  @IsInt()
-  foodId!: number;
-
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  quantity?: number;
 }
 
 export class CreateFoodDto {

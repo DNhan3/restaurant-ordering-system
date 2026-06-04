@@ -8,7 +8,6 @@ export class AppService {
       pages: [
         '/',
         '/menu',
-        '/cart',
         '/checkout',
         '/orders',
         '/bookings',

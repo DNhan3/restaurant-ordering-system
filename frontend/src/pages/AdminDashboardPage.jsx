@@ -6,6 +6,7 @@ import { billingService } from '../services/api';
 import { BILL_STATUS_LABELS } from '../utils/constants';
 import { formatPrice } from '../utils/formatters';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { subscribeToOrderEvents } from '../services/realtimeService';
 
 const BILL_STATUS_OPTIONS = [
   { value: 0, label: BILL_STATUS_LABELS[0], apiStatus: 'cancelled' },
@@ -46,6 +47,38 @@ export default function AdminDashboardPage() {
     loadBillingSummary();
     loadShippers();
   }, [admin, navigate]);
+
+  useEffect(() => {
+    if (!admin) return undefined;
+
+    return subscribeToOrderEvents({
+      session: admin,
+      onOrderChanged: ({ type, order }) => {
+        if (type === 'deleted') {
+          setBills((prev) => prev.filter((bill) => bill.bill_id !== order.bill_id));
+          setSelectedBill((current) =>
+            current?.bill_id === order.bill_id ? null : current,
+          );
+          setBillDetails((current) =>
+            selectedBill?.bill_id === order.bill_id ? [] : current,
+          );
+        } else {
+          setBills((prev) => {
+            const exists = prev.some((bill) => bill.bill_id === order.bill_id);
+            if (exists) {
+              return prev.map((bill) => (bill.bill_id === order.bill_id ? order : bill));
+            }
+            return [order, ...prev];
+          });
+          setSelectedBill((current) =>
+            current?.bill_id === order.bill_id ? order : current,
+          );
+        }
+
+        loadBillingSummary();
+      },
+    });
+  }, [admin, selectedBill?.bill_id]);
 
   const loadBills = async () => {
     try {

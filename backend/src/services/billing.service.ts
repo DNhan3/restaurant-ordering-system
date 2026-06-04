@@ -5,6 +5,7 @@ import { BillDetail } from '../models/bill-detail.entity.js';
 import { BillStatus, BillStatusEnum } from '../models/bill-status.entity.js';
 import { Food } from '../models/food.entity.js';
 import { mapBillStatusResponse, mapFoodResponse } from './response-mappers.js';
+import { RealtimeEventsService } from '../realtime/realtime-events.service.js';
 
 type CheckoutItem = {
   foodId?: number;
@@ -74,6 +75,7 @@ export class BillingService {
     private readonly billStatusRepository: Repository<BillStatus>,
     @InjectRepository(BillDetail)
     private readonly billDetailRepository: Repository<BillDetail>,
+    private readonly realtimeEvents: RealtimeEventsService,
   ) { }
 
   async checkout(body: unknown) {
@@ -139,10 +141,13 @@ export class BillingService {
       },
     );
 
+    const mappedBill = mapBillStatusResponse(bill);
+    this.realtimeEvents.emitOrderChanged({ type: 'created', order: mappedBill });
+
     return {
       message: 'Bill created',
-      order: mapBillStatusResponse(bill),
-      bill: mapBillStatusResponse(bill),
+      order: mappedBill,
+      bill: mappedBill,
     };
   }
 

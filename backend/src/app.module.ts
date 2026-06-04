@@ -5,16 +5,15 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { FoodsModule } from './modules/foods.module.js';
 import { UsersModule } from './modules/users.module.js';
-import { CartItemsModule } from './modules/cart-items.module.js';
 import { BookingsModule } from './modules/bookings.module.js';
 import { BillDetailsModule } from './modules/bill-details.module.js';
 import { BillStatusModule } from './modules/bill-status.module.js';
 import { AdminModule } from './modules/admin.module.js';
 import { AuthModule } from './modules/auth.module.js';
-import { CartModule } from './modules/cart.module.js';
 import { BillingModule } from './modules/billing.module.js';
 import { ShipperModule } from './modules/shipper.module.js';
 import { AuditLogsModule } from './modules/audit-logs.module.js';
+import { RealtimeModule } from './modules/realtime.module.js';
 
 @Module({
   imports: [
@@ -35,16 +34,15 @@ import { AuditLogsModule } from './modules/audit-logs.module.js';
     }),
     FoodsModule,
     UsersModule,
-    CartItemsModule,
     BookingsModule,
     BillDetailsModule,
     BillStatusModule,
     AdminModule,
     AuthModule,
-    CartModule,
     BillingModule,
     ShipperModule,
     AuditLogsModule,
+    RealtimeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
