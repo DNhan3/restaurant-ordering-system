@@ -1,5 +1,7 @@
 import api from '../api/axios';
 
+const getItems = (data) => (Array.isArray(data) ? data : data?.items ?? []);
+
 const buildParams = (params = {}) => ({
   params: Object.fromEntries(
     Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ''),
@@ -9,7 +11,7 @@ const buildParams = (params = {}) => ({
 export const foodService = {
   getAll: async (params) => {
     const response = await api.get(`/foods`, buildParams(params));
-    return response.data;
+    return getItems(response.data);
   },
 
   getById: async (id) => {
@@ -19,7 +21,7 @@ export const foodService = {
 
   getByCategory: async (category) => {
     const response = await api.get(`/foods?category=${category}`);
-    return response.data;
+    return getItems(response.data);
   },
 
   create: async (food) => {

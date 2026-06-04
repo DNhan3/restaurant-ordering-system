@@ -96,7 +96,7 @@ export default function MenuPage() {
     try {
       setIsLoading(true);
       const data = await foodService.getAll();
-      setFoods(data);
+      setFoods(Array.isArray(data) ? data : []);
       setError(null);
     } catch (err) {
       console.error('Failed to load foods:', err);
@@ -108,7 +108,7 @@ export default function MenuPage() {
 
   // Filter foods
   const filteredFoods = useMemo(() => {
-    return foods.filter((food) => {
+    return (Array.isArray(foods) ? foods : []).filter((food) => {
       // Search query
       if (searchQuery && !food.food_name?.toLowerCase().includes(searchQuery.toLowerCase())) {
         return false;
