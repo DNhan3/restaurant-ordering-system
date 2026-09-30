@@ -36,7 +36,7 @@ Java and PostgreSQL are not required for this project.
 1. Clone the repository and enter the project folder:
 
    ```bash
-   git clone [<repository-url>](https://github.com/DNhan3/restaurant-ordering-system.git)
+   git clone https://github.com/DNhan3/restaurant-ordering-system.git
    cd restaurant-ordering-system
    ```
 
